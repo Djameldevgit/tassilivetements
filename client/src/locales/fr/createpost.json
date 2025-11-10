@@ -1,0 +1,161 @@
+{
+  "validation_images_size": "La taille de l'image/vidéo ne doit pas dépasser 5 Mo",
+  "select_option": "Choisir une option",
+  "prix_adulte": "Prix adulte",
+  "prix_enfant": "Prix enfant",
+  "prix_bebe": "Prix bébé",
+  "prix_adulte_placeholder": "Prix pour adulte",
+  "prix_enfant_placeholder": "Prix pour enfant",
+  "prix_bebe_placeholder": "Prix pour bébé",
+  "superficie": "Superficie (m²)",
+  "superficie_placeholder": "Superficie en mètres carrés",
+  "etage": "Étage",
+  "etage_placeholder": "Numéro d'étage",
+  "capacite_personnes": "Capacité (personnes)",
+  "capacite_placeholder": "Nombre de personnes",
+  "nombre_chambres": "Nombre de chambres",
+  "nombre_chambres_placeholder": "Nombre de chambres",
+  "nombre_salles_bain": "Nombre de salles de bain",
+  "nombre_salles_bain_placeholder": "Nombre de salles de bain",
+  "check_in": "Heure d'arrivée",
+  "check_out": "Heure de départ",
+  "tarif_nuit": "Tarif par nuit (€)",
+  "tarif_nuit_placeholder": "Tarif par nuit",
+  "langues_guide": "Langue du guide",
+
+  "voyage": {
+    "destinations_internationales": "Destinations internationales",
+    "dates_duree": "Dates et durée du voyage",
+    "transport_deplacements": "Transport et déplacements",
+    "hebergement_pension": "Hébergement et pension",
+    "activites_services": "Activités et services inclus",
+    "tarifs_conditions": "Tarifs et conditions",
+    "services_inclus": "Services inclus dans le forfait",
+    "activites_proposees": "Activités proposées"
+  },
+
+  "location": {
+    "informations_logement": "Informations sur le logement",
+    "equipements_services": "Équipements et services",
+    "chambres_salles_bain": "Chambres et salles de bain",
+    "disponibilite_tarifs": "Disponibilité et tarifs"
+  },
+
+  "hadj": {
+    "destination_peletinage": "Destination du pèlerinage",
+    "dates_peletinage": "Dates du pèlerinage",
+    "transport_hebergement": "Transport et hébergement",
+    "services_spirituels": "Services spirituels",
+    "services_religieux": "Services religieux inclus",
+    "documents_requis": "Documents requis",
+    "documents_necessaires": "Documents nécessaires",
+    "tarifs_conditions": "Tarifs et conditions",
+    "type_peletinage": "Type de pèlerinage",
+    "niveau_confort": "Niveau de confort"
+  },
+
+  "services": {
+    "visite_guidee": "Visite guidée",
+    "repas": "Repas inclus",
+    "transfert": "Transfert aéroport",
+    "assistance": "Assistance 24/7",
+    "assurance": "Assurance voyage",
+    "guide_religieux": "Guide religieux",
+    "cours_rituels": "Cours de rituels",
+    "assistance_ihram": "Assistance Ihram",
+    "groupe_etude": "Groupe d'étude",
+    "prieres_collectives": "Prières collectives"
+  },
+
+  "activites": {
+    "excursion": "Excursions",
+    "plongee": "Plongée",
+    "randonnee": "Randonnée",
+    "shopping": "Shopping",
+    "culture": "Visites culturelles"
+  },
+
+  "langues": {
+    "arabe": "Arabe",
+    "francais": "Français",
+    "anglais": "Anglais",
+    "berbere": "Berbère"
+  },
+
+  "documents": {
+    "passeport": "Passeport",
+    "photos_identite": "Photos d'identité",
+    "certificat_vaccination": "Certificat de vaccination",
+    "reservation_hotel": "Réservation d'hôtel",
+    "billet_avion": "Billet d'avion"
+  },
+
+  "equipements": {
+    "wifi_gratuit": "Wi-Fi gratuit",
+    "climatisation": "Climatisation",
+    "cuisine_equipee": "Cuisine équipée",
+    "television": "Télévision",
+    "piscine": "Piscine",
+ 
+    "animaux_acceptes": "Animaux acceptés",
+    "menage_inclus": "Ménage inclus"
+  },
+
+  "types_voyage": {
+    "hadj": "Hadj",
+    "omra": "Omra",
+    "hadj_omra": "Hadj et Omra"
+  },
+
+  "niveaux_confort": {
+    "economique": "Économique",
+    "standard": "Standard",
+    "confort": "Confort",
+    "luxe": "Luxe"
+  },
+
+  "select_category_title": "📋 Choisir une catégorie",
+  "select_category_message": "Choisissez entre voyage organisé, location vacance ou hadj et omra",
+
+  "edit_title": "Modifier l'annonce",
+  "create_title": "Annonce Agence",
+  "modification": "Modification en cours",
+  "button_update": "Mettre à jour",
+  "button_publish": "Publier l'annonce",
+  "button_cancel": "Annuler",
+
+  "validation_category_required": "Veuillez choisir une catégorie",
+  "validation_wilaya_required": "Veuillez choisir la wilaya et la commune",
+  "validation_images_required": "Veuillez ajouter au moins une image",
+  "success_update": "Annonce mise à jour avec succès !",
+  "success_create": "Annonce créée avec succès !",
+  "error_publication": "Erreur lors de la publication",
+
+  "service_visite_guidee": "Visite guidée",
+  "service_repas": "Repas inclus",
+  "service_transfert": "Transfert aéroport",
+  "service_assistance": "Assistance 24/7",
+  "service_assurance": "Assurance voyage",
+  "service_guide_religieux": "Guide religieux",
+  "service_cours_rituels": "Cours de rituels",
+  "service_assistance_ihram": "Assistance Ihram",
+  "service_groupe_etude": "Groupe d'étude",
+  "service_prieres_collectives": "Prières collectives",
+
+  "activite_excursion": "Excursions",
+  "activite_plongee": "Plongée",
+  "activite_randonnee": "Randonnée",
+  "activite_shopping": "Shopping",
+  "activite_culture": "Activités culturelles",
+
+  "langue_arabe": "Arabe",
+  "langue_francais": "Français",
+  "langue_anglais": "Anglais",
+  "langue_berbere": "Berbère",
+
+  "document_passeport": "Passeport",
+  "document_photos_identite": "Photos d'identité",
+  "document_certificat_vaccination": "Certificat de vaccination",
+  "document_reservation_hotel": "Réservation d'hôtel",
+  "document_billet_avion": "Billet d'avion"
+}

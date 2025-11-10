@@ -1,0 +1,37 @@
+{
+  "contact_form": "Formulaire de Contact",
+  "subjectt": "Sujet",
+  "messagee": "Message",
+  "write_subject": "Écrivez le sujet de votre message",
+  "write_message": "Écrivez votre message ici...",
+  "sendingg": "Envoi en cours...",
+  "send_message": "Envoyer le Message",
+  "mensajeenviadoconexito": "✅ Message envoyé avec succès. Nous vous répondrons bientôt.",
+  "erroralenviarmensaje": "❌ Erreur lors de l'envoi du message. Veuillez réessayer.",
+  "commissionRequestSent": "✅ Demande de devis envoyée avec succès. Nous vous contacterons dans les 24 heures avec les détails de votre œuvre personnalisée.",
+  
+  "commissionHeader": "Demande de Devis pour une Œuvre d'Art Personnalisée",
+  "commissionSubheader": "Nous avons pré-rempli le formulaire avec des informations de base. Veuillez vérifier et compléter les détails spécifiques de votre œuvre.",
+  "commissionTitle": "Demande de Devis",
+  "commissionDefaultTitle": "Demande de devis pour une œuvre d'art personnalisée",
+ 
+  "emailLabel": "Votre Email",
+  "guestUser": "Visiteur (vous serez contacté par email)",
+  "commissionEmailHelp": "Nous vous contacterons sur cet email avec le devis détaillé de votre œuvre",
+  "regularEmailHelp": "Nous utiliserons cet email pour vous répondre",
+  
+  "commissionPlaceholder": "Décrivez en détail votre œuvre idéale...",
+  "commissionHelpText": "Incluez : type d'œuvre, dimensions, style, couleurs, thème, délai de livraison souhaité et tout détail important.",
+  
+  "sendingCommission": "Envoi de la demande en cours...",
+  "sendCommissionButton": "📨 Envoyer la Demande de Devis",
+  
+  "commissionIncludesTitle": "Que comprend le devis ?",
+  "commissionIncludesPrice": "Prix détaillé de l'œuvre",
+  "commissionIncludesMaterials": "Coût des matériaux",
+  "commissionIncludesDelivery": "Délai de livraison estimé",
+  "commissionIncludesShipping": "Options d'expédition et de cadre",
+  "commissionIncludesModifications": "Possibilité de modifications",
+
+  "commissionDefaultMessage": "Bonjour, je suis intéressé(e) par une demande de devis pour une œuvre d'art personnalisée. J'ai consulté la page des commandes et j'aimerais discuter des détails suivants :\n\n• Type d'œuvre que je souhaite :\n• Dimensions approximatives : \n• Style artistique préféré :\n• Thème ou idée principale :\n• Budget approximatif que j'envisage :\n• Délai de livraison souhaité :\n\nPouvez-vous m'aider avec plus d'informations et un devis détaillé ?"
+}

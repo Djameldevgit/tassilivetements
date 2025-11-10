@@ -1,0 +1,29 @@
+{
+  "map": {
+    "locationTitle": "الموقع على الخريطة",
+    "destination": "الوجهة",
+    "destinationInfo": "معلومات الوجهة",
+    "usedForSearch": "المستخدم للبحث",
+    "hotelName": "الفندق",
+    "city": "المدينة",
+    "zoneRegion": "المنطقة/الجهة",
+    "address": "العنوان",
+    "hotelMeca": "مكة",
+    "hotelMedina": "المدينة",
+    "availableFields": "الحقول المتاحة",
+    "streetView": "عرض الشارع",
+    "satelliteView": "عرض القمر الصناعي",
+    "terrainView": "عرض التضاريس",
+    "reload": "تحديث",
+    "searchingLocation": "جاري البحث عن الموقع...",
+    "noLocationData": "لا توجد بيانات موقع متاحة",
+    "locationNotFound": "الموقع غير موجود. عرض الخريطة الافتراضية.",
+    "generalError": "خطأ في تحميل الموقع",
+    "noPostData": "لا توجد بيانات منشور متاحة",
+    "loading": "جاري تحميل الخريطة...",
+    "unnamedLocation": "الوجهة"
+  },
+  "common": {
+    "back": "رجوع"
+  }
+}

@@ -1,0 +1,269 @@
+{
+  
+  
+        "destinoViaje": "وجهة الرحلة",
+        "selectDestination": "اختر الوجهة",
+        "destinosArabia": "وجهات السعودية والشرق الأوسط",
+        "destinosTurquia": "وجهات تركيا",
+        "destinosAsia": "وجهات آسيا",
+        "destinosEuropa": "وجهات أوروبا",
+        "destinosAmerica": "وجهات أمريكا",
+        "destinosAfrica": "وجهات أفريقيا",
+        
+        "cities": {
+          "Dubai": "دبي",
+          "Abu Dhabi": "أبو ظبي",
+          "Sharjah": "الشارقة",
+          "El Cairo": "القاهرة",
+          "Sharm El Sheikh": "شرم الشيخ",
+          "Alejandría": "الإسكندرية",
+          "Túnez": "تونس",
+          "Sousse": "سوسة",
+          "Djerba": "جربة",
+          "Hammamet": "الحمامات",
+          "Amán": "عمان",
+          "Aqaba": "العقبة",
+          "Petra": "البتراء",
+          "Doha": "الدوحة",
+          "Manama": "المنامة",
+          "Mascate": "مسقط",
+          "Salalah": "صلالة",
+          "Beirut": "بيروت",
+          "Trípoli": "طرابلس",
+          
+          "Estambul": "إسطنبول",
+          "Ankara": "أنقرة",
+          "Esmirna": "إزمير",
+          "Antalya": "أنطاليا",
+          "Bursa": "بورصة",
+          "Konya": "قونية",
+          "Trabzon": "طرابزون",
+          "Capadocia": "كبادوكيا",
+          "Pamukkale": "باموكالي",
+          "Éfeso": "أفسس",
+          
+          "Kuala Lumpur": "كوالالمبور",
+          "Langkawi": "لانكاوي",
+          "Penang": "بينانغ",
+          "Bangkok": "بانكوك",
+          "Phuket": "بوكيت",
+          "Chiang Mai": "تشيانغ مي",
+          "Singapur": "سنغافورة",
+          "Bali": "بالي",
+          "Yakarta": "جاكرتا",
+          "Seúl": "سيول",
+          
+          "París": "باريس",
+          "Lyon": "ليون",
+          "Marsella": "مرسيليا",
+          "Londres": "لندن",
+          "Manchester": "مانشستر",
+          "Roma": "روما",
+          "Milán": "ميلانو",
+          "Venecia": "البندقية",
+          "Madrid": "مدريد",
+          "Barcelona": "برشلونة",
+          "Berlín": "برلين",
+          "Múnich": "ميونخ",
+          "Ámsterdam": "أمستردام",
+          "Bruselas": "بروكسل",
+          "Ginebra": "جنيف",
+          "Zúrich": "زيورخ",
+          
+          "Nueva York": "نيويورك",
+          "Los Ángeles": "لوس أنجلوس",
+          "Miami": "ميامي",
+          "Las Vegas": "لاس فيغاس",
+          "Toronto": "تورونتو",
+          "Montreal": "مونتريال",
+          "Vancouver": "فانكوفر",
+          
+          "Casablanca": "الدار البيضاء",
+          "Marrakech": "مراكش",
+          "Tánger": "طنجة",
+          "Dakar": "داكار",
+          "Nairobi": "نيروبي",
+          "Ciudad del Cabo": "كيب تاون"
+        },
+      
+   
+    "validation_images_size": "يجب ألا يتجاوز حجم الصورة/الفيديو 5 ميجابايت",
+ 
+    
+    
+        "select_option": "اختر خيار",
+        "prix_adulte": "سعر البالغ",
+        "prix_enfant": "سعر الطفل",
+        "prix_bebe": "سعر الرضيع",
+        "prix_adulte_placeholder": "سعر للبالغ",
+        "prix_enfant_placeholder": "سعر للطفل",
+        "prix_bebe_placeholder": "سعر للرضيع",
+        "superficie": "المساحة (م²)",
+        "superficie_placeholder": "المساحة بالمتر المربع",
+        "etage": "الطابق",
+        "etage_placeholder": "رقم الطابق",
+        "capacite_personnes": "السعة (أشخاص)",
+        "capacite_placeholder": "عدد الأشخاص",
+        "nombre_chambres": "عدد الغرف",
+        "nombre_chambres_placeholder": "عدد الغرف",
+        "nombre_salles_bain": "عدد دورات المياه",
+        "nombre_salles_bain_placeholder": "عدد دورات المياه",
+        "check_in": "وقت الوصول",
+        "check_out": "وقت المغادرة",
+        "tarif_nuit": "السعر لليلة (€)",
+        "tarif_nuit_placeholder": "السعر لليلة",
+        "langues_guide": "لغة المرشد",
+    
+    
+    "voyage": {
+        "destinations_internationales": "الوجهات الدولية",
+        "dates_duree": "تواريخ ومدة الرحلة",
+        "transport_deplacements": "النقل والتنقلات",
+        "hebergement_pension": "الإقامة ونظام الطعام",
+        "activites_services": "الأنشطة والخدمات المضمنة",
+        "tarifs_conditions": "الأسعار والشروط",
+        "services_inclus": "الخدمات المضمنة في الباقة",
+        "activites_proposees": "الأنشطة المقترحة"
+    },
+    
+    "location": {
+        "informations_logement": "معلومات السكن",
+        "equipements_services": "التجهيزات والخدمات",
+        "chambres_salles_bain": "الغرف ودورات المياه",
+        "disponibilite_tarifs": "التوافر والأسعار"
+    },
+    
+    "hadj": {
+        "destination_peletinage": "وجهة الحج",
+        "dates_peletinage": "تواريخ الحج",
+        "transport_hebergement": "النقل والإقامة",
+        "services_spirituels": "الخدمات الروحية",
+        "services_religieux": "الخدمات الدينية المضمنة",
+        "documents_requis": "المستندات المطلوبة",
+        "documents_necessaires": "المستندات الضرورية",
+        "tarifs_conditions": "الأسعار والشروط",
+        "type_peletinage": "نوع الحج",
+        "niveau_confort": "مستوى الراحة"
+    },
+    
+    "services": {
+        "visite_guidee": "جولة بإرشاد",
+        "repas": "الوجبات مشمولة",
+        "transfert": "النقل من المطار",
+        "assistance": "مساعدة 24/7",
+        "assurance": "تأمين السفر",
+        "guide_religieux": "مرشد ديني",
+        "cours_rituels": "دروس الشعائر",
+        "assistance_ihram": "مساعدة في الإحرام",
+        "groupe_etude": "مجموعة دراسة",
+        "prieres_collectives": "صلاة جماعية"
+    },
+    
+    "activites": {
+        "excursion": "الجولات",
+        "plongee": "الغوص",
+        "randonnee": "المشي لمسافات طويلة",
+        "shopping": "التسوق",
+        "culture": "الجولات الثقافية"
+    },
+    
+    "langues": {
+        "arabe": "العربية",
+        "francais": "الفرنسية",
+        "anglais": "الإنجليزية",
+        "berbere": "الأمازيغية"
+    },
+    
+    "documents": {
+        "passeport": "جواز السفر",
+        "photos_identite": "صور شخصية",
+        "certificat_vaccination": "شهادة التطعيم",
+        "reservation_hotel": "حجز الفندق",
+        "billet_avion": "تذكرة الطائرة"
+    },
+    
+    "equipements": {
+        "wifi_gratuit": "واي فاي مجاني",
+        "climatisation": "تكييف",
+        "cuisine_equipee": "مطبخ مجهز",
+        "television": "تلفزيون",
+        "piscine": "مسبح",
+        "parking": "موقف سيارات",
+        "animaux_acceptes": "مسموح بالحيوانات",
+        "menage_inclus": "التنظيف مشمول"
+    },
+    
+    "types_voyage": {
+        "hadj": "حج",
+        "omra": "عمرة",
+        "hadj_omra": "حج وعمرة"
+    },
+    
+    "niveaux_confort": {
+        "economique": "اقتصادي",
+        "standard": "قياسي",
+        "confort": "مريح",
+        "luxe": "فاخر"
+    },
+ 
+  
+  
+  
+  
+  
+  
+    "visa_hajj_omra": "تأشيرة الحج/العمرة",
+    "hebergement_haram": "الإقامة قرب الحرمين",
+    "guide_religieux": "مرشد ديني", 
+    "transport_complet": "النقل الكامل",
+    "assistance_medicale": "المساعدة الطبية",
+    "zamzam_kit": "طرد زمزم وحقيبة الحاج",
+  
+  
+  "select_category_title": "📋 اختر فئة",
+  "select_category_message": "اختر بين رحلة منظمة، إيجار عطلات أو حج وعمرة",
+
+ 
+    "edit_title": "تعديل الإعلان",
+    "create_title": "إنشاء إعلان جديد",
+    "modification": "جاري التعديل",
+    "button_update": "تحديث",
+    "button_publish": "نشر الإعلان",
+    "button_cancel": "إلغاء",
+
+    "validation_category_required": "يرجى اختيار فئة",
+    "validation_wilaya_required": "يرجى اختيار الولاية والبلدية",
+    "validation_images_required": "يرجى إضافة صورة واحدة على الأقل",
+    "success_update": "تم تحديث الإعلان بنجاح!",
+    "success_create": "تم إنشاء الإعلان بنجاح!",
+    "error_publication": "خطأ أثناء النشر",
+
+    "service_visite_guidee": "جولة بإرشاد",
+    "service_repas": "وجبات مشمولة",
+    "service_transfert": "نقل من المطار",
+    "service_assistance": "مساعدة 24/7",
+    "service_assurance": "تأمين السفر",
+    "service_guide_religieux": "مرشد ديني",
+    "service_cours_rituels": "دروس الشعائر",
+    "service_assistance_ihram": "مساعدة الإحرام",
+    "service_groupe_etude": "مجموعة دراسة",
+    "service_prieres_collectives": "صلوات جماعية",
+
+    "activite_excursion": "رحلات",
+    "activite_plongee": "غوص",
+    "activite_randonnee": "تسلق",
+    "activite_shopping": "تسوق",
+    "activite_culture": "أنشطة ثقافية",
+
+    "langue_arabe": "العربية",
+    "langue_francais": "الفرنسية",
+    "langue_anglais": "الإنجليزية",
+    "langue_berbere": "الأمازيغية",
+
+    "document_passeport": "جواز السفر",
+    "document_photos_identite": "صور شخصية",
+    "document_certificat_vaccination": "شهادة التلقيح",
+    "document_reservation_hotel": "حجز الفندق",
+    "document_billet_avion": "تذكرة الطائرة"
+  }
+ 

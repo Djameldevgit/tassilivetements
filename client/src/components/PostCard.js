@@ -1,0 +1,18 @@
+import React from 'react';
+import CardBodyCarousel from './home/post_card/CardBodyCarousel';
+import CardBodyTitle from './home/post_card/CardBodyTitle';
+ 
+const PostCard = ({ post }) => {
+    return (
+        <div>
+ 
+
+            <CardBodyTitle post={post} />
+
+            <CardBodyCarousel post={post} />
+         
+        </div>
+    );
+};
+
+export default PostCard;

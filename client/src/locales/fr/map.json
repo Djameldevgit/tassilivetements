@@ -1,0 +1,29 @@
+{
+  "map": {
+    "locationTitle": "Localisation sur la Carte",
+    "destination": "Destination",
+    "destinationInfo": "Informations de destination",
+    "usedForSearch": "Utilisé pour la recherche",
+    "hotelName": "Hôtel",
+    "city": "Ville",
+    "zoneRegion": "Zone/Région",
+    "address": "Adresse",
+    "hotelMeca": "Mecque",
+    "hotelMedina": "Médine",
+    "availableFields": "Champs disponibles",
+    "streetView": "Vue Rue",
+    "satelliteView": "Vue Satellite",
+    "terrainView": "Vue Terrain",
+    "reload": "Actualiser",
+    "searchingLocation": "Recherche de la localisation...",
+    "noLocationData": "Aucune donnée de localisation disponible",
+    "locationNotFound": "Localisation non trouvée. Affichage de la carte par défaut.",
+    "generalError": "Erreur lors du chargement de la localisation",
+    "noPostData": "Aucune donnée de publication disponible",
+    "loading": "Chargement de la carte...",
+    "unnamedLocation": "Destination"
+  },
+  "common": {
+    "back": "Retour"
+  }
+}

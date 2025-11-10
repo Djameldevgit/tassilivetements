@@ -1,0 +1,151 @@
+{
+  
+ 
+    "search": {
+      "categories": {
+        "organizedTrip": "Voyage Organisé",
+        "vacationRental": "Location Vacances",
+        "hajjUmrah": "Hadj & Omra"
+      },
+      "values": {
+        "voyageOrganise": "Voyage Organisé",
+        "locationVacances": "Location Vacances", 
+        "hadjOmra": "Hadj & Omra"
+      },
+      "labels": {
+        "category": "Catégorie",
+        "destination": "Destination",
+        "destinationOrganized": "Destination (Voyages Organisés)",
+        "destinationRental": "Destination (Location Vacances)",
+        "destinationHajj": "Destination (Hadj & Omra)",
+        "startDate": "Date de Départ Min",
+        "endDate": "Date de Départ Max", 
+        "hotelSearch": "Recherche par Hôtel",
+        "hotel": "Hôtel",
+        "minPrice": "Prix Minimum",
+        "maxPrice": "Prix Maximum",
+        "from": "De",
+        "to": "À",
+        "activeFilters": "Filtres actifs",
+        "smartSearch": "Recherche Intelligente",
+        "latestTrips": "Derniers Voyages",
+        "filter": "filtre",
+        "filters": "filtres"
+      },
+      "placeholders": {
+        "allCategories": "Toutes les catégories",
+        "selectCategoryFirst": "Sélectionnez d'abord une catégorie",
+        "hotelName": "Nom de l'hôtel...",
+        "minPrice": "Min...",
+        "maxPrice": "Max..."
+      },
+      "buttons": {
+      "hideAdvanced": "Masquer la recherche avancée",
+      "showAdvanced": "Recherche avancée", 
+      "search": "Rechercher",
+      "latestTrips": "Derniers Voyages",
+      "clearAll": "Effacer",
+      "searching": "Recherche..."
+    },
+      "states": {
+        "searching": "Recherche...",
+        "applyingFilters": "Application des filtres...",
+        "pleaseWait": "Veuillez patienter..."
+      },
+      "results": {
+        "smartSearchResults": "Recherche intelligente",
+        "filtersApplied": "Filtres appliqués",
+        "resultsFound": "résultats trouvés",
+        "noSmartResults": "Aucun résultat trouvé avec la recherche intelligente"
+      },
+      "errors": {
+        "traditionalSearchError": "Error en búsqueda tradicional",
+        "searchError": "Erreur de recherche"
+      }
+    },
+ 
+  
+  "labels": {
+    "startDate": "Date de Début",
+    "endDate": "Date de Fin", 
+    "from": "De",
+    "to": "À",
+    "hotelSearch": "Recherche par Hôtel",
+    "hotel": "Hôtel",
+   
+    "minPrice": "Prix Minimum",
+    "maxPrice": "Prix Maximum",
+
+    "category": "Catégorie",
+    "destination": "Destination",
+    "destinationOrganized": "Destination (Voyages Organisés)",
+    "destinationRental": "Destination (Location Vacances)",
+    "destinationHajj": "Destination (Hadj & Omra)",
+    "departureDate": "Date de Départ",
+    "activeFilters": "Filtres actifs",
+    "smartSearch": "Recherche Intelligente",
+    "latestTrips": "Derniers Voyages",
+    "date": "Date",
+    "filter": "filtre",
+    "filters": "filtres"
+  },
+  
+  "placeholders": {
+    "allCategories": "Toutes les catégories",
+    "selectCategoryFirst": "Sélectionnez d'abord une catégorie",
+    "hotelName": "Nom de l'hôtel...",
+    "minPrice": "Min...",
+    "maxPrice": "Max..."
+  },
+  
+  "buttons": {
+    "searchWithFilters": "Rechercher avec Filtres",
+    "searching": "Recherche...",
+    "latestTrips": "Derniers Voyages",
+    "clearAll": "Tout Effacer",
+    "search": "بحث",
+    "showAdvanced": "بحث متقدم", 
+    "hideAdvanced": "إخفاء البحث المتقدم"
+
+
+  },
+  
+  "results": {
+    "smartSearchResults": "Recherche intelligente",
+    "filtersApplied": "Filtres appliqués",
+    "resultsFound": "résultats trouvés",
+    "noSmartResults": "Aucun résultat trouvé avec la recherche intelligente"
+  },
+  
+  "states": {
+    "searching": "Recherche...",
+    "applyingFilters": "Application des filtres...",
+    "pleaseWait": "Veuillez patienter..."
+  },
+  
+  "errors": {
+    "searchError": "Erreur de recherche"
+  },
+    "title": "Rechercher des Voyages",
+    "subtitle": "Trouvez votre prochaine destination parfaite",
+    "searchLabel": "Rechercher des agences ou voyages",
+    "searchPlaceholder": "Rechercher par nom, agence...",
+    "travelAgenciesFound": "Agences de Voyage Trouvées",
+    "searchingAgencies": "Recherche d'agences...",
+    
+    "filters": {
+      "title": "Filtres de Recherche",
+      "subCategory": "Type de Voyage",
+      "selectSubCategory": "Sélectionner le type de voyage",
+      "destination": "Destination",
+      "selectDestination": "Sélectionner une destination",
+      "wilaya": "Wilaya/Région",
+      "wilayaPlaceholder": "Ex: Alger, Oran, Constantine...",
+      "nationalDestinations": "Destinations Nationales",
+      "internationalDestinations": "Destinations Internationales"
+    }
+    
+   
+   
+  }
+ 
