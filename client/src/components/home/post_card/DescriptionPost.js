@@ -1,24 +1,98 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaComment, FaPhone } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { MESS_TYPES } from '../../../redux/actions/messageAction';
+import { GLOBALTYPES } from '../../../redux/actions/globalTypes';
 
 const DescriptionPost = ({ post }) => {
     const { t, i18n } = useTranslation(['descripcion', 'categories']);
+    const { auth, message } = useSelector(state => state);
+    const dispatch = useDispatch();
+    const history = useHistory();
     const isRTL = i18n.language === 'ar';
     const [readMore, setReadMore] = useState(false);     
     
-    // 🎨 COLORES MEJORADOS - SIN AZULES EN TEXTO
+    // 🎨 COLORES VIBRANTES PARA TIENDA DE ROPA
     const styles = {
-        primaryColor: "#1e293b",  // ✅ Azul reemplazado por gris oscuro
-        accentColor: "#0f172a",   // ✅ Azul reemplazado por negro azulado
-        successColor: "#065f46",  // ✅ Verde oscuro
-        warningColor: "#92400e",  // ✅ Ámbar oscuro
-        purpleColor: "#7c3aed",   // ✅ Violeta oscuro
-        textDark: "#000000",      // ✅ Negro puro para mejor contraste
-        textMedium: "#1f2937",    // ✅ Gris muy oscuro
-        textLight: "#374151",     // ✅ Gris oscuro
-        mainGradient: "linear-gradient(135deg, #1e293b 0%, #7c3aed 100%)", // ✅ Sin azul
-        contactGradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", // ✅ Sin azul
-        cardShadow: "0 2px 8px rgba(0, 0, 0, 0.12)"
+        primaryColor: "#7c3aed",     // Violeta vibrante
+        accentColor: "#ec4899",      // Rosa fucsia
+        successColor: "#10b981",     // Verde esmeralda
+        warningColor: "#f59e0b",     // Ámbar dorado
+        purpleColor: "#8b5cf6",      // Violeta claro
+        textDark: "#000000",         // Negro puro
+        textMedium: "#1f2937",       // Gris muy oscuro
+        textLight: "#ffffff",        // Blanco para contraste
+        mainGradient: "linear-gradient(135deg, #ec4899 0%, #7c3aed 100%)", // Rosa a violeta
+        contactGradient: "linear-gradient(135deg, #f59e0b 0%, #ec4899 100%)", // Dorado a rosa
+        cardShadow: "0 4px 12px rgba(0, 0, 0, 0.15)"
+    };
+
+    // LÓGICA DEL CHAT - IGUAL QUE CARDFOOTER
+    const handleChatWithOwner = () => {
+        if (!auth.user) {
+            dispatch({ 
+                type: GLOBALTYPES.ALERT, 
+                payload: { error: 'Veuillez vous connecter pour démarrer une conversation' } 
+            });
+            return;
+        }
+
+        if (!post.user || !post.user._id) {
+            dispatch({ 
+                type: GLOBALTYPES.ALERT, 
+                payload: { error: 'Impossible de contacter ce vendeur' } 
+            });
+            return;
+        }
+
+        try {
+            const existingConversation = message.data.find(item => item._id === post.user._id);
+            
+            if (existingConversation) {
+                history.push(`/message/${post.user._id}`);
+                return;
+            }
+
+            dispatch({
+                type: MESS_TYPES.ADD_USER,
+                payload: { 
+                    ...post.user, 
+                    text: '', 
+                    media: [],
+                    postTitle: post.title || 'Produit de mode',
+                    postId: post._id
+                }
+            });
+
+            history.push(`/message/${post.user._id}`);
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { success: 'Conversation démarrée avec le vendeur' }
+            });
+
+        } catch (error) {
+            console.error('Erreur lors du démarrage de la conversation:', error);
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload: { error: 'Erreur lors du démarrage de la conversation' }
+            });
+        }
+    };
+
+    const handleCallOwner = () => {
+        if (!post.phone) {
+            dispatch({ 
+                type: GLOBALTYPES.ALERT, 
+                payload: { error: 'Numéro de téléphone non disponible' } 
+            });
+            return;
+        }
+        
+        if (window.confirm(`Voulez-vous appeler ${post.phone} ?`)) {
+            window.location.href = `tel:${post.phone}`;
+        }
     };
 
     // 🏷️ Información de categoría para ropa
@@ -27,13 +101,13 @@ const DescriptionPost = ({ post }) => {
             "Vêtements Homme": {
                 icon: "👔",
                 title: t('categories.mensClothing', 'Vêtements Homme'),
-                color: "#1e293b",
+                color: "#3b82f6",
                 description: t('categories.mensDescription', 'Style et élégance pour hommes')
             },
             "Vêtements Femme": {
                 icon: "👗",
                 title: t('categories.womensClothing', 'Vêtements Femme'),
-                color: "#7c3aed",
+                color: "#ec4899",
                 description: t('categories.womensDescription', 'Mode et tendances pour femmes')
             },
             "Chaussures Homme": {
@@ -45,25 +119,25 @@ const DescriptionPost = ({ post }) => {
             "Chaussures Femme": {
                 icon: "👠",
                 title: t('categories.womensShoes', 'Chaussures Femme'),
-                color: "#991b1b",
+                color: "#dc2626",
                 description: t('categories.womensShoesDescription', 'Chaussures élégantes pour femmes')
             },
             "Garçons": {
                 icon: "👦",
                 title: t('categories.boys', 'Vêtements Garçons'),
-                color: "#1e40af",
+                color: "#3b82f6",
                 description: t('categories.boysDescription', 'Vêtements pratiques pour garçons')
             },
             "Filles": {
                 icon: "👧",
                 title: t('categories.girls', 'Vêtements Filles'),
-                color: "#c026d3",
+                color: "#ec4899",
                 description: t('categories.girlsDescription', 'Vêtements mignons pour filles')
             },
             "Bébé": {
                 icon: "👶",
                 title: t('categories.baby', 'Vêtements Bébé'),
-                color: "#0d9488",
+                color: "#f59e0b",
                 description: t('categories.babyDescription', 'Vêtements doux pour bébés')
             }
         };
@@ -76,29 +150,29 @@ const DescriptionPost = ({ post }) => {
         };
     };
 
-    // ✨ HIGHLIGHT MEJORADO - SIN COLOR AZUL
+    // ✨ HIGHLIGHT MEJORADO
     const Highlight = ({ children, type = "default" }) => {
         const typeStyles = {
             default: { 
-                backgroundColor: '#f3f4f6', // ✅ Gris claro en lugar de azul
-                color: '#1f2937',  // ✅ Negro/gris oscuro
-                fontWeight: '700'  // ✅ Negrita
+                backgroundColor: '#f3f4f6',
+                color: '#1f2937',
+                fontWeight: '700'
             },
             price: { 
                 backgroundColor: '#d1fae5', 
-                color: '#065f46',  // ✅ Verde muy oscuro
-                fontWeight: '800', // ✅ Extra negrita
+                color: '#065f46',
+                fontWeight: '800',
                 border: '1px solid #10b981'
             },
             feature: { 
                 backgroundColor: '#fef3c7', 
-                color: '#92400e',  // ✅ Ámbar muy oscuro
-                fontWeight: '700'  // ✅ Negrita
+                color: '#92400e',
+                fontWeight: '700'
             },
             contact: { 
-                backgroundColor: '#f3f4f6', // ✅ Gris claro en lugar de azul
-                color: '#1f2937',  // ✅ Negro/gris oscuro
-                fontWeight: '800'  // ✅ Extra negrita
+                backgroundColor: '#f3f4f6',
+                color: '#1f2937',
+                fontWeight: '800'
             }
         };
 
@@ -107,10 +181,10 @@ const DescriptionPost = ({ post }) => {
         return (
             <span style={{
                 ...style,
-                padding: '4px 10px', // ✅ Padding aumentado
+                padding: '4px 10px',
                 borderRadius: '6px',
                 margin: '0 3px',
-                fontSize: '15px', // ✅ Tamaño de fuente aumentado
+                fontSize: '15px',
                 display: 'inline-block',
                 wordBreak: 'break-word',
                 maxWidth: '100%',
@@ -122,7 +196,7 @@ const DescriptionPost = ({ post }) => {
         );
     };
 
-    // 🆕 FIELDDISPLAY MEJORADO - TEXTO MÁS GRANDE Y NEGRITA
+    // 🆕 FIELDDISPLAY MEJORADO
     const FieldDisplay = ({ label, value, icon, type = "text" }) => {
         if (!value && type !== "boolean") return null;
 
@@ -130,23 +204,23 @@ const DescriptionPost = ({ post }) => {
             <div style={{
                 display: 'flex',
                 alignItems: 'flex-start',
-                gap: '12px', // ✅ Espacio aumentado
-                marginBottom: '12px', // ✅ Margen aumentado
-                padding: '10px 0', // ✅ Padding aumentado
+                gap: '12px',
+                marginBottom: '12px',
+                padding: '10px 0',
                 borderBottom: '1px solid #e5e7eb',
                 flexDirection: isRTL ? 'row-reverse' : 'row',
                 width: '100%',
                 wordBreak: 'break-word'
             }}>
                 <span style={{
-                    fontWeight: '800',  // ✅ Extra negrita
-                    color: '#000000',   // ✅ Negro puro para mejor contraste
-                    minWidth: isRTL ? 'auto' : '140px', // ✅ Ancho aumentado
-                    maxWidth: isRTL ? '160px' : '160px', // ✅ Ancho aumentado
-                    fontSize: '16px', // ✅ Tamaño de fuente aumentado
+                    fontWeight: '800',
+                    color: '#000000',
+                    minWidth: isRTL ? 'auto' : '140px',
+                    maxWidth: isRTL ? '160px' : '160px',
+                    fontSize: '16px',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px', // ✅ Espacio aumentado
+                    gap: '8px',
                     flexShrink: 0,
                     textAlign: isRTL ? 'right' : 'left',
                     lineHeight: '1.5'
@@ -154,9 +228,9 @@ const DescriptionPost = ({ post }) => {
                     {isRTL ? <>{label} {icon}</> : <>{icon} {label}</>}:
                 </span>
                 <span style={{ 
-                    fontSize: '16px', // ✅ Tamaño de fuente aumentado
-                    color: '#1f2937',  // ✅ Negro/gris oscuro
-                    fontWeight: '600',  // ✅ Semi-negrita
+                    fontSize: '16px',
+                    color: '#1f2937',
+                    fontWeight: '600',
                     flex: 1,
                     textAlign: isRTL ? 'right' : 'left',
                     wordBreak: 'break-word',
@@ -165,10 +239,10 @@ const DescriptionPost = ({ post }) => {
                 }}>
                     {type === "boolean" ? (
                         <span style={{
-                            padding: '6px 12px', // ✅ Padding aumentado
+                            padding: '6px 12px',
                             borderRadius: '6px',
-                            fontSize: '14px', // ✅ Tamaño de fuente aumentado
-                            fontWeight: '700', // ✅ Negrita
+                            fontSize: '14px',
+                            fontWeight: '700',
                             backgroundColor: value ? '#d1fae5' : '#fee2e2',
                             color: value ? '#065f46' : '#991b1b',
                             display: 'inline-block'
@@ -183,7 +257,7 @@ const DescriptionPost = ({ post }) => {
         );
     };
 
-    // 💰 PRICEDISPLAY MEJORADO - TEXTO MÁS GRANDE
+    // 💰 PRICEDISPLAY MEJORADO
     const PriceDisplay = ({ label, value, currency = "DZD" }) => {
         if (!value) return null;
 
@@ -192,29 +266,29 @@ const DescriptionPost = ({ post }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '14px 16px', // ✅ Padding aumentado
+                padding: '14px 16px',
                 backgroundColor: '#ecfdf5',
                 borderRadius: '8px',
                 border: '2px solid #10b981',
-                marginBottom: '12px', // ✅ Margen aumentado
+                marginBottom: '12px',
                 flexDirection: isRTL ? 'row-reverse' : 'row',
                 width: '100%',
                 boxSizing: 'border-box',
                 boxShadow: '0 2px 4px rgba(16, 185, 129, 0.15)'
             }}>
                 <span style={{ 
-                    fontWeight: '800',  // ✅ Extra negrita
-                    color: '#000000',   // ✅ Negro puro
-                    fontSize: '16px', // ✅ Tamaño de fuente aumentado
+                    fontWeight: '800',
+                    color: '#000000',
+                    fontSize: '16px',
                     textAlign: isRTL ? 'right' : 'left'
                 }}>
                     {isRTL ? <>{label} 💰</> : <>💰 {label}</>}:
                 </span>
                 <div style={{ textAlign: isRTL ? 'left' : 'right' }}>
                     <div style={{ 
-                        fontSize: '20px',  // ✅ Tamaño aumentado
-                        fontWeight: '900',  // ✅ Extra negrita
-                        color: '#065f46',   // ✅ Verde muy oscuro
+                        fontSize: '20px',
+                        fontWeight: '900',
+                        color: '#065f46',
                         whiteSpace: 'nowrap',
                         textShadow: '0 1px 2px rgba(0,0,0,0.1)'
                     }}>
@@ -225,22 +299,22 @@ const DescriptionPost = ({ post }) => {
         );
     };
 
-    // 📋 ARRAYDISPLAY MEJORADO - TEXTO MÁS GRANDE
+    // 📋 ARRAYDISPLAY MEJORADO
     const ArrayDisplay = ({ label, items, icon }) => {
         if (!items || items.length === 0) return null;
 
         return (
-            <div style={{ marginBottom: '16px', width: '100%' }}> {/* ✅ Margen aumentado */}
+            <div style={{ marginBottom: '16px', width: '100%' }}>
                 <div style={{
-                    fontWeight: '800',  // ✅ Extra negrita
-                    color: '#000000',   // ✅ Negro puro
-                    marginBottom: '12px', // ✅ Margen aumentado
-                    fontSize: '18px', // ✅ Tamaño de fuente aumentado
+                    fontWeight: '800',
+                    color: '#000000',
+                    marginBottom: '12px',
+                    fontSize: '18px',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px', // ✅ Espacio aumentado
+                    gap: '8px',
                     flexDirection: isRTL ? 'row-reverse' : 'row',
-                    padding: '8px 0', // ✅ Padding aumentado
+                    padding: '8px 0',
                     borderBottom: '2px solid #e5e7eb'
                 }}>
                     {isRTL ? <>{label} {icon}</> : <>{icon} {label}</>}:
@@ -248,21 +322,21 @@ const DescriptionPost = ({ post }) => {
                 <div style={{
                     display: 'flex',
                     flexWrap: 'wrap',
-                    gap: '10px', // ✅ Espacio aumentado
+                    gap: '10px',
                     justifyContent: isRTL ? 'flex-end' : 'flex-start',
-                    marginTop: '10px' // ✅ Margen aumentado
+                    marginTop: '10px'
                 }}>
                     {items.map((item, index) => (
                         <span key={index} style={{
-                            backgroundColor: '#f3f4f6', // ✅ Gris claro en lugar de azul
-                            color: '#1f2937', // ✅ Negro/gris oscuro
-                            padding: '10px 14px', // ✅ Padding aumentado
+                            backgroundColor: '#f3f4f6',
+                            color: '#1f2937',
+                            padding: '10px 14px',
                             borderRadius: '8px',
-                            fontSize: '15px', // ✅ Tamaño de fuente aumentado
-                            fontWeight: '700',  // ✅ Negrita
+                            fontSize: '15px',
+                            fontWeight: '700',
                             wordBreak: 'break-word',
                             textAlign: isRTL ? 'right' : 'left',
-                            border: '1px solid #d1d5db', // ✅ Borde gris
+                            border: '1px solid #d1d5db',
                             boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
                         }}>
                             {isRTL ? <>{item} ✅</> : <>✅ {item}</>}
@@ -273,7 +347,7 @@ const DescriptionPost = ({ post }) => {
         );
     };
 
-    // 🔹 SECCIÓN 1: ANUNCIO PRINCIPAL - TEXTO MÁS GRANDE
+    // 🔹 SECCIÓN 1: ANUNCIO PRINCIPAL - COLORES VIBRANTES
     const generateMainAnnouncement = () => {
         const categoryInfo = getCategoryInfo();
 
@@ -281,70 +355,80 @@ const DescriptionPost = ({ post }) => {
             <div style={{
                 background: styles.mainGradient,
                 color: 'white',
-                padding: '20px', // ✅ Padding aumentado
-                borderRadius: '12px',
-                marginBottom: '16px', // ✅ Margen aumentado
+                padding: '24px 20px',
+                borderRadius: '16px',
+                marginBottom: '20px',
                 textAlign: 'center',
                 width: '100%',
                 boxSizing: 'border-box',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                boxShadow: '0 8px 25px rgba(124, 58, 237, 0.3)',
+                border: '2px solid rgba(255,255,255,0.2)'
             }}>
-                <div style={{ fontSize: '36px', marginBottom: '12px' }}> {/* ✅ Tamaño aumentado */}
+                <div style={{ 
+                    fontSize: '48px', 
+                    marginBottom: '16px',
+                    filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))'
+                }}>
                     {categoryInfo.icon}
                 </div>
                 <h1 style={{
-                    margin: '0 0 10px 0',
-                    fontSize: '24px', // ✅ Tamaño aumentado
-                    fontWeight: '900',  // ✅ Extra negrita
+                    margin: '0 0 16px 0',
+                    fontSize: '28px',
+                    fontWeight: '900',
                     wordBreak: 'break-word',
-                    textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                    textShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                    letterSpacing: '0.5px'
                 }}>
-                    {t('excitingNews', '🎉 Nouvel Article de Mode !')}
+                    {t('excitingNews', '🎉 NOUVEAU ARRIVAGE !')}
                 </h1>
                 <p style={{
-                    fontSize: '17px', // ✅ Tamaño aumentado
-                    opacity: '0.98',
+                    fontSize: '18px',
+                    opacity: '0.95',
                     lineHeight: '1.6',
-                    marginBottom: '16px', // ✅ Margen aumentado
-                    padding: '0 12px', // ✅ Padding aumentado
+                    marginBottom: '20px',
+                    padding: '0 16px',
                     wordBreak: 'break-word',
-                    fontWeight: '600' // ✅ Negrita
+                    fontWeight: '600',
+                    textShadow: '0 1px 4px rgba(0,0,0,0.2)'
                 }}>
-                    <strong style={{ fontSize: '18px' }}>{post.category}</strong> {t('proudlyPresents', 'vous présente un')}
-                    <strong style={{ fontSize: '18px' }}> {categoryInfo.title}</strong> {t('carefullyDesigned', 'soigneusement sélectionné pour votre style.')}
+                    <strong style={{ fontSize: '20px', color: '#fef3c7' }}>{post.category}</strong> {t('proudlyPresents', 'vous présente un')}
+                    <strong style={{ fontSize: '20px', color: '#fef3c7' }}> {categoryInfo.title}</strong> {t('carefullyDesigned', 'soigneusement sélectionné pour votre style.')}
                 </p>
 
                 {/* Información clave */}
                 <div style={{
                     display: 'flex',
                     justifyContent: 'center',
-                    gap: '16px', // ✅ Espacio aumentado
+                    gap: '20px',
                     flexWrap: 'wrap',
-                    marginTop: '16px' // ✅ Margen aumentado
+                    marginTop: '20px'
                 }}>
                     {post.brand && (
                         <div style={{ 
                             textAlign: 'center', 
-                            minWidth: '160px', // ✅ Ancho aumentado
+                            minWidth: '160px',
                             flex: '1 1 auto', 
-                            maxWidth: '240px', // ✅ Ancho aumentado
-                            backgroundColor: 'rgba(255,255,255,0.15)',
-                            padding: '12px', // ✅ Padding aumentado
-                            borderRadius: '8px'
+                            maxWidth: '240px',
+                            backgroundColor: 'rgba(255,255,255,0.2)',
+                            padding: '16px',
+                            borderRadius: '12px',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(255,255,255,0.3)'
                         }}>
                             <div style={{ 
-                                fontSize: '14px', // ✅ Tamaño aumentado
+                                fontSize: '15px',
                                 opacity: '0.9',
-                                fontWeight: '700' // ✅ Negrita
+                                fontWeight: '700',
+                                marginBottom: '8px'
                             }}>
                                 {isRTL ? 'العلامة التجارية 🏷️' : '🏷️ Marque'}
                             </div>
                             <div style={{ 
-                                fontSize: '15px', // ✅ Tamaño aumentado
-                                fontWeight: '800',  // ✅ Extra negrita
+                                fontSize: '16px',
+                                fontWeight: '800',
                                 wordBreak: 'break-word',
-                                padding: '6px', // ✅ Padding aumentado
-                                marginTop: '6px' // ✅ Margen aumentado
+                                padding: '8px',
+                                textShadow: '0 1px 3px rgba(0,0,0,0.3)'
                             }}>
                                 {post.brand}
                             </div>
@@ -354,26 +438,29 @@ const DescriptionPost = ({ post }) => {
                     {post.condition && (
                         <div style={{ 
                             textAlign: 'center',
-                            minWidth: '140px', // ✅ Ancho aumentado
+                            minWidth: '140px',
                             flex: '1 1 auto',
-                            maxWidth: '240px', // ✅ Ancho aumentado
-                            backgroundColor: 'rgba(255,255,255,0.15)',
-                            padding: '12px', // ✅ Padding aumentado
-                            borderRadius: '8px'
+                            maxWidth: '240px',
+                            backgroundColor: 'rgba(255,255,255,0.2)',
+                            padding: '16px',
+                            borderRadius: '12px',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(255,255,255,0.3)'
                         }}>
                             <div style={{ 
-                                fontSize: '14px', // ✅ Tamaño aumentado
+                                fontSize: '15px',
                                 opacity: '0.9',
-                                fontWeight: '700' // ✅ Negrita
+                                fontWeight: '700',
+                                marginBottom: '8px'
                             }}>
                                 {isRTL ? 'الحالة ⭐' : '⭐ État'}
                             </div>
                             <div style={{
-                                fontSize: '15px', // ✅ Tamaño aumentado
-                                fontWeight: '800',  // ✅ Extra negrita
+                                fontSize: '16px',
+                                fontWeight: '800',
                                 wordBreak: 'break-word',
-                                padding: '6px', // ✅ Padding aumentado
-                                marginTop: '6px' // ✅ Margen aumentado
+                                padding: '8px',
+                                textShadow: '0 1px 3px rgba(0,0,0,0.3)'
                             }}>
                                 {post.condition}
                             </div>
@@ -383,24 +470,27 @@ const DescriptionPost = ({ post }) => {
                     {post.price && (
                         <div style={{ 
                             textAlign: 'center', 
-                            minWidth: '120px', // ✅ Ancho aumentado
+                            minWidth: '120px',
                             flex: '1 1 auto', 
-                            maxWidth: '180px', // ✅ Ancho aumentado
-                            backgroundColor: 'rgba(255,255,255,0.15)',
-                            padding: '12px', // ✅ Padding aumentado
-                            borderRadius: '8px'
+                            maxWidth: '180px',
+                            backgroundColor: 'rgba(255,255,255,0.2)',
+                            padding: '16px',
+                            borderRadius: '12px',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(255,255,255,0.3)'
                         }}>
                             <div style={{ 
-                                fontSize: '14px', // ✅ Tamaño aumentado
+                                fontSize: '15px',
                                 opacity: '0.9',
-                                fontWeight: '700' // ✅ Negrita
+                                fontWeight: '700',
+                                marginBottom: '8px'
                             }}>
                                 {isRTL ? 'السعر 💰' : '💰 Prix'}
                             </div>
                             <div style={{ 
-                                fontSize: '15px', // ✅ Tamaño aumentado
-                                fontWeight: '800', // ✅ Extra negrita
-                                marginTop: '6px' // ✅ Margen aumentado
+                                fontSize: '16px',
+                                fontWeight: '800',
+                                textShadow: '0 1px 3px rgba(0,0,0,0.3)'
                             }}>
                                 {post.price} {post.currency || 'DZD'}
                             </div>
@@ -411,16 +501,16 @@ const DescriptionPost = ({ post }) => {
         );
     };
 
-    // 🔹 SECCIÓN 2: DESCRIPCIÓN - TEXTO MÁS GRANDE
+    // 🔹 SECCIÓN 2: DESCRIPCIÓN
     const generateDescriptionSection = () => {
         if (!post.description) return null;
 
         return (
             <div style={{
                 backgroundColor: '#f8fafc',
-                padding: '18px', // ✅ Padding aumentado
+                padding: '18px',
                 borderRadius: '12px',
-                marginBottom: '16px', // ✅ Margen aumentado
+                marginBottom: '16px',
                 border: '2px solid #cbd5e1',
                 width: '100%',
                 boxSizing: 'border-box',
@@ -429,25 +519,25 @@ const DescriptionPost = ({ post }) => {
                 <h2 style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px', // ✅ Espacio aumentado
-                    marginBottom: '14px', // ✅ Margen aumentado
+                    gap: '10px',
+                    marginBottom: '14px',
                     color: styles.primaryColor,
-                    fontSize: '20px', // ✅ Tamaño aumentado
-                    fontWeight: '900',  // ✅ Extra negrita
+                    fontSize: '20px',
+                    fontWeight: '900',
                     flexDirection: isRTL ? 'row-reverse' : 'row',
                     borderBottom: '2px solid #cbd5e1',
-                    paddingBottom: '10px' // ✅ Padding aumentado
+                    paddingBottom: '10px'
                 }}>
                     {isRTL ? 'وصف المنتج 📝' : '📝 Description du Produit'}
                 </h2>
                 <div style={{
-                    fontSize: '16px', // ✅ Tamaño aumentado
+                    fontSize: '16px',
                     color: '#374151',
                     lineHeight: '1.7',
                     textAlign: isRTL ? 'right' : 'left',
                     wordBreak: 'break-word',
                     overflowWrap: 'break-word',
-                    fontWeight: '600'  // ✅ Negrita
+                    fontWeight: '600'
                 }}>
                     <span>
                         {
@@ -459,14 +549,14 @@ const DescriptionPost = ({ post }) => {
                     {post.description.length > 120 && (
                         <span
                             style={{
-                                color: '#1e293b',  // ✅ Sin azul
+                                color: styles.primaryColor,
                                 cursor: 'pointer',
-                                fontWeight: '800',  // ✅ Extra negrita
-                                marginLeft: isRTL ? '0' : '10px', // ✅ Margen aumentado
-                                marginRight: isRTL ? '10px' : '0', // ✅ Margen aumentado
-                                fontSize: '15px', // ✅ Tamaño aumentado
+                                fontWeight: '800',
+                                marginLeft: isRTL ? '0' : '10px',
+                                marginRight: isRTL ? '10px' : '0',
+                                fontSize: '15px',
                                 display: 'inline-block',
-                                marginTop: '8px', // ✅ Margen aumentado
+                                marginTop: '8px',
                                 textDecoration: 'underline'
                             }}
                             onClick={() => setReadMore(!readMore)}
@@ -481,14 +571,14 @@ const DescriptionPost = ({ post }) => {
         );
     };
 
-    // 🔹 SECCIÓN 3: INFO BÁSICA - TEXTO MÁS GRANDE
+    // 🔹 SECCIÓN 3: INFO BÁSICA
     const generateBasicInfoSection = () => {
         return (
             <div style={{
                 backgroundColor: '#eff6ff',
-                padding: '18px', // ✅ Padding aumentado
+                padding: '18px',
                 borderRadius: '12px',
-                marginBottom: '16px', // ✅ Margen aumentado
+                marginBottom: '16px',
                 border: '2px solid #93c5fd',
                 width: '100%',
                 boxSizing: 'border-box',
@@ -497,14 +587,14 @@ const DescriptionPost = ({ post }) => {
                 <h2 style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px', // ✅ Espacio aumentado
-                    marginBottom: '14px', // ✅ Margen aumentado
+                    gap: '10px',
+                    marginBottom: '14px',
                     color: styles.primaryColor,
-                    fontSize: '20px', // ✅ Tamaño aumentado
-                    fontWeight: '900', // ✅ Extra negrita
+                    fontSize: '20px',
+                    fontWeight: '900',
                     flexDirection: isRTL ? 'row-reverse' : 'row',
                     borderBottom: '2px solid #93c5fd',
-                    paddingBottom: '10px' // ✅ Padding aumentado
+                    paddingBottom: '10px'
                 }}>
                     {isRTL ? 'معلومات المنتج 🎯' : '🎯 Informations du Produit'}
                 </h2>
@@ -542,14 +632,14 @@ const DescriptionPost = ({ post }) => {
         );
     };
 
-    // 🔹 SECCIÓN 4: CARACTERÍSTICAS - TEXTO MÁS GRANDE
+    // 🔹 SECCIÓN 4: CARACTERÍSTICAS
     const generateFeaturesSection = () => {
         return (
             <div style={{
                 backgroundColor: '#f0fdf4',
-                padding: '18px', // ✅ Padding aumentado
+                padding: '18px',
                 borderRadius: '12px',
-                marginBottom: '16px', // ✅ Margen aumentado
+                marginBottom: '16px',
                 border: '2px solid #86efac',
                 width: '100%',
                 boxSizing: 'border-box',
@@ -558,14 +648,14 @@ const DescriptionPost = ({ post }) => {
                 <h2 style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px', // ✅ Espacio aumentado
-                    marginBottom: '14px', // ✅ Margen aumentado
+                    gap: '10px',
+                    marginBottom: '14px',
                     color: styles.successColor,
-                    fontSize: '20px', // ✅ Tamaño aumentado
-                    fontWeight: '900', // ✅ Extra negrita
+                    fontSize: '20px',
+                    fontWeight: '900',
                     flexDirection: isRTL ? 'row-reverse' : 'row',
                     borderBottom: '2px solid #86efac',
-                    paddingBottom: '10px' // ✅ Padding aumentado
+                    paddingBottom: '10px'
                 }}>
                     {isRTL ? 'المواصفات 📏' : '📏 Caractéristiques'}
                 </h2>
@@ -596,16 +686,16 @@ const DescriptionPost = ({ post }) => {
         );
     };
 
-    // 🔹 SECCIÓN 5: PRECIO - TEXTO MÁS GRANDE
+    // 🔹 SECCIÓN 5: PRECIO
     const generatePricingSection = () => {
         if (!post.price) return null;
 
         return (
             <div style={{
                 backgroundColor: '#fffbeb',
-                padding: '18px', // ✅ Padding aumentado
+                padding: '18px',
                 borderRadius: '12px',
-                marginBottom: '16px', // ✅ Margen aumentado
+                marginBottom: '16px',
                 border: '2px solid #fbbf24',
                 width: '100%',
                 boxSizing: 'border-box',
@@ -614,14 +704,14 @@ const DescriptionPost = ({ post }) => {
                 <h2 style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px', // ✅ Espacio aumentado
-                    marginBottom: '14px', // ✅ Margen aumentado
+                    gap: '10px',
+                    marginBottom: '14px',
                     color: styles.warningColor,
-                    fontSize: '20px', // ✅ Tamaño aumentado
-                    fontWeight: '900', // ✅ Extra negrita
+                    fontSize: '20px',
+                    fontWeight: '900',
                     flexDirection: isRTL ? 'row-reverse' : 'row',
                     borderBottom: '2px solid #fbbf24',
-                    paddingBottom: '10px' // ✅ Padding aumentado
+                    paddingBottom: '10px'
                 }}>
                     {isRTL ? 'التسعير 💰' : '💰 Tarification'}
                 </h2>
@@ -635,14 +725,14 @@ const DescriptionPost = ({ post }) => {
         );
     };
 
-    // 🔹 SECCIÓN 6: UBICACIÓN Y CONTACTO - TEXTO MÁS GRANDE
+    // 🔹 SECCIÓN 6: UBICACIÓN Y CONTACTO
     const generateLocationSection = () => {
         return (
             <div style={{
                 backgroundColor: '#faf5ff',
-                padding: '18px', // ✅ Padding aumentado
+                padding: '18px',
                 borderRadius: '12px',
-                marginBottom: '16px', // ✅ Margen aumentado
+                marginBottom: '16px',
                 border: '2px solid #e9d5ff',
                 width: '100%',
                 boxSizing: 'border-box',
@@ -651,14 +741,14 @@ const DescriptionPost = ({ post }) => {
                 <h2 style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px', // ✅ Espacio aumentado
-                    marginBottom: '14px', // ✅ Margen aumentado
+                    gap: '10px',
+                    marginBottom: '14px',
                     color: styles.purpleColor,
-                    fontSize: '20px', // ✅ Tamaño aumentado
-                    fontWeight: '900', // ✅ Extra negrita
+                    fontSize: '20px',
+                    fontWeight: '900',
                     flexDirection: isRTL ? 'row-reverse' : 'row',
                     borderBottom: '2px solid #e9d5ff',
-                    paddingBottom: '10px' // ✅ Padding aumentado
+                    paddingBottom: '10px'
                 }}>
                     {isRTL ? 'الموقع والاتصال 📍' : '📍 Localisation & Contact'}
                 </h2>
@@ -700,120 +790,128 @@ const DescriptionPost = ({ post }) => {
         );
     };
 
-    // 🔹 SECCIÓN 7: CONTACTO Y COMPRA - TEXTO MÁS GRANDE CON TECLADO TELEFÓNICO
+    // 🔹 SECCIÓN 7: CONTACTO - CON LOS MISMOS ICONOS DEL CARDFOOTER
     const generateContactSection = () => {
         return (
             <div style={{
                 background: styles.contactGradient,
                 color: 'white',
-                padding: '18px',
-                borderRadius: '10px',
+                padding: '20px',
+                borderRadius: '12px',
                 textAlign: 'center',
                 width: '100%',
                 boxSizing: 'border-box',
+                boxShadow: '0 8px 25px rgba(245, 158, 11, 0.3)',
+                border: '2px solid rgba(255,255,255,0.2)'
             }}>
                 <h2 style={{
-                    margin: '0 0 12px 0', // ✅ Margen aumentado
-                    fontSize: '18px', // ✅ Tamaño aumentado
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px', // ✅ Espacio aumentado
-                    flexWrap: 'wrap',
-                    fontWeight: '800' // ✅ Extra negrita
+                    margin: '0 0 16px 0',
+                    fontSize: '20px',
+                    fontWeight: '800',
+                    textShadow: '0 2px 8px rgba(0,0,0,0.3)',
                 }}>
-                    {isRTL ? 'جاهز للشراء؟ 📞' : '📞 Prêt à Acheter ?'}
+                    {isRTL ? 'جاهز للشراء؟' : '📞 Prêt à Acheter ?'}
                 </h2>
 
                 <p style={{ 
-                    marginBottom: '14px', // ✅ Margen aumentado
-                    fontSize: '16px', // ✅ Tamaño aumentado
+                    marginBottom: '20px',
+                    fontSize: '16px',
                     opacity: '0.95',
-                    padding: '0 10px', // ✅ Padding aumentado
                     lineHeight: '1.5',
                     wordBreak: 'break-word',
-                    fontWeight: '600' // ✅ Negrita
+                    fontWeight: '600',
+                    textShadow: '0 1px 4px rgba(0,0,0,0.2)'
                 }}>
                     {isRTL 
-                        ? 'لا تفوت هذه الفرصة! اتصل بالبائع الآن.'
-                        : t('contact.dontMiss', 'Ne manquez pas cette opportunité ! Contactez le vendeur dès maintenant.')
+                        ? 'لا تفوت هذه الفرصة! تواصل مع البائع الآن.'
+                        : "Ne manquez pas cette opportunité ! Contactez le vendeur dès maintenant."
                     }
                 </p>
 
-                {post.phone && (
-                    <div style={{
-                        backgroundColor: 'rgba(255,255,255,0.2)',
-                        padding: '14px 18px', // ✅ Padding aumentado
-                        borderRadius: '8px',
-                        display: 'inline-block',
-                        marginBottom: '14px', // ✅ Margen aumentado
-                        maxWidth: '100%',
-                        wordBreak: 'break-word'
-                    }}>
-                        <div style={{ 
-                            fontSize: '13px', // ✅ Tamaño aumentado
-                            opacity: '0.85', 
-                            marginBottom: '6px', // ✅ Margen aumentado
-                            fontWeight: '700' // ✅ Negrita
-                        }}>
-                            {isRTL ? 'اتصل بالبائع 📞' : '📞 Contactez le vendeur'}
-                        </div>
-                        <div 
-                            style={{ 
-                                fontSize: '18px', // ✅ Tamaño aumentado
-                                fontWeight: '900', // ✅ Extra negrita
-                                direction: 'ltr',
-                                cursor: 'pointer',
-                                padding: '8px 12px',
-                                borderRadius: '6px',
-                                backgroundColor: 'rgba(255,255,255,0.1)',
-                                display: 'inline-block',
-                                minWidth: '200px',
-                                border: '1px solid rgba(255,255,255,0.3)',
-                                transition: 'all 0.3s ease'
-                            }}
-                            onClick={() => {
-                                window.location.href = `tel:${post.phone}`;
-                            }}
-                            onTouchStart={(e) => {
+                {/* ICONOS IDÉNTICOS AL CARDFOOTER */}
+                <div className="d-flex justify-content-between align-items-center w-100 border-top pt-3" style={{ borderColor: 'rgba(255,255,255,0.3)' }}>
+                    {/* Icono Teléfono - Izquierda */}
+                    <div 
+                        className="d-flex align-items-center"
+                        style={{ 
+                            cursor: post.phone ? 'pointer' : 'not-allowed',
+                            transition: 'all 0.2s',
+                            padding: '8px 16px',
+                            borderRadius: '8px',
+                            opacity: post.phone ? 1 : 0.5,
+                            backgroundColor: 'rgba(255,255,255,0.2)',
+                            color: 'white'
+                        }}
+                        onClick={handleCallOwner}
+                        onMouseEnter={(e) => {
+                            if (post.phone) {
+                                e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.3)';
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (post.phone) {
                                 e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)';
-                                e.currentTarget.style.transform = 'scale(0.98)';
+                            }
+                        }}
+                        title={post.phone ? "Appeler le vendeur" : "Numéro non disponible"}
+                    >
+                        <FaPhone 
+                            style={{ 
+                                fontSize: '1.3rem',
+                                marginRight: '8px'
                             }}
-                            onTouchEnd={(e) => {
-                                e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)';
-                                e.currentTarget.style.transform = 'scale(1)';
-                            }}
-                        >
-                            {post.phone}
-                        </div>
-                        <div style={{
-                            fontSize: '12px',
-                            opacity: '0.7',
-                            marginTop: '6px',
-                            fontStyle: 'italic'
-                        }}>
-                            {isRTL ? 'انقر للاتصال' : 'Cliquez pour appeler'}
-                        </div>
+                        />
+                        <span className="fw-medium">Appeler</span>
                     </div>
-                )}
+
+                    {/* Icono Chat - Derecha */}
+                    <div 
+                        className="d-flex align-items-center"
+                        style={{ 
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            padding: '8px 16px',
+                            borderRadius: '8px',
+                            backgroundColor: 'rgba(255,255,255,0.2)',
+                            color: 'white'
+                        }}
+                        onClick={handleChatWithOwner}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)';
+                        }}
+                        title="Envoyer un message au vendeur"
+                    >
+                        <FaComment 
+                            style={{ 
+                                fontSize: '1.3rem',
+                                marginRight: '8px'
+                            }}
+                        />
+                        <span className="fw-medium">Message</span>
+                    </div>
+                </div>
 
                 <p style={{ 
-                    fontSize: '15px', // ✅ Tamaño aumentado
+                    fontSize: '14px',
                     opacity: '0.9', 
-                    margin: '0',
+                    margin: '20px 0 0 0',
                     wordBreak: 'break-word',
-                    fontWeight: '700' // ✅ Negrita
+                    fontWeight: '600',
+                    textShadow: '0 1px 3px rgba(0,0,0,0.2)'
                 }}>
                     {isRTL 
                         ? '🛍️ تسوق بثقة تامة!'
-                        : t('contact.guarantee', 'Achetez en toute confiance !') + ' 🛍️'
+                        : '🛍️ Achetez en toute confiance !'
                     }
                 </p>
             </div>
         );
     };
 
-    // 🎯 RENDER PRINCIPAL MEJORADO
+    // 🎯 RENDER PRINCIPAL
     return (
         <div style={{
             direction: isRTL ? 'rtl' : 'ltr',
@@ -822,7 +920,7 @@ const DescriptionPost = ({ post }) => {
             color: '#2d3748',
             maxWidth: '800px',
             margin: '0 auto',
-            padding: '14px', // ✅ Padding aumentado
+            padding: '16px',
             width: '100%',
             boxSizing: 'border-box',
             overflowX: 'hidden',

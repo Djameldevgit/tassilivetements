@@ -7,9 +7,7 @@ import { useSelector } from 'react-redux'
 import LoadIcon from '../images/loading.gif'
  
 import { useTranslation } from 'react-i18next';
-import HeaderCarousel from '../components/HeaderHeader';
-
-
+import HeaderCarousel from '../components/HeaderCarousel';
  
 let scroll = 0;
 
