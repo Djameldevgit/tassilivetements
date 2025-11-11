@@ -4,22 +4,22 @@ import Carousel from 'react-bootstrap/Carousel';
 const HeaderCarousel = () => {
     const slides = [
         {
-            image: "/images/clothing/04.png",
+            image: "/images/clothing/04.jpg",
             title: "Nouvelle Collection Printemps",
             description: "Découvrez les dernières tendances de la saison"
         },
         {
-            image: "/images/clothing/00.png",
+            image: "/images/clothing/00.jpg",
             title: "Soldes d'Été",
             description: "Jusqu'à -50% sur toute la collection été"
         },
         {
-            image: "/images/clothing/01.png",
+            image: "/images/clothing/01.jpg",
             title: "Collection Homme",
             description: "Style et élégance pour chaque occasion"
         },
         {
-            image: "/images/clothing/03.png",
+            image: "/images/clothing/03.jpg",
             title: "Collection Femme",
             description: "Élégance et confort pour votre quotidien"
         }

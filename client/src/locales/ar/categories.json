@@ -1,5 +1,71 @@
 {
-
+ 
+    "Vêtements Homme": "ملابس رجالية",
+    "Vêtements Femme": "ملابس نسائية",
+    "Chaussures Homme": "أحذية رجالية", 
+    "Chaussures Femme": "أحذية نسائية",
+    "Garçons": "أولاد",
+    "Filles": "بنات",
+    "Bébé": "أطفال",
+    "Tenues professionnelles": "ملابس عمل",
+    "Sacs & Valises": "حقائب ومستلزمات سفر",
+    
+    "Hauts & Chemises": "تيشيرتات وقمصان",
+    "Jeans & Pantalons": "جينز وبناطيل",
+    "Shorts & Pantacourts": "شورتات وسراويل قصيرة",
+  
+    "Costumes & Blazers": "بدلات وبلazers",
+    "Survetements": "ملابس رياضية",
+    "Kamiss": "قمصان تقليدية",
+    "Sous vêtements": "ملابس داخلية",
+    "Pyjamas": "بيجامات",
+    "Maillots de bain": "ملابس سباحة",
+    "Casquettes & Chapeaux": "قبعات وطرابيش",
+    "Chaussettes": "جوارب",
+    "Ceintures": "أحزمة",
+    "Gants": "قفازات",
+    "Cravates": "ربطات عنق",
+    
+    "Ensembles": "مجموعات",
+    "Abayas & Hijabs": "عبايات وحجاب",
+    "Mariages & Fêtes": "أفراح ومناسبات",
+    "Maternité": "ملابس حمل",
+    "Robes": "فساتين",
+    "Jupes": "تنانير",
+    "Joggings & Survetements": "ملابس رياضية",
+    "Leggings": "ليقنغ",
+    "Sous-vêtements & Lingerie": "ملابس داخلية و lingerie",
+    "Peignoirs": "أردية",
+    "Chaussettes & Collants": "جوارب وشرابات",
+    "Foulards & Echarpes": "أوشحة ولفاعات",
+    
+    "Basquettes": "حذاء رياضي",
+    "Bottes": "بوت",
+    "Classiques": "كلاسيكي",
+    "Mocassins": "موكاسين",
+    "Sandales": "صنادل",
+    "Tangues & Pantoufles": "شبشب ونعال",
+    
+    "Escarpins": "كعب عالي",
+    "Ballerines": "باليрина",
+    
+    "Chaussures": "أحذية",
+    "Pantalons & Shorts": "بناطيل وشورتات",
+    "Vestes & Gilets": "جاكيتات وصدريات",
+    "Survetements & Joggings": "ملابس رياضية",
+    "Sous-vêtements": "ملابس داخلية",
+    "Leggings & Collants": "ليقنغ وشرابات",
+    
+    "Vêtements": "ملابس",
+    "Accessoires": "إكسسوارات",
+    
+    "Pochettes & Portefeuilles": "محافظ ومحافظ نقود",
+    "Sacs à main": "حقائب يد",
+    "Sacs à dos": "حقائب ظهر",
+    "Sacs professionnels": "حقائب مهنية",
+    "Valises": "حقائب سفر",
+    "Cabas de sport": "حقائب رياضية",
+ 
  
       
       "destination_voyage_title": "🌍 وجهة الرحلة المنظمة",

@@ -1,5 +1,58 @@
 {
   
+    "labels": {
+      "subCategory": "Sous-catégorie",
+      "subSubCategory": "Type spécifique",
+      "brand": "Marque",
+      "condition": "État",
+      "gender": "Genre",
+      "size": "Taille",
+      "color": "Couleur",
+      "material": "Matériau",
+      "season": "Saison",
+      "location": "Localisation",
+      "minPrice": "Prix Min",
+      "maxPrice": "Prix Max",
+      "activeFilters": "Filtres actifs"
+    },
+    "placeholders": {
+      "allSubCategories": "Toutes les sous-catégories",
+      "allTypes": "Tous les types",
+      "brand": "Marque...",
+      "allConditions": "Tous les états",
+      "allGenders": "Tous les genres",
+      "allSizes": "Toutes les tailles",
+      "allColors": "Toutes les couleurs",
+      "allMaterials": "Tous les matériaux",
+      "allSeasons": "Toutes les saisons",
+      "location": "Ville ou wilaya...",
+      "minPrice": "Min...",
+      "maxPrice": "Max..."
+    },
+    "buttons": {
+      "search": "Rechercher",
+      "searching": "Recherche...",
+      "showAdvanced": "Recherche avancée",
+      "hideAdvanced": "Masquer la recherche avancée",
+      "latestProducts": "Derniers Produits",
+      "clearAll": "Effacer",
+      "clearFilters": "Effacer les filtres",
+      "seeLatest": "Voir les derniers"
+    },
+    "states": {
+      "searching": "Recherche...",
+      "pleaseWait": "Veuillez patienter...",
+      "noResults": "Aucun produit trouvé",
+      "tryDifferentFilters": "Essayez de modifier vos critères de recherche",
+      "startSearching": "Commencez votre recherche",
+      "useFiltersAbove": "Utilisez les filtres ci-dessus pour trouver des produits",
+      "productFound": "produit trouvé",
+      "productsFound": "produits trouvés"
+    },
+    "errors": {
+      "searchError": "Erreur de "
+    },
+ 
  
     "search": {
       "categories": {
@@ -65,50 +118,9 @@
     },
  
   
-  "labels": {
-    "startDate": "Date de Début",
-    "endDate": "Date de Fin", 
-    "from": "De",
-    "to": "À",
-    "hotelSearch": "Recherche par Hôtel",
-    "hotel": "Hôtel",
-   
-    "minPrice": "Prix Minimum",
-    "maxPrice": "Prix Maximum",
-
-    "category": "Catégorie",
-    "destination": "Destination",
-    "destinationOrganized": "Destination (Voyages Organisés)",
-    "destinationRental": "Destination (Location Vacances)",
-    "destinationHajj": "Destination (Hadj & Omra)",
-    "departureDate": "Date de Départ",
-    "activeFilters": "Filtres actifs",
-    "smartSearch": "Recherche Intelligente",
-    "latestTrips": "Derniers Voyages",
-    "date": "Date",
-    "filter": "filtre",
-    "filters": "filtres"
-  },
+ 
   
-  "placeholders": {
-    "allCategories": "Toutes les catégories",
-    "selectCategoryFirst": "Sélectionnez d'abord une catégorie",
-    "hotelName": "Nom de l'hôtel...",
-    "minPrice": "Min...",
-    "maxPrice": "Max..."
-  },
   
-  "buttons": {
-    "searchWithFilters": "Rechercher avec Filtres",
-    "searching": "Recherche...",
-    "latestTrips": "Derniers Voyages",
-    "clearAll": "Tout Effacer",
-    "search": "بحث",
-    "showAdvanced": "بحث متقدم", 
-    "hideAdvanced": "إخفاء البحث المتقدم"
-
-
-  },
   
   "results": {
     "smartSearchResults": "Recherche intelligente",
@@ -117,15 +129,9 @@
     "noSmartResults": "Aucun résultat trouvé avec la recherche intelligente"
   },
   
-  "states": {
-    "searching": "Recherche...",
-    "applyingFilters": "Application des filtres...",
-    "pleaseWait": "Veuillez patienter..."
-  },
+ 
   
-  "errors": {
-    "searchError": "Erreur de recherche"
-  },
+ 
     "title": "Rechercher des Voyages",
     "subtitle": "Trouvez votre prochaine destination parfaite",
     "searchLabel": "Rechercher des agences ou voyages",

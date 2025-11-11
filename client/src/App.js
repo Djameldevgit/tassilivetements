@@ -127,7 +127,7 @@ function App() {
       <Alert />
       <input type="checkbox" id="theme" />
       <div className={`App ${(status || modal) && 'mode'}`}>
-        <LanguageSelectorandroid />
+       
         <div className="main">
           <Navbar2 />
           

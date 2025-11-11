@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaComment, FaPhone } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,34 +7,54 @@ import { MESS_TYPES } from '../../../redux/actions/messageAction';
 import { GLOBALTYPES } from '../../../redux/actions/globalTypes';
 
 const DescriptionPost = ({ post }) => {
-    const { t, i18n } = useTranslation(['descripcion', 'categories']);
-    const { auth, message } = useSelector(state => state);
+    const [readMore, setReadMore] = useState(false);
+    const [isTranslationsReady, setIsTranslationsReady] = useState(false);
+    
+    const { auth, message, languageReducer } = useSelector(state => state);
     const dispatch = useDispatch();
     const history = useHistory();
-    const isRTL = i18n.language === 'ar';
-    const [readMore, setReadMore] = useState(false);     
     
+    // Obtener el idioma del reducer
+    const lang = languageReducer.language || 'fr';
+    
+    // Usar useTranslation con los namespaces necesarios
+    const { t, i18n } = useTranslation(['descripcion', 'categories', 'common']);
+    
+    // Cambiar el idioma activamente si es diferente
+    useEffect(() => {
+        const changeLanguage = async () => {
+            if (i18n.language !== lang) {
+                await i18n.changeLanguage(lang);
+            }
+            setIsTranslationsReady(true);
+        };
+        
+        changeLanguage();
+    }, [lang, i18n]);
+
+    const isRTL = lang === 'ar';
+
     // 🎨 COLORES VIBRANTES PARA TIENDA DE ROPA
     const styles = {
-        primaryColor: "#7c3aed",     // Violeta vibrante
-        accentColor: "#ec4899",      // Rosa fucsia
-        successColor: "#10b981",     // Verde esmeralda
-        warningColor: "#f59e0b",     // Ámbar dorado
-        purpleColor: "#8b5cf6",      // Violeta claro
-        textDark: "#000000",         // Negro puro
-        textMedium: "#1f2937",       // Gris muy oscuro
-        textLight: "#ffffff",        // Blanco para contraste
-        mainGradient: "linear-gradient(135deg, #ec4899 0%, #7c3aed 100%)", // Rosa a violeta
-        contactGradient: "linear-gradient(135deg, #f59e0b 0%, #ec4899 100%)", // Dorado a rosa
+        primaryColor: "#7c3aed",
+        accentColor: "#ec4899",
+        successColor: "#10b981",
+        warningColor: "#f59e0b",
+        purpleColor: "#8b5cf6",
+        textDark: "#000000",
+        textMedium: "#1f2937",
+        textLight: "#ffffff",
+        mainGradient: "linear-gradient(135deg, #ec4899 0%, #7c3aed 100%)",
+        contactGradient: "linear-gradient(135deg, #f59e0b 0%, #ec4899 100%)",
         cardShadow: "0 4px 12px rgba(0, 0, 0, 0.15)"
     };
 
-    // LÓGICA DEL CHAT - IGUAL QUE CARDFOOTER
+    // LÓGICA DEL CHAT - ACTUALIZADA IDÉNTICA A CARDFOOTER
     const handleChatWithOwner = () => {
         if (!auth.user) {
             dispatch({ 
                 type: GLOBALTYPES.ALERT, 
-                payload: { error: 'Veuillez vous connecter pour démarrer une conversation' } 
+                payload: { error: t('messages:loginToChat', 'Veuillez vous connecter pour démarrer une conversation') } 
             });
             return;
         }
@@ -42,7 +62,7 @@ const DescriptionPost = ({ post }) => {
         if (!post.user || !post.user._id) {
             dispatch({ 
                 type: GLOBALTYPES.ALERT, 
-                payload: { error: 'Impossible de contacter ce vendeur' } 
+                payload: { error: t('messages:cannotContactSeller', 'Impossible de contacter ce vendeur') } 
             });
             return;
         }
@@ -61,22 +81,23 @@ const DescriptionPost = ({ post }) => {
                     ...post.user, 
                     text: '', 
                     media: [],
-                    postTitle: post.title || 'Produit de mode',
+                    postTitle: post.title || t('categories:general', 'Produit de mode'),
                     postId: post._id
                 }
             });
 
             history.push(`/message/${post.user._id}`);
+
             dispatch({
                 type: GLOBALTYPES.ALERT,
-                payload: { success: 'Conversation démarrée avec le vendeur' }
+                payload: { success: t('messages:conversationStarted', 'Conversation démarrée avec le vendeur') }
             });
 
         } catch (error) {
             console.error('Erreur lors du démarrage de la conversation:', error);
             dispatch({
                 type: GLOBALTYPES.ALERT,
-                payload: { error: 'Erreur lors du démarrage de la conversation' }
+                payload: { error: t('messages:chatError', 'Erreur lors du démarrage de la conversation') }
             });
         }
     };
@@ -85,12 +106,16 @@ const DescriptionPost = ({ post }) => {
         if (!post.phone) {
             dispatch({ 
                 type: GLOBALTYPES.ALERT, 
-                payload: { error: 'Numéro de téléphone non disponible' } 
+                payload: { error: t('contact:phoneNotAvailable', 'Numéro de téléphone non disponible') } 
             });
             return;
         }
         
-        if (window.confirm(`Voulez-vous appeler ${post.phone} ?`)) {
+        if (window.confirm(
+            isRTL 
+                ? `هل تريد الاتصال بـ ${post.phone}؟`
+                : `Voulez-vous appeler ${post.phone} ?`
+        )) {
             window.location.href = `tel:${post.phone}`;
         }
     };
@@ -100,53 +125,53 @@ const DescriptionPost = ({ post }) => {
         const categories = {
             "Vêtements Homme": {
                 icon: "👔",
-                title: t('categories.mensClothing', 'Vêtements Homme'),
+                title: t('categories:mensClothing', 'Vêtements Homme'),
                 color: "#3b82f6",
-                description: t('categories.mensDescription', 'Style et élégance pour hommes')
+                description: t('categories:mensDescription', 'Style et élégance pour hommes')
             },
             "Vêtements Femme": {
                 icon: "👗",
-                title: t('categories.womensClothing', 'Vêtements Femme'),
+                title: t('categories:womensClothing', 'Vêtements Femme'),
                 color: "#ec4899",
-                description: t('categories.womensDescription', 'Mode et tendances pour femmes')
+                description: t('categories:womensDescription', 'Mode et tendances pour femmes')
             },
             "Chaussures Homme": {
                 icon: "👞",
-                title: t('categories.mensShoes', 'Chaussures Homme'),
+                title: t('categories:mensShoes', 'Chaussures Homme'),
                 color: "#78350f",
-                description: t('categories.mensShoesDescription', 'Chaussures de qualité pour hommes')
+                description: t('categories:mensShoesDescription', 'Chaussures de qualité pour hommes')
             },
             "Chaussures Femme": {
                 icon: "👠",
-                title: t('categories.womensShoes', 'Chaussures Femme'),
+                title: t('categories:womensShoes', 'Chaussures Femme'),
                 color: "#dc2626",
-                description: t('categories.womensShoesDescription', 'Chaussures élégantes pour femmes')
+                description: t('categories:womensShoesDescription', 'Chaussures élégantes pour femmes')
             },
             "Garçons": {
                 icon: "👦",
-                title: t('categories.boys', 'Vêtements Garçons'),
+                title: t('categories:boys', 'Vêtements Garçons'),
                 color: "#3b82f6",
-                description: t('categories.boysDescription', 'Vêtements pratiques pour garçons')
+                description: t('categories:boysDescription', 'Vêtements pratiques pour garçons')
             },
             "Filles": {
                 icon: "👧",
-                title: t('categories.girls', 'Vêtements Filles'),
+                title: t('categories:girls', 'Vêtements Filles'),
                 color: "#ec4899",
-                description: t('categories.girlsDescription', 'Vêtements mignons pour filles')
+                description: t('categories:girlsDescription', 'Vêtements mignons pour filles')
             },
             "Bébé": {
                 icon: "👶",
-                title: t('categories.baby', 'Vêtements Bébé'),
+                title: t('categories:baby', 'Vêtements Bébé'),
                 color: "#f59e0b",
-                description: t('categories.babyDescription', 'Vêtements doux pour bébés')
+                description: t('categories:babyDescription', 'Vêtements doux pour bébés')
             }
         };
 
         return categories[post.subCategory] || {
             icon: "🛍️",
-            title: post.subCategory || t('categories.general', 'Article de Mode'),
+            title: post.subCategory || t('categories:general', 'Article de Mode'),
             color: "#7c3aed",
-            description: t('categories.generalDescription', 'Article de qualité à prix exceptionnel')
+            description: t('categories:generalDescription', 'Article de qualité à prix exceptionnel')
         };
     };
 
@@ -379,7 +404,7 @@ const DescriptionPost = ({ post }) => {
                     textShadow: '0 2px 8px rgba(0,0,0,0.3)',
                     letterSpacing: '0.5px'
                 }}>
-                    {t('excitingNews', '🎉 NOUVEAU ARRIVAGE !')}
+                    {t('descripcion:excitingNews', '🎉 NOUVEAU ARRIVAGE !')}
                 </h1>
                 <p style={{
                     fontSize: '18px',
@@ -391,8 +416,8 @@ const DescriptionPost = ({ post }) => {
                     fontWeight: '600',
                     textShadow: '0 1px 4px rgba(0,0,0,0.2)'
                 }}>
-                    <strong style={{ fontSize: '20px', color: '#fef3c7' }}>{post.category}</strong> {t('proudlyPresents', 'vous présente un')}
-                    <strong style={{ fontSize: '20px', color: '#fef3c7' }}> {categoryInfo.title}</strong> {t('carefullyDesigned', 'soigneusement sélectionné pour votre style.')}
+                    <strong style={{ fontSize: '20px', color: '#fef3c7' }}>{post.category}</strong> {t('descripcion:proudlyPresents', 'vous présente un')}
+                    <strong style={{ fontSize: '20px', color: '#fef3c7' }}> {categoryInfo.title}</strong> {t('descripcion:carefullyDesigned', 'soigneusement sélectionné pour votre style.')}
                 </p>
 
                 {/* Información clave */}
@@ -562,8 +587,8 @@ const DescriptionPost = ({ post }) => {
                             onClick={() => setReadMore(!readMore)}
                         >
                             {readMore ?
-                                (isRTL ? 'عرض أقل ▲' : '▲ Voir moins') :
-                                (isRTL ? 'قراءة المزيد ▼' : '▼ Lire la suite')}
+                                (isRTL ? t('descripcion:seeLess', 'عرض أقل ▲') : t('descripcion:seeLess', '▲ Voir moins')) :
+                                (isRTL ? t('descripcion:readMore', 'قراءة المزيد ▼') : t('descripcion:readMore', '▼ Lire la suite'))}
                         </span>
                     )}
                 </div>
@@ -810,7 +835,7 @@ const DescriptionPost = ({ post }) => {
                     fontWeight: '800',
                     textShadow: '0 2px 8px rgba(0,0,0,0.3)',
                 }}>
-                    {isRTL ? 'جاهز للشراء؟' : '📞 Prêt à Acheter ?'}
+                    {isRTL ? 'جاهز للشراء؟' : t('descripcion:readyToBuy', '📞 Prêt à Acheter ?')}
                 </h2>
 
                 <p style={{ 
@@ -823,8 +848,8 @@ const DescriptionPost = ({ post }) => {
                     textShadow: '0 1px 4px rgba(0,0,0,0.2)'
                 }}>
                     {isRTL 
-                        ? 'لا تفوت هذه الفرصة! تواصل مع البائع الآن.'
-                        : "Ne manquez pas cette opportunité ! Contactez le vendeur dès maintenant."
+                        ? t('descripcion:dontMissOpportunity', 'لا تفوت هذه الفرصة! تواصل مع البائع الآن.')
+                        : t('descripcion:dontMissOpportunity', "Ne manquez pas cette opportunité ! Contactez le vendeur dès maintenant.")
                     }
                 </p>
 
@@ -853,15 +878,21 @@ const DescriptionPost = ({ post }) => {
                                 e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)';
                             }
                         }}
-                        title={post.phone ? "Appeler le vendeur" : "Numéro non disponible"}
+                        title={post.phone ? 
+                            (isRTL ? "اتصال بالبائع" : "Appeler le vendeur") : 
+                            (isRTL ? "الرقم غير متوفر" : "Numéro non disponible")
+                        }
                     >
                         <FaPhone 
                             style={{ 
                                 fontSize: '1.3rem',
-                                marginRight: '8px'
+                                marginRight: isRTL ? '0' : '8px',
+                                marginLeft: isRTL ? '8px' : '0'
                             }}
                         />
-                        <span className="fw-medium">Appeler</span>
+                        <span className="fw-medium">
+                            {isRTL ? "اتصال" : "Appeler"}
+                        </span>
                     </div>
 
                     {/* Icono Chat - Derecha */}
@@ -882,15 +913,18 @@ const DescriptionPost = ({ post }) => {
                         onMouseLeave={(e) => {
                             e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)';
                         }}
-                        title="Envoyer un message au vendeur"
+                        title={isRTL ? "إرسال رسالة إلى البائع" : "Envoyer un message au vendeur"}
                     >
                         <FaComment 
                             style={{ 
                                 fontSize: '1.3rem',
-                                marginRight: '8px'
+                                marginRight: isRTL ? '0' : '8px',
+                                marginLeft: isRTL ? '8px' : '0'
                             }}
                         />
-                        <span className="fw-medium">Message</span>
+                        <span className="fw-medium">
+                            {isRTL ? "رسالة" : "Message"}
+                        </span>
                     </div>
                 </div>
 
@@ -903,13 +937,33 @@ const DescriptionPost = ({ post }) => {
                     textShadow: '0 1px 3px rgba(0,0,0,0.2)'
                 }}>
                     {isRTL 
-                        ? '🛍️ تسوق بثقة تامة!'
-                        : '🛍️ Achetez en toute confiance !'
+                        ? t('descripcion:shopWithConfidence', '🛍️ تسوق بثقة تامة!')
+                        : t('descripcion:shopWithConfidence', '🛍️ Achetez en toute confiance !')
                     }
                 </p>
             </div>
         );
     };
+
+    // Si las traducciones no están listas, puedes mostrar un loader
+    if (!isTranslationsReady) {
+        return (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '200px',
+                direction: isRTL ? 'rtl' : 'ltr'
+            }}>
+                <div className="text-center">
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <p className="mt-2">{isRTL ? 'جاري التحميل...' : 'Chargement...'}</p>
+                </div>
+            </div>
+        );
+    }
 
     // 🎯 RENDER PRINCIPAL
     return (

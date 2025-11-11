@@ -1,6 +1,6 @@
 import React from 'react';
-import { Row, Col } from 'react-bootstrap';
-import { FaComment, FaPhone } from 'react-icons/fa';
+import { Card, ListGroup, Button } from 'react-bootstrap';
+import { FaComment, FaPhone, FaTag, FaLayerGroup, FaMapMarkerAlt } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { MESS_TYPES } from '../../../redux/actions/messageAction';
@@ -29,16 +29,13 @@ const CardFooter = ({ post }) => {
         }
 
         try {
-            // Verificar si ya existe una conversación con este usuario
             const existingConversation = message.data.find(item => item._id === post.user._id);
             
             if (existingConversation) {
-                // Si ya existe conversación, redirigir directamente
                 history.push(`/message/${post.user._id}`);
                 return;
             }
 
-            // Crear nuevo usuario en el estado de mensajes
             dispatch({
                 type: MESS_TYPES.ADD_USER,
                 payload: { 
@@ -50,10 +47,8 @@ const CardFooter = ({ post }) => {
                 }
             });
 
-            // Redirigir al chat
             history.push(`/message/${post.user._id}`);
 
-            // Mostrar mensaje de éxito
             dispatch({
                 type: GLOBALTYPES.ALERT,
                 payload: { success: 'Conversation démarrée avec le vendeur' }
@@ -77,105 +72,121 @@ const CardFooter = ({ post }) => {
             return;
         }
         
-        // Confirmación antes de llamar
         if (window.confirm(`Voulez-vous appeler ${post.phone} ?`)) {
             window.location.href = `tel:${post.phone}`;
         }
     };
 
+    const handleOpenMap = () => {
+       
+    
+        // 🔥 NAVEGAR A LA RUTA /map CON LOS DATOS DEL POST
+        history.push('/map')
+          
+         
+    };
+
     return (
-        <div className="card-footer bg-white border-top px-3 py-2">
-            {/* Fila 1: Título */}
-            <div className="mb-1">
-                <h6 className="fw-bold text-dark mb-0 text-truncate fs-6">
-                    {post.title || 'Sans titre'}
-                </h6>
-            </div>
-
-            {/* Fila 2: Subcategoría */}
-            <div className="mb-2">
-                <span className="text-muted small">
-                    {post.subCategory || 'Général'}
-                </span>
-            </div>
-
-            {/* Fila 3: Precio */}
-            <div className="mb-2">
-                <span className="fw-bold text-success fs-5">
-                    {post.price || '0'}
-                    <small className="text-muted ms-1 fs-6">
-                        {post.currency || 'DZD'}
-                    </small>
-                </span>
-            </div>
-
-            {/* Fila 4: Iconos de Contacto - Separados completamente */}
-            <div className="d-flex justify-content-between align-items-center w-100 border-top pt-2">
-                {/* Icono Teléfono con Texto - Izquierda */}
-                <div 
-                    className="d-flex align-items-center text-primary"
-                    style={{ 
-                        cursor: post.phone ? 'pointer' : 'not-allowed',
-                        transition: 'all 0.2s',
-                        padding: '4px 8px',
-                        borderRadius: '6px',
-                        opacity: post.phone ? 1 : 0.5
-                    }}
-                    onClick={handleCallOwner}
-                    onMouseEnter={(e) => {
-                        if (post.phone) {
-                            e.currentTarget.style.backgroundColor = '#f8f9fa';
-                            e.currentTarget.style.color = '#0056b3';
-                        }
-                    }}
-                    onMouseLeave={(e) => {
-                        if (post.phone) {
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                            e.currentTarget.style.color = '#0d6efd';
-                        }
-                    }}
-                    title={post.phone ? "Appeler le vendeur" : "Numéro non disponible"}
-                >
-                    <FaPhone 
-                        style={{ 
-                            fontSize: '1.2rem',
-                            marginRight: '6px'
-                        }}
-                    />
-                    <span className="small fw-medium">Appeler</span>
+        <Card.Footer className="border-0 p-0 bg-white">
+        <ListGroup variant="flush">
+            {/* Información del producto - COMPACTADA */}
+            <ListGroup.Item className="border-0 px-2 py-1">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="flex-grow-1">
+                        <h6 className="fw-bold text-dark mb-0 text-truncate fs-6">
+                            {post.title || 'Sans titre'}
+                        </h6>
+                        <small className="text-muted">
+                            {post.subCategory || 'Général'}
+                        </small>
+                    </div>
+                    <div className="text-end">
+                        <span className="fw-bold text-success fs-6">
+                            {post.price || '0'}
+                        </span>
+                        <small className="text-muted d-block fs-7">
+                            {post.currency || 'DZD'}
+                        </small>
+                    </div>
                 </div>
+            </ListGroup.Item>
 
-                {/* Icono Chat con Texto - Derecha */}
-                <div 
-                    className="d-flex align-items-center text-success"
-                    style={{ 
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        padding: '4px 8px',
-                        borderRadius: '6px'
-                    }}
-                    onClick={handleChatWithOwner}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#f8f9fa';
-                        e.currentTarget.style.color = '#0a3622';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.color = '#198754';
-                    }}
-                    title="Envoyer un message au vendeur"
-                >
-                    <FaComment 
-                        style={{ 
-                            fontSize: '1.2rem',
-                            marginRight: '6px'
-                        }}
-                    />
-                    <span className="small fw-medium">Message</span>
-                </div>
-            </div>
+            {/* Botones de acción - SUPER COMPACTOS */}
+            <ListGroup.Item className="border-0 px-1 py-1">
+    <div className="d-flex justify-content-between align-items-center gap-3">
+        {/* 1. Teléfono */}
+        <div
+            className={`d-flex align-items-center justify-content-center ${
+                post.phone ? 'text-primary' : 'text-muted'
+            }`}
+            style={{
+                width: '30px',
+                height: '30px',
+                cursor: post.phone ? 'pointer' : 'not-allowed',
+                borderRadius: '50%',
+                transition: 'all 0.2s'
+            }}
+            onClick={post.phone ? handleCallOwner : undefined}
+            onMouseEnter={(e) => {
+                if (post.phone) e.currentTarget.style.backgroundColor = '#f8f9fa';
+            }}
+            onMouseLeave={(e) => {
+                if (post.phone) e.currentTarget.style.backgroundColor = 'transparent';
+            }}
+            title={post.phone ? "Appeler le vendeur" : "Numéro non disponible"}
+        >
+            <FaPhone size={15} />
         </div>
-    );
+
+        {/* 2. Chat */}
+        <div
+            className="d-flex align-items-center justify-content-center text-success"
+            style={{
+                width: '30px',
+                height: '30px',
+                cursor: 'pointer',
+                borderRadius: '50%',
+                transition: 'all 0.2s'
+            }}
+            onClick={handleChatWithOwner}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+            title="Envoyer un message au vendeur"
+        >
+            <FaComment size={15} />
+        </div>
+
+        {/* 3. Mapa */}
+        <div
+            className={`d-flex align-items-center justify-content-center ${
+                post.location ? 'text-danger' : 'text-muted'
+            }`}
+            style={{
+                width: '30px',
+                height: '30px',
+                cursor: post.location ? 'pointer' : 'not-allowed',
+                borderRadius: '50%',
+                transition: 'all 0.2s'
+            }}
+            onClick={post.location ? handleOpenMap : undefined}
+            onMouseEnter={(e) => {
+                if (post.location) e.currentTarget.style.backgroundColor = '#f8f9fa';
+            }}
+            onMouseLeave={(e) => {
+                if (post.location) e.currentTarget.style.backgroundColor = 'transparent';
+            }}
+            title={post.location ? "Voir sur la carte" : "Localisation non disponible"}
+        >
+            <FaMapMarkerAlt size={15} />
+        </div>
+    </div>
+</ListGroup.Item>
+        </ListGroup>
+    </Card.Footer>
+);
 };
 
 export default CardFooter;
+ 
+
+ 
