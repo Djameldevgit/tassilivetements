@@ -101,11 +101,11 @@ const CardFooter = ({ post }) => {
                         </small>
                     </div>
                     <div className="text-end">
-                        <span className="fw-bold text-success fs-6">
+                        <span className="fw-bold text-danger fs-6">
                             {post.price || '0'}
                         </span>
                         <small className="text-muted d-block fs-7">
-                            {post.currency || 'DZD'}
+                            {post.currency || 'DA'}
                         </small>
                     </div>
                 </div>

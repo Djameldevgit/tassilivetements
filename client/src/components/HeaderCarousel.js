@@ -38,9 +38,17 @@ const HeaderCarousel = () => {
                             objectFit: 'cover'
                         }}
                     />
-                    <Carousel.Caption>
-                        <h3>{slide.title}</h3>
-                        <p>{slide.description}</p>
+                    <Carousel.Caption style={{
+                        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                        borderRadius: '8px',
+                        padding: '15px 20px'
+                    }}>
+                        <h3 style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)' }}>
+                            {slide.title}
+                        </h3>
+                        <p style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)' }}>
+                            {slide.description}
+                        </p>
                     </Carousel.Caption>
                 </Carousel.Item>
             ))}
@@ -49,4 +57,3 @@ const HeaderCarousel = () => {
 };
 
 export default HeaderCarousel;
- 

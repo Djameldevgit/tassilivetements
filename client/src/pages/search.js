@@ -19,7 +19,8 @@ import {
 } from "react-bootstrap";
 
 export default function SearchPage() {
-  const { t, i18n } = useTranslation('search');
+  // 🔹 CORREGIDO: Namespaces correctos
+  const { t, i18n } = useTranslation(['search', 'createpost']);
   const languageReducer = useSelector(state => state.languageReducer);
   
   // 🆕 DETECCIÓN RTL
@@ -35,9 +36,9 @@ export default function SearchPage() {
     }
   }, [languageReducer?.language, i18n]);
 
-  // 🔹 Estados para filtros de ropa
+  // 🔹 Estados para filtros de ropa - USANDO CLAVES EN INGLÉS
   const [filters, setFilters] = useState({
-    category: "Vêtements",
+    category: "clothing", // Clave en inglés
     subCategory: "",    
     subSubCategory: "",
     brand: "",
@@ -60,52 +61,71 @@ export default function SearchPage() {
 
   const { auth } = useSelector((state) => state);
 
-  // 🔹 Arrays para selects (los mismos que en VetementsForm)
-  const conditions = ['Nouveau', 'Comme neuf', 'Bon état', 'État satisfaisant'];
+  // 🔹 Arrays para selects (claves en inglés)
+  const conditions = ['new', 'like_new', 'good', 'satisfactory'];
   const allSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '36', '38', '40', '42', '44', '46', '48', '50'];
-  const allColors = ['Noir', 'Blanc', 'Rouge', 'Bleu', 'Vert', 'Jaune', 'Rose', 'Violet', 'Orange', 'Marron', 'Gris', 'Beige', 'Multicolor'];
-  const materials = ['Coton', 'Polyester', 'Laine', 'Soie', 'Denim', 'Cuir', 'Synthétique', 'Linen', 'Cachemire', 'Velours'];
-  const genders = ['Homme', 'Femme', 'Unisexe', 'Garçon', 'Fille', 'Bébé'];
-  const seasons = ['Printemps', 'Été', 'Automne', 'Hiver', 'Toute l\'année'];
+  const allColors = ['black', 'white', 'red', 'blue', 'green', 'yellow', 'pink', 'purple', 'orange', 'brown', 'gray', 'beige', 'multicolor'];
+  const materials = ['cotton', 'polyester', 'wool', 'silk', 'denim', 'leather', 'synthetic', 'linen', 'cashmere', 'velvet'];
+  const genders = ['man', 'woman', 'unisex', 'boy', 'girl', 'baby'];
+  const seasons = ['spring', 'summer', 'autumn', 'winter', 'all_year'];
 
-  // 🔹 Categorías y subcategorías (las mismas que en VetementsForm)
+  // 🔹 CORREGIDO: Función de traducción unificada
+  const translateOption = useCallback((optionKey, namespace = 'createpost', fallback = '') => {
+    if (!optionKey) return fallback;
+    
+    console.log(`Buscando traducción: ${optionKey} en namespace: ${namespace}`);
+    
+    // Intentar desde createpost primero (porque tiene todas las categorías)
+    let translation = t(`createpost:options.${optionKey}`, { defaultValue: '' });
+    
+    // Si no se encuentra en createpost, intentar en search
+    if (!translation && namespace === 'search') {
+      translation = t(`search:options.${optionKey}`, { defaultValue: '' });
+    }
+    
+    // Si todavía no se encuentra, usar el fallback o la clave
+    const result = translation || fallback || optionKey;
+    console.log(`Resultado para ${optionKey}:`, result);
+    
+    return result;
+  }, [t]);
+
+  // 🔹 Categorías y subcategorías (estructura con claves en inglés - IGUAL QUE createpost)
   const categories = {
-    'Vêtements': {
-      'Vêtements Homme': [
-        'Hauts & Chemises', 'Jeans & Pantalons', 'Shorts & Pantacourts', 
-        'Vestes & Gilets', 'Costumes & Blazers', 'Survetements', 'Kamiss',
-        'Sous vêtements', 'Pyjamas', 'Maillots de bain', 'Casquettes & Chapeaux',
-        'Chaussettes', 'Ceintures', 'Gants', 'Cravates'
+    'clothing': {
+      'man_clothing': [
+        'tops_shirts', 'jeans_pants', 'shorts_capris', 
+        'jackets_vests', 'suits_blazers', 'sportswear', 'kamiss',
+        'underwear', 'pajamas', 'swimwear', 'caps_hats',
+        'socks', 'belts', 'gloves', 'ties'
       ],
-      'Vêtements Femme': [
-        'Hauts & Chemises', 'Jeans & Pantalons', 'Shorts & Pantacourts',
-        'Vestes & Gilets', 'Ensembles', 'Abayas & Hijabs', 'Mariages & Fêtes',
-        'Maternité', 'Robes', 'Jupes', 'Joggings & Survetements', 'Leggings',
-        'Sous-vêtements & Lingerie', 'Pyjamas', 'Peignoirs', 'Maillots de bain',
-        'Casquettes & Chapeaux', 'Chaussettes & Collants', 'Foulards & Echarpes',
-        'Ceintures', 'Gants'
+      'woman_clothing': [
+        'tops_shirts', 'jeans_pants', 'shorts_capris',
+        'jackets_vests', 'sets', 'abayas_hijabs', 'wedding_party',
+        'maternity', 'dresses', 'skirts', 'sportswear', 'leggings',
+        'lingerie', 'pajamas', 'robes', 'swimwear',
+        'caps_hats', 'tights', 'scarves', 'belts', 'gloves'
       ],
-      'Chaussures Homme': [
-        'Basquettes', 'Bottes', 'Classiques', 'Mocassins', 'Sandales', 'Tangues & Pantoufles'
+      'man_shoes': [
+        'sneakers', 'boots', 'classic', 'moccasins', 'sandals', 'slippers'
       ],
-      'Chaussures Femme': [
-        'Basquettes', 'Sandales', 'Bottes', 'Escarpins', 'Ballerines', 'Tangues & Pantoufles'
+      'woman_shoes': [
+        'sneakers', 'sandals', 'boots', 'heels', 'ballet', 'slippers'
       ],
-      'Garçons': [
-        'Chaussures', 'Hauts & Chemises', 'Pantalons & Shorts', 'Vestes & Gilets',
-        'Costumes', 'Survetements & Joggings', 'Pyjamas', 'Sous-vêtements',
-        'Maillots de bain', 'Kamiss', 'Casquettes & Chapeaux'
+      'boys': [
+        'sneakers', 'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests',
+        'suits_blazers', 'sportswear', 'pajamas', 'underwear',
+        'swimwear', 'kamiss', 'caps_hats'
       ],
-      'Filles': [
-        'Chaussures', 'Hauts & Chemises', 'Pantalons & Shorts', 'Vestes & Gilets',
-        'Robes', 'Jupes', 'Ensembles', 'Joggings & Survetements', 'Pyjamas',
-        'Sous-vêtements', 'Leggings & Collants', 'Maillots de bain', 'Casquettes & Chapeaux'
+      'girls': [
+        'sneakers', 'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests',
+        'dresses', 'skirts', 'sets', 'sportswear', 'pajamas',
+        'underwear', 'leggings', 'swimwear', 'caps_hats'
       ],
-      'Bébé': ['Vêtements', 'Chaussures', 'Accessoires'],
-      'Tenues professionnelles': ['Tenues professionnelles'],
-      'Sacs & Valises': [
-        'Pochettes & Portefeuilles', 'Sacs à main', 'Sacs à dos',
-        'Sacs professionnels', 'Valises', 'Cabas de sport'
+      'baby': ['tops_shirts', 'sneakers', 'accessories'],
+      'professional_wear': ['suits_blazers'],
+      'bags_luggage': [
+        'wallets', 'handbags', 'backpacks', 'professional_bags', 'suitcases', 'sport_bags'
       ]
     }
   };
@@ -119,7 +139,7 @@ export default function SearchPage() {
     try {
       const queryParams = new URLSearchParams();
       
-      // Filtros básicos
+      // Filtros básicos - ENVIAR CLAVES EN INGLÉS AL BACKEND
       if (filters.subCategory.trim()) {
         queryParams.append('subCategory', filters.subCategory.trim());
       }
@@ -177,13 +197,16 @@ export default function SearchPage() {
       const queryString = queryParams.toString();
       const url = `posts${queryString ? `?${queryString}` : ''}`;
       
+      console.log("Buscando con filtros:", filters);
+      console.log("URL:", url);
+      
       const res = await getDataAPI(url, auth.token);
       setResults(res.data.posts || []);
       
     } catch (err) {
       console.error("Error en búsqueda:", err);
       setError(
-        err.response?.data?.message || err.message || t('errors.searchError', 'Erreur de recherche')
+        err.response?.data?.message || err.message || t('search:errors.searchError')
       );
     } finally {
       setLoading(false);
@@ -230,7 +253,7 @@ export default function SearchPage() {
   // 🔹 Limpiar todos los filtros
   const handleClearFilters = () => {
     setFilters({
-      category: "Vêtements",
+      category: "clothing",
       subCategory: "",
       subSubCategory: "",
       brand: "",
@@ -287,13 +310,13 @@ export default function SearchPage() {
                   <Form.Label className="small fw-semibold mb-1">
                     {isRTL ? (
                       <span>
-                        {t('labels.subCategory', 'Sous-catégorie')} 
+                        {t('search:labels.subCategory')} 
                         <i className="fas fa-tags text-info ms-1"></i>
                       </span>
                     ) : (
                       <span>
                         <i className="fas fa-tags text-info me-1"></i>
-                        {t('labels.subCategory', 'Sous-catégorie')}
+                        {t('search:labels.subCategory')}
                       </span>
                     )}
                   </Form.Label>
@@ -305,9 +328,12 @@ export default function SearchPage() {
                     className="flex-grow-1"
                     dir={isRTL ? "rtl" : "ltr"}
                   >
-                    <option value="">{t('placeholders.allSubCategories', 'Toutes les sous-catégories')}</option>
+                    <option value="">{t('search:placeholders.allSubCategories')}</option>
                     {Object.keys(categories[filters.category] || {}).map(subCat => (
-                      <option key={subCat} value={subCat}>{subCat}</option>
+                      <option key={subCat} value={subCat}>
+                        {/* 🔹 CORREGIDO: Acceso correcto a las categorías */}
+                        {translateOption(`categories.${subCat}`, 'createpost')}
+                      </option>
                     ))}
                   </Form.Select>
                 </Form.Group>
@@ -319,13 +345,13 @@ export default function SearchPage() {
                   <Form.Label className="small fw-semibold mb-1">
                     {isRTL ? (
                       <span>
-                        {t('labels.subSubCategory', 'Type spécifique')} 
+                        {t('search:labels.subSubCategory')} 
                         <i className="fas fa-list-alt text-success ms-1"></i>
                       </span>
                     ) : (
                       <span>
                         <i className="fas fa-list-alt text-success me-1"></i>
-                        {t('labels.subSubCategory', 'Type spécifique')}
+                        {t('search:labels.subSubCategory')}
                       </span>
                     )}
                   </Form.Label>
@@ -337,9 +363,12 @@ export default function SearchPage() {
                     className="flex-grow-1"
                     dir={isRTL ? "rtl" : "ltr"}
                   >
-                    <option value="">{t('placeholders.allTypes', 'Tous les types')}</option>
+                    <option value="">{t('search:placeholders.allTypes')}</option>
                     {getSubSubCategoryOptions().map(type => (
-                      <option key={type} value={type}>{type}</option>
+                      <option key={type} value={type}>
+                        {/* 🔹 CORREGIDO: Acceso correcto a las categorías */}
+                        {translateOption(`categories.${type}`, 'createpost')}
+                      </option>
                     ))}
                   </Form.Select>
                 </Form.Group>
@@ -357,8 +386,8 @@ export default function SearchPage() {
                 >
                   <i className={`fas ${showAdvancedSearch ? 'fa-chevron-up' : 'fa-chevron-down'} ${isRTL ? 'ms-2' : 'me-2'}`}></i>
                   {showAdvancedSearch 
-                    ? t('buttons.hideAdvanced', 'Masquer la recherche avancée') 
-                    : t('buttons.showAdvanced', 'Recherche avancée')}
+                    ? t('search:buttons.hideAdvanced') 
+                    : t('search:buttons.showAdvanced')}
                   {activeFiltersCount > 0 && (
                     <Badge bg="primary" className={`${isRTL ? 'me-2' : 'ms-2'}`}>
                       {activeFiltersCount}
@@ -379,19 +408,19 @@ export default function SearchPage() {
                       <Form.Label className="small fw-semibold mb-1">
                         {isRTL ? (
                           <span>
-                            {t('labels.brand', 'Marque')} 
+                            {t('search:labels.brand')} 
                             <i className="fas fa-tag text-warning ms-1"></i>
                           </span>
                         ) : (
                           <span>
                             <i className="fas fa-tag text-warning me-1"></i>
-                            {t('labels.brand', 'Marque')}
+                            {t('search:labels.brand')}
                           </span>
                         )}
                       </Form.Label>
                       <Form.Control
                         type="text"
-                        placeholder={t('placeholders.brand', 'Marque...')}
+                        placeholder={t('search:placeholders.brand')}
                         value={filters.brand}
                         onChange={(e) => updateFilter('brand', e.target.value)}
                         size="sm"
@@ -407,13 +436,13 @@ export default function SearchPage() {
                       <Form.Label className="small fw-semibold mb-1">
                         {isRTL ? (
                           <span>
-                            {t('labels.condition', 'État')} 
+                            {t('search:labels.condition')} 
                             <i className="fas fa-star text-warning ms-1"></i>
                           </span>
                         ) : (
                           <span>
                             <i className="fas fa-star text-warning me-1"></i>
-                            {t('labels.condition', 'État')}
+                            {t('search:labels.condition')}
                           </span>
                         )}
                       </Form.Label>
@@ -424,9 +453,12 @@ export default function SearchPage() {
                         disabled={loading}
                         dir={isRTL ? "rtl" : "ltr"}
                       >
-                        <option value="">{t('placeholders.allConditions', 'Tous les états')}</option>
+                        <option value="">{t('search:placeholders.allConditions')}</option>
                         {conditions.map(condition => (
-                          <option key={condition} value={condition}>{condition}</option>
+                          <option key={condition} value={condition}>
+                            {/* 🔹 CORREGIDO: Acceso correcto a las condiciones */}
+                            {translateOption(`conditions.${condition}`, 'createpost')}
+                          </option>
                         ))}
                       </Form.Select>
                     </Form.Group>
@@ -438,13 +470,13 @@ export default function SearchPage() {
                       <Form.Label className="small fw-semibold mb-1">
                         {isRTL ? (
                           <span>
-                            {t('labels.gender', 'Genre')} 
+                            {t('search:labels.gender')} 
                             <i className="fas fa-venus-mars text-info ms-1"></i>
                           </span>
                         ) : (
                           <span>
                             <i className="fas fa-venus-mars text-info me-1"></i>
-                            {t('labels.gender', 'Genre')}
+                            {t('search:labels.gender')}
                           </span>
                         )}
                       </Form.Label>
@@ -455,9 +487,12 @@ export default function SearchPage() {
                         disabled={loading}
                         dir={isRTL ? "rtl" : "ltr"}
                       >
-                        <option value="">{t('placeholders.allGenders', 'Tous les genres')}</option>
+                        <option value="">{t('search:placeholders.allGenders')}</option>
                         {genders.map(gender => (
-                          <option key={gender} value={gender}>{gender}</option>
+                          <option key={gender} value={gender}>
+                            {/* 🔹 CORREGIDO: Acceso correcto a los géneros */}
+                            {translateOption(`genders.${gender}`, 'createpost')}
+                          </option>
                         ))}
                       </Form.Select>
                     </Form.Group>
@@ -472,13 +507,13 @@ export default function SearchPage() {
                       <Form.Label className="small fw-semibold mb-1">
                         {isRTL ? (
                           <span>
-                            {t('labels.size', 'Taille')} 
+                            {t('search:labels.size')} 
                             <i className="fas fa-ruler text-primary ms-1"></i>
                           </span>
                         ) : (
                           <span>
                             <i className="fas fa-ruler text-primary me-1"></i>
-                            {t('labels.size', 'Taille')}
+                            {t('search:labels.size')}
                           </span>
                         )}
                       </Form.Label>
@@ -489,9 +524,11 @@ export default function SearchPage() {
                         disabled={loading}
                         dir={isRTL ? "rtl" : "ltr"}
                       >
-                        <option value="">{t('placeholders.allSizes', 'Toutes les tailles')}</option>
+                        <option value="">{t('search:placeholders.allSizes')}</option>
                         {allSizes.map(size => (
-                          <option key={size} value={size}>{size}</option>
+                          <option key={size} value={size}>
+                            {translateOption(`sizes.${size}`, 'createpost')}
+                          </option>
                         ))}
                       </Form.Select>
                     </Form.Group>
@@ -503,13 +540,13 @@ export default function SearchPage() {
                       <Form.Label className="small fw-semibold mb-1">
                         {isRTL ? (
                           <span>
-                            {t('labels.color', 'Couleur')} 
+                            {t('search:labels.color')} 
                             <i className="fas fa-palette text-success ms-1"></i>
                           </span>
                         ) : (
                           <span>
                             <i className="fas fa-palette text-success me-1"></i>
-                            {t('labels.color', 'Couleur')}
+                            {t('search:labels.color')}
                           </span>
                         )}
                       </Form.Label>
@@ -520,9 +557,11 @@ export default function SearchPage() {
                         disabled={loading}
                         dir={isRTL ? "rtl" : "ltr"}
                       >
-                        <option value="">{t('placeholders.allColors', 'Toutes les couleurs')}</option>
+                        <option value="">{t('search:placeholders.allColors')}</option>
                         {allColors.map(color => (
-                          <option key={color} value={color}>{color}</option>
+                          <option key={color} value={color}>
+                            {translateOption(`colors.${color}`, 'createpost')}
+                          </option>
                         ))}
                       </Form.Select>
                     </Form.Group>
@@ -534,13 +573,13 @@ export default function SearchPage() {
                       <Form.Label className="small fw-semibold mb-1">
                         {isRTL ? (
                           <span>
-                            {t('labels.material', 'Matériau')} 
+                            {t('search:labels.material')} 
                             <i className="fas fa-tshirt text-secondary ms-1"></i>
                           </span>
                         ) : (
                           <span>
                             <i className="fas fa-tshirt text-secondary me-1"></i>
-                            {t('labels.material', 'Matériau')}
+                            {t('search:labels.material')}
                           </span>
                         )}
                       </Form.Label>
@@ -551,9 +590,11 @@ export default function SearchPage() {
                         disabled={loading}
                         dir={isRTL ? "rtl" : "ltr"}
                       >
-                        <option value="">{t('placeholders.allMaterials', 'Tous les matériaux')}</option>
+                        <option value="">{t('search:placeholders.allMaterials')}</option>
                         {materials.map(material => (
-                          <option key={material} value={material}>{material}</option>
+                          <option key={material} value={material}>
+                            {translateOption(`materials.${material}`, 'createpost')}
+                          </option>
                         ))}
                       </Form.Select>
                     </Form.Group>
@@ -568,13 +609,13 @@ export default function SearchPage() {
                       <Form.Label className="small fw-semibold mb-1">
                         {isRTL ? (
                           <span>
-                            {t('labels.season', 'Saison')} 
+                            {t('search:labels.season')} 
                             <i className="fas fa-sun text-warning ms-1"></i>
                           </span>
                         ) : (
                           <span>
                             <i className="fas fa-sun text-warning me-1"></i>
-                            {t('labels.season', 'Saison')}
+                            {t('search:labels.season')}
                           </span>
                         )}
                       </Form.Label>
@@ -585,9 +626,11 @@ export default function SearchPage() {
                         disabled={loading}
                         dir={isRTL ? "rtl" : "ltr"}
                       >
-                        <option value="">{t('placeholders.allSeasons', 'Toutes les saisons')}</option>
+                        <option value="">{t('search:placeholders.allSeasons')}</option>
                         {seasons.map(season => (
-                          <option key={season} value={season}>{season}</option>
+                          <option key={season} value={season}>
+                            {translateOption(`seasons.${season}`, 'createpost')}
+                          </option>
                         ))}
                       </Form.Select>
                     </Form.Group>
@@ -599,19 +642,19 @@ export default function SearchPage() {
                       <Form.Label className="small fw-semibold mb-1">
                         {isRTL ? (
                           <span>
-                            {t('labels.location', 'Localisation')} 
+                            {t('search:labels.location')} 
                             <i className="fas fa-map-marker-alt text-danger ms-1"></i>
                           </span>
                         ) : (
                           <span>
                             <i className="fas fa-map-marker-alt text-danger me-1"></i>
-                            {t('labels.location', 'Localisation')}
+                            {t('search:labels.location')}
                           </span>
                         )}
                       </Form.Label>
                       <Form.Control
                         type="text"
-                        placeholder={t('placeholders.location', 'Ville ou wilaya...')}
+                        placeholder={t('search:placeholders.location')}
                         value={filters.location}
                         onChange={(e) => updateFilter('location', e.target.value)}
                         size="sm"
@@ -625,11 +668,11 @@ export default function SearchPage() {
                   <Col xl={2} lg={2} md={6} sm={6}>
                     <Form.Group>
                       <Form.Label className="small fw-semibold mb-1">
-                        {t('labels.minPrice', 'Prix Min')}
+                        {t('search:labels.minPrice')}
                       </Form.Label>
                       <Form.Control
                         type="number"
-                        placeholder={t('placeholders.minPrice', 'Min...')}
+                        placeholder={t('search:placeholders.minPrice')}
                         value={filters.minPrice}
                         onChange={(e) => updateFilter('minPrice', e.target.value)}
                         size="sm"
@@ -645,11 +688,11 @@ export default function SearchPage() {
                   <Col xl={2} lg={2} md={6} sm={6}>
                     <Form.Group>
                       <Form.Label className="small fw-semibold mb-1">
-                        {t('labels.maxPrice', 'Prix Max')}
+                        {t('search:labels.maxPrice')}
                       </Form.Label>
                       <Form.Control
                         type="number"
-                        placeholder={t('placeholders.maxPrice', 'Max...')}
+                        placeholder={t('search:placeholders.maxPrice')}
                         value={filters.maxPrice}
                         onChange={(e) => updateFilter('maxPrice', e.target.value)}
                         size="sm"
@@ -679,12 +722,12 @@ export default function SearchPage() {
                     {loading ? (
                       <>
                         <Spinner animation="border" size="sm" className={isRTL ? "ms-1" : "me-1"} />
-                        {t('buttons.searching', 'Recherche...')}
+                        {t('search:buttons.searching')}
                       </>
                     ) : (
                       <>
                         <i className={`fas fa-search ${isRTL ? "ms-1" : "me-1"}`}></i>
-                        {t('buttons.search', 'Rechercher')}
+                        {t('search:buttons.search')}
                       </>
                     )}
                   </Button>
@@ -697,7 +740,7 @@ export default function SearchPage() {
                     style={{ minWidth: '120px' }}
                   >
                     <i className={`fas fa-clock ${isRTL ? "ms-1" : "me-1"}`}></i>
-                    {t('buttons.latestProducts', 'Derniers Produits')}
+                    {t('search:buttons.latestProducts')}
                   </Button>
                   
                   {activeFiltersCount > 0 && (
@@ -709,108 +752,18 @@ export default function SearchPage() {
                       style={{ minWidth: '100px' }}
                     >
                       <i className={`fas fa-times ${isRTL ? "ms-1" : "me-1"}`}></i>
-                      {t('buttons.clearAll', 'Effacer')}
+                      {t('search:buttons.clearAll')}
                     </Button>
                   )}
                 </div>
               </Col>
             </Row>
-
-            {/* 🔹 FILTROS ACTIVOS */}
-            <div className="mt-3">
-              {activeFiltersCount > 0 && (
-                <div className={`d-flex align-items-center flex-wrap ${isRTL ? 'flex-row-reverse' : ''}`}>
-                  <small className={`text-muted ${isRTL ? "ms-2" : "me-2"}`}>
-                    {t('labels.activeFilters', 'Filtres actifs')}:
-                  </small>
-                  {filters.subCategory && (
-                    <Badge bg="info" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      Catégorie: {filters.subCategory}
-                    </Badge>
-                  )}
-                  {filters.subSubCategory && (
-                    <Badge bg="success" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      Type: {filters.subSubCategory}
-                    </Badge>
-                  )}
-                  {filters.brand && (
-                    <Badge bg="warning" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      Marque: {filters.brand}
-                    </Badge>
-                  )}
-                  {filters.condition && (
-                    <Badge bg="secondary" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      État: {filters.condition}
-                    </Badge>
-                  )}
-                  {filters.gender && (
-                    <Badge bg="info" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      Genre: {filters.gender}
-                    </Badge>
-                  )}
-                  {filters.size && (
-                    <Badge bg="primary" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      Taille: {filters.size}
-                    </Badge>
-                  )}
-                  {filters.color && (
-                    <Badge bg="success" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      Couleur: {filters.color}
-                    </Badge>
-                  )}
-                  {filters.material && (
-                    <Badge bg="secondary" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      Matériau: {filters.material}
-                    </Badge>
-                  )}
-                  {filters.season && (
-                    <Badge bg="warning" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      Saison: {filters.season}
-                    </Badge>
-                  )}
-                  {filters.location && (
-                    <Badge bg="danger" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      Localisation: {filters.location}
-                    </Badge>
-                  )}
-                  {filters.minPrice && (
-                    <Badge bg="success" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      Prix Min: {filters.minPrice} DZD
-                    </Badge>
-                  )}
-                  {filters.maxPrice && (
-                    <Badge bg="success" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      Prix Max: {filters.maxPrice} DZD
-                    </Badge>
-                  )}
-                  {filters.latest && (
-                    <Badge bg="dark" className={isRTL ? "ms-1 mb-1" : "me-1 mb-1"}>
-                      Derniers Produits
-                    </Badge>
-                  )}
-                  <Badge bg="primary" className="mb-1">
-                    {activeFiltersCount} {activeFiltersCount === 1 ? 'filtre' : 'filtres'}
-                  </Badge>
-                </div>
-              )}
-            </div>
-
           </Form>
         </Card.Body>
       </Card>
 
       {/* 🔹 CONTENIDO PRINCIPAL - CON RTL */}
-      <Container className="py-3">
-        {/* 🔹 Indicadores de Resultados */}
-        {results.length > 0 && (
-          <Alert variant="info" className="px-3 d-flex align-items-center mb-3">
-            <i className={`fas fa-info-circle ${isRTL ? "ms-2" : "me-2"} fs-6`}></i>
-            <small className="fw-semibold">
-              {results.length} {results.length === 1 ? 'produit trouvé' : 'produits trouvés'}
-            </small>
-          </Alert>
-        )}
-
+      <Container>
         {error && (
           <Alert variant="danger" className="px-3 d-flex align-items-center mb-3">
             <i className={`fas fa-exclamation-triangle ${isRTL ? "ms-2" : "me-2"} fs-6`}></i>
@@ -825,9 +778,9 @@ export default function SearchPage() {
               <Card.Body className="p-3">
                 <img src={LoadIcon} alt="loading" width="40" className="mb-2" />
                 <h6 className="text-muted mb-1">
-                  {t('states.searching', 'Recherche...')}
+                  {t('search:states.searching')}
                 </h6>
-                <small className="text-muted">{t('states.pleaseWait', 'Veuillez patienter...')}</small>
+                <small className="text-muted">{t('search:states.pleaseWait')}</small>
               </Card.Body>
             </Card>
           ) : (
@@ -838,25 +791,3 @@ export default function SearchPage() {
     </Container>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

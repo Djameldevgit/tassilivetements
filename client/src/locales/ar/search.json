@@ -1,102 +1,198 @@
-{   
-  
- 
-   
-    "title": "بحث الرحلات",
-    "subtitle": "ابحث عن وجهتك القادمة المثالية",
-    "searchLabel": "ابحث عن وكالات أو رحلات",
-    "searchPlaceholder": "ابحث بالاسم، الوكالة...",
-    "travelAgenciesFound": "وكالات السفر التي تم العثور عليها",
-    "searchingAgencies": "جاري البحث عن الوكالات...",
-    
-    "filters": {
-      "title": "فلاتر البحث",
-      "subCategory": "نوع الرحلة",
-      "selectSubCategory": "اختر نوع الرحلة",
-      "destination": "الوجهة",
-      "selectDestination": "اختر الوجهة",
-      "wilaya": "الولاية/المنطقة",
-      "wilayaPlaceholder": "مثال: الجزائر، وهران، قسنطينة...",
-      "nationalDestinations": "الوجهات الوطنية",
-      "internationalDestinations": "الوجهات الدولية"
+{
+  "labels": {
+    "subCategory": "الفئة الفرعية",
+    "subSubCategory": "النوع المحدد",
+    "brand": "الماركة",
+    "condition": "الحالة",
+    "gender": "الجنس",
+    "size": "المقاس",
+    "color": "اللون",
+    "material": "المادة",
+    "season": "الموسم",
+    "location": "الموقع",
+    "minPrice": "أقل سعر",
+    "maxPrice": "أعلى سعر"
+  },
+  "placeholders": {
+    "allSubCategories": "جميع الفئات الفرعية",
+    "allTypes": "جميع الأنواع",
+    "brand": "البحث بالماركة...",
+    "allConditions": "جميع الحالات",
+    "allGenders": "جميع الأجناس",
+    "allSizes": "جميع المقاسات",
+    "allColors": "جميع الألوان",
+    "allMaterials": "جميع المواد",
+    "allSeasons": "جميع المواسم",
+    "location": "المدينة، الولاية...",
+    "minPrice": "الحد الأدنى",
+    "maxPrice": "الحد الأقصى"
+  },
+  "buttons": {
+    "showAdvanced": "بحث متقدم",
+    "hideAdvanced": "إخفاء الفلاتر",
+    "search": "بحث",
+    "searching": "جاري البحث...",
+    "latestProducts": "أحدث المنتجات",
+    "clearAll": "مسح الكل"
+  },
+  "states": {
+    "searching": "جاري البحث",
+    "pleaseWait": "يرجى الانتظار...",
+    "noResults": "لم يتم العثور على نتائج",
+    "tryAgain": "جرب معايير أخرى"
+  },
+  "errors": {
+    "searchError": "خطأ في البحث",
+    "networkError": "خطأ في الاتصال"
+  },
+  "options": {
+    "categories": {
+      "clothing": "ملابس",
+      "man_clothing": "ملابس الرجال",
+      "woman_clothing": "ملابس النساء",
+      "man_shoes": "أحذية الرجال",
+      "woman_shoes": "أحذية النساء",
+      "boys": "أولاد",
+      "girls": "بنات",
+      "baby": "رضع",
+      "professional_wear": "ملابس مهنية",
+      "bags_luggage": "حقائب وأمتعة",
+      "tops_shirts": "قمصان وبلوزات",
+      "jeans_pants": "جينز وبناطيل",
+      "shorts_capris": "شورتات وكابريس",
+      "jackets_vests": "جاكيتات وصدريات",
+      "suits_blazers": "بدلات وبلazers",
+      "sportswear": "ملابس رياضية",
+      "kamiss": "قمیص",
+      "underwear": "ملابس داخلية",
+      "pajamas": "بيجامات",
+      "swimwear": "ملابس سباحة",
+      "caps_hats": "قبعات وكراهي",
+      "socks": "جوارب",
+      "belts": "أحزمة",
+      "gloves": "قفازات",
+      "ties": "ربطات عنق",
+      "sets": "مجموعات",
+      "abayas_hijabs": "عبايات وحجاب",
+      "wedding_party": "زفاف وحفلات",
+      "maternity": "حمل",
+      "dresses": "فساتين",
+      "skirts": "تنانير",
+      "leggings": "ليقنغ",
+      "lingerie": "لانجري",
+      "robes": "أردية",
+      "tights": "جوارب ضيقة",
+      "scarves": "أوشحة",
+      "sneakers": "أحذية رياضية",
+      "boots": "أحذية",
+      "classic": "كلاسيكي",
+      "moccasins": "موكاسين",
+      "sandals": "صنادل",
+      "slippers": "شبشب",
+      "heels": "كعب عالي",
+      "ballet": "بالي",
+      "accessories": "إكسسوارات",
+      "wallets": "محافظ",
+      "handbags": "حقائب يد",
+      "backpacks": "حقائب ظهر",
+      "professional_bags": "حقائب مهنية",
+      "suitcases": "حقائب سفر",
+      "sport_bags": "حقائب رياضية"
     },
-    
-    "buttons": {
-      "search": "بحث الرحلات",
-      "searching": "جاري البحث...",
-      "clear": "مسح",
-
-     
-      "showAdvanced": "بحث متقدم", 
-      "hideAdvanced": "إخفاء البحث المتقدم"
-
-
+    "conditions": {
+      "new": "جديد",
+      "like_new": "كالجديد",
+      "good": "حالة جيدة",
+      "satisfactory": "حالة مقبولة"
     },
-    
-    "results": {
-      "found": "تم العثور على {{count}} رحلة",
-      "searching": "جاري البحث عن الرحلات...",
-      "loading": "يرجى الانتظار"
+    "genders": {
+      "man": "رجل",
+      "woman": "امرأة",
+      "unisex": "للجنسين",
+      "boy": "ولد",
+      "girl": "بنت",
+      "baby": "رضيع"
     },
-    
-    "errors": {
-      "userSearchError": "خطأ في البحث عن الوكالات",
-      "searchError": "خطأ في البحث عن الرحلات"
+    "sizes": {
+      "XS": "XS",
+      "S": "S",
+      "M": "M",
+      "L": "L",
+      "XL": "XL",
+      "XXL": "XXL",
+      "XXXL": "XXXL",
+      "36": "36",
+      "38": "38",
+      "40": "40",
+      "42": "42",
+      "44": "44",
+      "46": "46",
+      "48": "48",
+      "50": "50"
     },
-    
-    
-        "categories": {
-          "organizedTrip": "رحلة منظمة",
-          "vacationRental": "إيجار عطلات",
-          "hajjUmrah": "حج وعمرة"
-        },
-        
-        "labels": {
-          "category": "الفئة",
-          "destination": "الوجهة",
-          "destinationOrganized": "الوجهة (رحلات منظمة)",
-          "destinationRental": "الوجهة (إيجار عطلات)",
-          "destinationHajj": "الوجهة (حج وعمرة)",
-          "departureDate": "تاريخ المغادرة",
-          "activeFilters": "الفلاتر النشطة",
-          "smartSearch": "بحث ذكي",
-          "latestTrips": "أحدث الرحلات",
-          "date": "التاريخ",
-          "filter": "فلتر",
-          "filters": "فلاتر",
-          "startDate": "تاريخ البداية",
-          "endDate": "تاريخ النهاية",
-          "from": "من",
-          "to": "إلى", 
-          "hotelSearch": "بحث بالفندق",
-          "hotel": "فندق",
-         
-          "minPrice": "أدنى سعر",
-          "maxPrice": "أقصى سعر"
-
-
-        },
-        
-        "placeholders": {
-          "allCategories": "جميع الفئات",
-          "selectCategoryFirst": "اختر فئة أولاً",
-          "hotelName": "اسم الفندق...",
-          "minPrice": "الحد الأدنى...",
-          "maxPrice": "الحد الأقصى..."
-
-
-        },
-        
-       
-        "states": {
-          "searching": "جاري البحث...",
-          "applyingFilters": "جاري تطبيق الفلاتر...",
-          "pleaseWait": "يرجى الانتظار..."
-        }
-        
-       
-    
-
-
+    "colors": {
+      "black": "أسود",
+      "white": "أبيض",
+      "red": "أحمر",
+      "blue": "أزرق",
+      "green": "أخضر",
+      "yellow": "أصفر",
+      "pink": "وردي",
+      "purple": "بنفسجي",
+      "orange": "برتقالي",
+      "brown": "بني",
+      "gray": "رمادي",
+      "beige": "بيج",
+      "multicolor": "متعدد الألوان"
+    },
+    "materials": {
+      "cotton": "قطن",
+      "polyester": "بوليستر",
+      "wool": "صوف",
+      "silk": "حرير",
+      "denim": "دينيم",
+      "leather": "جلد",
+      "synthetic": "صناعي",
+      "linen": "كتان",
+      "cashmere": "كشمير",
+      "velvet": "قطيفة"
+    },
+    "seasons": {
+      "spring": "الربيع",
+      "summer": "الصيف",
+      "autumn": "الخريف",
+      "winter": "الشتاء",
+      "all_year": "طوال السنة"
+    },
+    "wilayas": {
+      "algiers": "الجزائر",
+      "oran": "وهران",
+      "constantine": "قسنطينة",
+      "annaba": "عنابة",
+      "blida": "البليدة",
+      "batna": "باتنة",
+      "djelfa": "الجلفة",
+      "setif": "سطيف",
+      "sidi_bel_abbes": "سيدي بلعباس",
+      "biskra": "بسكرة",
+      "tebessa": "تبسة",
+      "el_oued": "الوادي",
+      "skikda": "سكيكدة",
+      "tiaret": "تيارت",
+      "bejaia": "بجاية",
+      "tlemcen": "تلمسان",
+      "ouargla": "ورقلة",
+      "mostaganem": "مستغانم",
+      "bordj_bou_arreridj": "برج بوعريريج",
+      "chlef": "الشلف",
+      "souk_ahras": "سوق أهراس",
+      "medea": "المدية",
+      "el_tarf": "الطارف",
+      "ain_defla": "عين الدفلى",
+      "naama": "النعامة",
+      "ain_temouchent": "عين تموشنت",
+      "ghardaia": "غرداية",
+      "relizane": "غليزان"
+    }
   }
- 
+}

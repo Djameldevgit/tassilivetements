@@ -31,7 +31,7 @@ import { getPrivacySettings } from './redux/actions/privacyAction';
 import bloginfo from './pages/bloginfo';
 import Bloqueos404 from './components/adminitration/Bloqueos404';
 import appinfo2 from './pages/appinfo2';
-import Createpost from './pages/createpost';
+import CreatePost from './pages/CreatePost';
 import appinfo3 from './pages/appinfo3';
 
 function App() {
@@ -143,7 +143,7 @@ function App() {
             <Route exact path="/infoaplicacionn" component={appinfo2} />
             <Route exact path="/infoaplicacionn3" component={appinfo3} />
 
-            <Route path="/edit-post/:id" element={<Createpost />} />
+            <Route path="/edit-post/:id" element={<CreatePost />} />
           
               <Route exact path="/bloqueos404" component={Bloqueos404} />
             <Route exact path="/video/:obraId" component={video} />

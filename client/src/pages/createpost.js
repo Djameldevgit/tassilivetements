@@ -12,7 +12,7 @@ import ImageUpload from '../components/forms/ImageUpload';
 import { createPost, updatePost } from '../redux/actions/postAction';
 
 const getInitialState = () => ({
-  category: "Vêtements",
+  category: "clothing",
   subCategory: "",
   subSubCategory: "",
   title: "",
@@ -20,12 +20,12 @@ const getInitialState = () => ({
   price: "",
   currency: 'DZD',
   brand: "",
-  condition: 'Nouveau',
+  condition: 'new',
   sizes: [],
   colors: [],
   material: "",
   gender: "",
-  season: 'Toute l\'année',
+  season: 'all_year',
   wilaya: "",
   commune: "",
   location: "",
@@ -34,63 +34,21 @@ const getInitialState = () => ({
   tags: []
 });
 
-// Arrays para selects - VALORES ORIGINALES (claves)
-const wilayas = ['Alger', 'Oran', 'Constantine', 'Annaba', 'Blida', 'Batna', 'Djelfa', 'Sétif', 'Sidi Bel Abbès', 'Biskra', 'Tébessa', 'El Oued', 'Skikda', 'Tiaret', 'Béjaïa', 'Tlemcen', 'Ouargla', 'Mostaganem', 'Bordj Bou Arréridj', 'Chlef', 'Souk Ahras', 'Médéa', 'El Tarf', 'Aïn Defla', 'Naâma', 'Aïn Témouchent', 'Ghardaïa', 'Relizane'];
-const conditions = ['Nouveau', 'Comme neuf', 'Bon état', 'État satisfaisant'];
+// Arrays para selects - AHORA SE TRADUCEN DESDE createpost
+const conditions = ['new', 'like_new', 'good', 'satisfactory'];
 const allSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '36', '38', '40', '42', '44', '46', '48', '50'];
-const allColors = ['Noir', 'Blanc', 'Rouge', 'Bleu', 'Vert', 'Jaune', 'Rose', 'Violet', 'Orange', 'Marron', 'Gris', 'Beige', 'Multicolor'];
-const materials = ['Coton', 'Polyester', 'Laine', 'Soie', 'Denim', 'Cuir', 'Synthétique', 'Linen', 'Cachemire', 'Velours'];
-const genders = ['Homme', 'Femme', 'Unisexe', 'Garçon', 'Fille', 'Bébé'];
-const seasons = ['Printemps', 'Été', 'Automne', 'Hiver', 'Toute l\'année'];
-
-// Categorías y subcategorías - ESTRUCTURA ORIGINAL
-const categories = {
-  'Vêtements': {
-    'Vêtements Homme': [
-      'Hauts & Chemises', 'Jeans & Pantalons', 'Shorts & Pantacourts', 
-      'Vestes & Gilets', 'Costumes & Blazers', 'Survetements', 'Kamiss',
-      'Sous vêtements', 'Pyjamas', 'Maillots de bain', 'Casquettes & Chapeaux',
-      'Chaussettes', 'Ceintures', 'Gants', 'Cravates'
-    ],
-    'Vêtements Femme': [
-      'Hauts & Chemises', 'Jeans & Pantalons', 'Shorts & Pantacourts',
-      'Vestes & Gilets', 'Ensembles', 'Abayas & Hijabs', 'Mariages & Fêtes',
-      'Maternité', 'Robes', 'Jupes', 'Joggings & Survetements', 'Leggings',
-      'Sous-vêtements & Lingerie', 'Pyjamas', 'Peignoirs', 'Maillots de bain',
-      'Casquettes & Chapeaux', 'Chaussettes & Collants', 'Foulards & Echarpes',
-      'Ceintures', 'Gants'
-    ],
-    'Chaussures Homme': [
-      'Basquettes', 'Bottes', 'Classiques', 'Mocassins', 'Sandales', 'Tangues & Pantoufles'
-    ],
-    'Chaussures Femme': [
-      'Basquettes', 'Sandales', 'Bottes', 'Escarpins', 'Ballerines', 'Tangues & Pantoufles'
-    ],
-    'Garçons': [
-      'Chaussures', 'Hauts & Chemises', 'Pantalons & Shorts', 'Vestes & Gilets',
-      'Costumes', 'Survetements & Joggings', 'Pyjamas', 'Sous-vêtements',
-      'Maillots de bain', 'Kamiss', 'Casquettes & Chapeaux'
-    ],
-    'Filles': [
-      'Chaussures', 'Hauts & Chemises', 'Pantalons & Shorts', 'Vestes & Gilets',
-      'Robes', 'Jupes', 'Ensembles', 'Joggings & Survetements', 'Pyjamas',
-      'Sous-vêtements', 'Leggings & Collants', 'Maillots de bain', 'Casquettes & Chapeaux'
-    ],
-    'Bébé': ['Vêtements', 'Chaussures', 'Accessoires'],
-    'Tenues professionnelles': ['Tenues professionnelles'],
-    'Sacs & Valises': [
-      'Pochettes & Portefeuilles', 'Sacs à main', 'Sacs à dos',
-      'Sacs professionnels', 'Valises', 'Cabas de sport'
-    ]
-  }
-};
+const allColors = ['black', 'white', 'red', 'blue', 'green', 'yellow', 'pink', 'purple', 'orange', 'brown', 'gray', 'beige', 'multicolor'];
+const materials = ['cotton', 'polyester', 'wool', 'silk', 'denim', 'leather', 'synthetic', 'linen', 'cashmere', 'velvet'];
+const genders = ['man', 'woman', 'unisex', 'boy', 'girl', 'baby'];
+const seasons = ['spring', 'summer', 'autumn', 'winter', 'all_year'];
+const wilayas = ['algiers', 'oran', 'constantine', 'annaba', 'blida', 'batna', 'djelfa', 'setif', 'sidi_bel_abbes', 'biskra', 'tebessa', 'el_oued', 'skikda', 'tiaret', 'bejaia', 'tlemcen', 'ouargla', 'mostaganem', 'bordj_bou_arreridj', 'chlef', 'souk_ahras', 'medea', 'el_tarf', 'ain_defla', 'naama', 'ain_temouchent', 'ghardaia', 'relizane'];
 
 const CreatePost = () => {
   const { auth, theme, languageReducer } = useSelector((state) => state);
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-  const { t, i18n } = useTranslation(['forms', 'common', 'categories', 'arrays']);
+  const { t, i18n } = useTranslation('createpost'); // Solo createpost
 
   const isEdit = location.state?.isEdit || false;
   const postToEdit = location.state?.postData || null;
@@ -105,6 +63,36 @@ const CreatePost = () => {
   const [selectedColors, setSelectedColors] = useState([]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 🔥 ESTRUCTURA DE CATEGORÍAS REACTIVA
+  const categoriesStructure = useMemo(() => ({
+    clothing: {
+      man_clothing: [
+        'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests', 
+        'suits_blazers', 'sportswear', 'kamiss', 'underwear', 'pajamas', 
+        'swimwear', 'caps_hats', 'socks', 'belts', 'gloves', 'ties'
+      ],
+      woman_clothing: [
+        'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests', 
+        'sets', 'abayas_hijabs', 'wedding_party', 'maternity', 'dresses', 
+        'skirts', 'sportswear', 'leggings', 'lingerie', 'pajamas', 'robes', 
+        'swimwear', 'caps_hats', 'tights', 'scarves', 'belts', 'gloves'
+      ],
+      man_shoes: ['sneakers', 'boots', 'classic', 'moccasins', 'sandals', 'slippers'],
+      woman_shoes: ['sneakers', 'sandals', 'boots', 'heels', 'ballet', 'slippers'],
+      boys: [
+        'sneakers', 'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests',
+        'suits_blazers', 'sportswear', 'pajamas', 'underwear', 'swimwear', 'kamiss', 'caps_hats'
+      ],
+      girls: [
+        'sneakers', 'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests',
+        'dresses', 'skirts', 'sets', 'sportswear', 'pajamas', 'underwear', 'leggings', 'swimwear', 'caps_hats'
+      ],
+      baby: ['tops_shirts', 'sneakers', 'accessories'],
+      professional_wear: ['suits_blazers'],
+      bags_luggage: ['wallets', 'handbags', 'backpacks', 'professional_bags', 'suitcases', 'sport_bags']
+    }
+  }), []);
 
   // 🔥 ESTILOS 100% RESPONSIVE PARA ANDROID
   const styles = useMemo(() => ({
@@ -197,16 +185,27 @@ const CreatePost = () => {
     }
   }), [isRTL]);
 
-  // 🔥 FUNCIONES DE TRADUCCIÓN SIMPLIFICADAS
-  const translateOption = useCallback((option, namespace = 'arrays') => {
-    if (!option) return '';
-    return t(`${namespace}:${option}`, { defaultValue: option });
+  // 🔥 FUNCIÓN ÚNICA DE TRADUCCIÓN PARA TODO
+  const translateOption = useCallback((optionKey, fallback = '') => {
+    if (!optionKey) return fallback;
+    
+    // Intentar traducir desde createpost
+    const translation = t(`options.${optionKey}`, { defaultValue: '' });
+    
+    // Si no existe, usar el fallback o el key
+    return translation || fallback || optionKey;
   }, [t]);
 
-  const translateCategory = useCallback((category) => {
-    if (!category) return '';
-    return t(`categories:${category}`, { defaultValue: category });
-  }, [t]);
+  // 🔥 FUNCIONES PARA OBTENER OPCIONES DE CATEGORÍAS
+  const getSubCategoryOptions = useCallback(() => {
+    if (!postData.category) return [];
+    return Object.keys(categoriesStructure[postData.category] || {});
+  }, [postData.category, categoriesStructure]);
+
+  const getSubSubCategoryOptions = useCallback(() => {
+    if (!postData.subCategory) return [];
+    return categoriesStructure[postData.category]?.[postData.subCategory] || [];
+  }, [postData.category, postData.subCategory, categoriesStructure]);
 
   useEffect(() => {
     const lang = languageReducer?.language || 'fr';
@@ -222,7 +221,7 @@ const CreatePost = () => {
       const finalPostData = {
         ...getInitialState(),
         ...sanitizedData,
-        category: sanitizedData.category || "Vêtements",
+        category: sanitizedData.category || "clothing",
         subCategory: sanitizedData.subCategory || "",
         subSubCategory: sanitizedData.subSubCategory || "",
         description: sanitizedData.description || sanitizedData.content || "",
@@ -284,8 +283,8 @@ const CreatePost = () => {
     const newImages = [];
 
     files.forEach(file => {
-      if (!file) err = t('forms:validation_images_required');
-      else if (file.size > 5 * 1024 * 1024) err = t('forms:validation_images_size');
+      if (!file) err = t('validation.images_required');
+      else if (file.size > 5 * 1024 * 1024) err = t('validation.images_size');
       else newImages.push(file);
     });
 
@@ -342,17 +341,17 @@ const CreatePost = () => {
   const validateForm = useCallback(() => {
     const newErrors = {};
     
-    if (!postData.title.trim()) newErrors.title = t('forms:validation_title');
-    if (!postData.description.trim()) newErrors.description = t('forms:validation_description');
-    if (!postData.price || postData.price <= 0) newErrors.price = t('forms:validation_price');
-    if (!postData.subCategory) newErrors.subCategory = t('forms:validation_subcategory');
-    if (!postData.brand.trim()) newErrors.brand = t('forms:validation_brand');
-    if (!postData.wilaya) newErrors.wilaya = t('forms:validation_wilaya');
-    if (!postData.commune) newErrors.commune = t('forms:validation_commune');
-    if (!postData.phone.trim()) newErrors.phone = t('forms:validation_phone');
-    if (selectedSizes.length === 0) newErrors.sizes = t('forms:validation_sizes');
-    if (selectedColors.length === 0) newErrors.colors = t('forms:validation_colors');
-    if (images.length === 0) newErrors.images = t('forms:validation_images');
+    if (!postData.title.trim()) newErrors.title = t('validation.title');
+    if (!postData.description.trim()) newErrors.description = t('validation.description');
+    if (!postData.price || postData.price <= 0) newErrors.price = t('validation.price');
+    if (!postData.subCategory) newErrors.subCategory = t('validation.subcategory');
+    if (!postData.brand.trim()) newErrors.brand = t('validation.brand');
+    if (!postData.wilaya) newErrors.wilaya = t('validation.wilaya');
+    if (!postData.commune) newErrors.commune = t('validation.commune');
+    if (!postData.phone.trim()) newErrors.phone = t('validation.phone');
+    if (selectedSizes.length === 0) newErrors.sizes = t('validation.sizes');
+    if (selectedColors.length === 0) newErrors.colors = t('validation.colors');
+    if (images.length === 0) newErrors.images = t('validation.images');
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -363,7 +362,7 @@ const CreatePost = () => {
     setIsSubmitting(true);
 
     if (!validateForm()) {
-      showAlertMessage(t('forms:validation_required_fields'), "danger");
+      showAlertMessage(t('validation.required_fields'), "danger");
       setIsSubmitting(false);
       return;
     }
@@ -380,16 +379,16 @@ const CreatePost = () => {
 
       if (isEdit && postToEdit) {
         await dispatch(updatePost(actionData));
-        showAlertMessage(t('forms:success_update'), "success");
+        showAlertMessage(t('success.update'), "success");
       } else {
         await dispatch(createPost(actionData));
-        showAlertMessage(t('forms:success_create'), "success");
+        showAlertMessage(t('success.create'), "success");
       }
 
       setTimeout(() => history.push('/'), 2000);
 
     } catch (error) {
-      showAlertMessage(t('forms:error_publication'), "danger");
+      showAlertMessage(t('error.publication'), "danger");
     } finally {
       setIsSubmitting(false);
     }
@@ -402,89 +401,82 @@ const CreatePost = () => {
     setTimeout(() => setShowAlert(false), 5000);
   }, []);
 
-  const getSubSubCategoryOptions = useCallback(() => {
-    if (!postData.subCategory) return [];
-    return categories[postData.category]?.[postData.subCategory] || [];
-  }, [postData.category, postData.subCategory]);
+  // 🔥 COMPONENTE CATEGORY SECTION
+  const CategorySection = useMemo(() => (
+    <Card style={styles.card}>
+      <Card.Header style={styles.cardHeader}>
+        <h6 style={styles.sectionTitle}>
+          <FaTag style={styles.icon} />
+          {t('sections.categories')}
+        </h6>
+      </Card.Header>
+      <Card.Body style={styles.cardBody}>
+        <Row className="g-2">
+          <Col xs={12} lg={6}>
+            <Form.Group>
+              <Form.Label style={styles.formLabel}>{t('labels.subcategory')} *</Form.Label>
+              <Form.Select
+                name="subCategory"
+                value={postData.subCategory}
+                onChange={(e) => handleCategoryChange('subCategory', e.target.value)}
+                isInvalid={!!errors.subCategory}
+                style={styles.formControl}
+              >
+                <option value="">{t('placeholders.select_subcategory')}</option>
+                {getSubCategoryOptions().map(subCatKey => (
+                  <option key={subCatKey} value={subCatKey}>
+                    {translateOption(`categories.${subCatKey}`)}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.subCategory}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+          
+          <Col xs={12} lg={6}>
+            <Form.Group>
+              <Form.Label style={styles.formLabel}>{t('labels.specific_type')}</Form.Label>
+              <Form.Select
+                name="subSubCategory"
+                value={postData.subSubCategory}
+                onChange={(e) => handleCategoryChange('subSubCategory', e.target.value)}
+                disabled={!postData.subCategory}
+                style={styles.formControl}
+              >
+                <option value="">{t('placeholders.select_type')}</option>
+                {getSubSubCategoryOptions().map(typeKey => (
+                  <option key={typeKey} value={typeKey}>
+                    {translateOption(`categories.${typeKey}`)}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+          </Col>
+        </Row>
+      </Card.Body>
+    </Card>
+  ), [postData.subCategory, postData.subSubCategory, errors.subCategory, t, getSubCategoryOptions, getSubSubCategoryOptions, styles, handleCategoryChange, translateOption]);
 
-  // 🔥 COMPONENTES OPTIMIZADOS CON TRADUCCIÓN DIRECTA
- // 🔥 COMPONENTE CATEGORY SECTION SIMPLIFICADO
-const CategorySection = useMemo(() => (
-  <Card style={styles.card}>
-    <Card.Header style={styles.cardHeader}>
-      <h6 style={styles.sectionTitle}>
-        <FaTag style={styles.icon} />
-        {t('forms:categories')}
-      </h6>
-    </Card.Header>
-    <Card.Body style={styles.cardBody}>
-      <Row className="g-2">
-        <Col xs={12} lg={6}>
-          <Form.Group>
-            <Form.Label style={styles.formLabel}>{t('forms:subcategory')} *</Form.Label>
-            <Form.Select
-              name="subCategory"
-              value={postData.subCategory}
-              onChange={(e) => handleCategoryChange('subCategory', e.target.value)}
-              isInvalid={!!errors.subCategory}
-              style={styles.formControl}
-            >
-              <option value="">{t('forms:select_subcategory')}</option>
-              {Object.keys(categories[postData.category] || {}).map(subCat => (
-  <option key={subCat} value={subCat}>
-    {t(`categories:${subCat}`, { defaultValue: subCat })}
-  </option>
-))}
-
- 
- 
-            </Form.Select>
-            <Form.Control.Feedback type="invalid">
-              {errors.subCategory}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Col>
-        
-        <Col xs={12} lg={6}>
-          <Form.Group>
-            <Form.Label style={styles.formLabel}>{t('forms:specific_type')}</Form.Label>
-            <Form.Select
-              name="subSubCategory"
-              value={postData.subSubCategory}
-              onChange={(e) => handleCategoryChange('subSubCategory', e.target.value)}
-              disabled={!postData.subCategory}
-              style={styles.formControl}
-            >
-              <option value="">{t('forms:select_type')}</option>
-              {getSubSubCategoryOptions().map(type => (
-  <option key={type} value={type}>
-    {t(`categories:${type}`, { defaultValue: type })}
-  </option>
-))}
-            </Form.Select>
-          </Form.Group>
-        </Col>
-      </Row>
-    </Card.Body>
-  </Card>
-), [postData.subCategory, postData.subSubCategory, errors.subCategory, t, getSubSubCategoryOptions, styles]);
+  // 🔥 COMPONENTE BASIC INFO SECTION
   const BasicInfoSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
-        <h6 style={styles.sectionTitle}>📝 {t('forms:basic_info')}</h6>
+        <h6 style={styles.sectionTitle}>📝 {t('sections.basic_info')}</h6>
       </Card.Header>
       <Card.Body style={styles.cardBody}>
         <Row className="g-2">
           <Col xs={12} lg={8}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:title')} *</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.title')} *</Form.Label>
               <Form.Control
                 type="text"
                 name="title"
                 value={postData.title}
                 onChange={handleChangeInput}
                 isInvalid={!!errors.title}
-                placeholder={t('forms:title_placeholder')}
+                placeholder={t('placeholders.title')}
                 style={styles.formControl}
               />
               <Form.Control.Feedback type="invalid">
@@ -495,14 +487,14 @@ const CategorySection = useMemo(() => (
           
           <Col xs={12} lg={4}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:brand')} *</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.brand')} *</Form.Label>
               <Form.Control
                 type="text"
                 name="brand"
                 value={postData.brand}
                 onChange={handleChangeInput}
                 isInvalid={!!errors.brand}
-                placeholder={t('forms:brand_placeholder')}
+                placeholder={t('placeholders.brand')}
                 style={styles.formControl}
               />
               <Form.Control.Feedback type="invalid">
@@ -513,7 +505,7 @@ const CategorySection = useMemo(() => (
           
           <Col xs={12}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:description')} *</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.description')} *</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -521,7 +513,7 @@ const CategorySection = useMemo(() => (
                 value={postData.description}
                 onChange={handleChangeInput}
                 isInvalid={!!errors.description}
-                placeholder={t('forms:description_placeholder')}
+                placeholder={t('placeholders.description')}
                 style={styles.textarea}
               />
               <Form.Control.Feedback type="invalid">
@@ -534,16 +526,17 @@ const CategorySection = useMemo(() => (
     </Card>
   ), [postData.title, postData.brand, postData.description, errors, t, handleChangeInput, styles]);
 
+  // 🔥 COMPONENTE PRICE CONDITION SECTION
   const PriceConditionSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
-        <h6 style={styles.sectionTitle}>💰 {t('forms:price_condition')}</h6>
+        <h6 style={styles.sectionTitle}>💰 {t('sections.price_condition')}</h6>
       </Card.Header>
       <Card.Body style={styles.cardBody}>
         <Row className="g-2">
           <Col xs={12} sm={6} lg={3}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:price')} (DZD) *</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.price')} (DZD) *</Form.Label>
               <Form.Control
                 type="number"
                 name="price"
@@ -563,7 +556,7 @@ const CategorySection = useMemo(() => (
           
           <Col xs={12} sm={6} lg={3}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:condition')}</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.condition')}</Form.Label>
               <Form.Select
                 name="condition"
                 value={postData.condition}
@@ -572,7 +565,7 @@ const CategorySection = useMemo(() => (
               >
                 {conditions.map(condition => (
                   <option key={condition} value={condition}>
-                    {translateOption(condition, 'arrays')}
+                    {translateOption(`conditions.${condition}`)}
                   </option>
                 ))}
               </Form.Select>
@@ -581,17 +574,17 @@ const CategorySection = useMemo(() => (
           
           <Col xs={12} sm={6} lg={3}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:gender')}</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.gender')}</Form.Label>
               <Form.Select
                 name="gender"
                 value={postData.gender}
                 onChange={handleChangeInput}
                 style={styles.formControl}
               >
-                <option value="">{t('forms:select_gender')}</option>
+                <option value="">{t('placeholders.select_gender')}</option>
                 {genders.map(gender => (
                   <option key={gender} value={gender}>
-                    {translateOption(gender, 'arrays')}
+                    {translateOption(`genders.${gender}`)}
                   </option>
                 ))}
               </Form.Select>
@@ -600,7 +593,7 @@ const CategorySection = useMemo(() => (
           
           <Col xs={12} sm={6} lg={3}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:season')}</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.season')}</Form.Label>
               <Form.Select
                 name="season"
                 value={postData.season}
@@ -609,7 +602,7 @@ const CategorySection = useMemo(() => (
               >
                 {seasons.map(season => (
                   <option key={season} value={season}>
-                    {translateOption(season, 'arrays')}
+                    {translateOption(`seasons.${season}`)}
                   </option>
                 ))}
               </Form.Select>
@@ -620,10 +613,11 @@ const CategorySection = useMemo(() => (
     </Card>
   ), [postData.price, postData.condition, postData.gender, postData.season, errors.price, t, handleChangeInput, translateOption, styles]);
 
+  // 🔥 COMPONENTE SIZES SECTION
   const SizesSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
-        <h6 style={styles.sectionTitle}>📏 {t('forms:available_sizes')} *</h6>
+        <h6 style={styles.sectionTitle}>📏 {t('sections.available_sizes')} *</h6>
       </Card.Header>
       <Card.Body style={styles.cardBody}>
         {errors.sizes && (
@@ -638,7 +632,7 @@ const CategorySection = useMemo(() => (
                 <Form.Check
                   type="checkbox"
                   id={`size-${size}`}
-                  label={translateOption(size, 'arrays')}
+                  label={translateOption(`sizes.${size}`)}
                   checked={selectedSizes.includes(size)}
                   onChange={() => handleSizeChange(size)}
                   className="fw-medium"
@@ -651,10 +645,11 @@ const CategorySection = useMemo(() => (
     </Card>
   ), [selectedSizes, errors.sizes, t, handleSizeChange, translateOption, styles]);
 
+  // 🔥 COMPONENTE COLORS SECTION
   const ColorsSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
-        <h6 style={styles.sectionTitle}>🎨 {t('forms:available_colors')} *</h6>
+        <h6 style={styles.sectionTitle}>🎨 {t('sections.available_colors')} *</h6>
       </Card.Header>
       <Card.Body style={styles.cardBody}>
         {errors.colors && (
@@ -669,7 +664,7 @@ const CategorySection = useMemo(() => (
                 <Form.Check
                   type="checkbox"
                   id={`color-${color}`}
-                  label={translateOption(color, 'arrays')}
+                  label={translateOption(`colors.${color}`)}
                   checked={selectedColors.includes(color)}
                   onChange={() => handleColorChange(color)}
                   className="fw-medium"
@@ -682,26 +677,27 @@ const CategorySection = useMemo(() => (
     </Card>
   ), [selectedColors, errors.colors, t, handleColorChange, translateOption, styles]);
 
+  // 🔥 COMPONENTE MATERIAL SECTION
   const MaterialSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
-        <h6 style={styles.sectionTitle}>🧵 {t('forms:material')}</h6>
+        <h6 style={styles.sectionTitle}>🧵 {t('sections.material')}</h6>
       </Card.Header>
       <Card.Body style={styles.cardBody}>
         <Row>
           <Col xs={12} lg={6}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:main_material')}</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.main_material')}</Form.Label>
               <Form.Select
                 name="material"
                 value={postData.material}
                 onChange={handleChangeInput}
                 style={styles.formControl}
               >
-                <option value="">{t('forms:select_material')}</option>
+                <option value="">{t('placeholders.select_material')}</option>
                 {materials.map(material => (
                   <option key={material} value={material}>
-                    {translateOption(material, 'arrays')}
+                    {translateOption(`materials.${material}`)}
                   </option>
                 ))}
               </Form.Select>
@@ -712,19 +708,20 @@ const CategorySection = useMemo(() => (
     </Card>
   ), [postData.material, t, handleChangeInput, translateOption, styles]);
 
+  // 🔥 COMPONENTE LOCATION SECTION
   const LocationSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
         <h6 style={styles.sectionTitle}>
           <FaMapMarkerAlt style={styles.icon} />
-          {t('forms:location')}
+          {t('sections.location')}
         </h6>
       </Card.Header>
       <Card.Body style={styles.cardBody}>
         <Row className="g-2">
           <Col xs={12} lg={6}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:wilaya')} *</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.wilaya')} *</Form.Label>
               <Form.Select
                 name="wilaya"
                 value={postData.wilaya}
@@ -732,10 +729,10 @@ const CategorySection = useMemo(() => (
                 isInvalid={!!errors.wilaya}
                 style={styles.formControl}
               >
-                <option value="">{t('forms:select_wilaya')}</option>
+                <option value="">{t('placeholders.select_wilaya')}</option>
                 {wilayas.map(wilaya => (
                   <option key={wilaya} value={wilaya}>
-                    {translateOption(wilaya, 'arrays')}
+                    {translateOption(`wilayas.${wilaya}`)}
                   </option>
                 ))}
               </Form.Select>
@@ -746,14 +743,14 @@ const CategorySection = useMemo(() => (
           </Col>
           <Col xs={12} lg={6}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:commune')} *</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.commune')} *</Form.Label>
               <Form.Control
                 type="text"
                 name="commune"
                 value={postData.commune}
                 onChange={handleChangeInput}
                 isInvalid={!!errors.commune}
-                placeholder={t('forms:commune_placeholder')}
+                placeholder={t('placeholders.commune')}
                 style={styles.formControl}
               />
               <Form.Control.Feedback type="invalid">
@@ -763,13 +760,13 @@ const CategorySection = useMemo(() => (
           </Col>
           <Col xs={12}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:address')}</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.address')}</Form.Label>
               <Form.Control
                 type="text"
                 name="location"
                 value={postData.location}
                 onChange={handleChangeInput}
-                placeholder={t('forms:address_placeholder')}
+                placeholder={t('placeholders.address')}
                 style={styles.formControl}
               />
             </Form.Group>
@@ -779,26 +776,27 @@ const CategorySection = useMemo(() => (
     </Card>
   ), [postData.wilaya, postData.commune, postData.location, errors, t, handleChangeInput, translateOption, styles]);
 
+  // 🔥 COMPONENTE CONTACT SECTION
   const ContactSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
         <h6 style={styles.sectionTitle}>
           <FaPhone style={styles.icon} />
-          {t('forms:contact')}
+          {t('sections.contact')}
         </h6>
       </Card.Header>
       <Card.Body style={styles.cardBody}>
         <Row className="g-2">
           <Col xs={12} lg={6}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:phone')} *</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.phone')} *</Form.Label>
               <Form.Control
                 type="tel"
                 name="phone"
                 value={postData.phone}
                 onChange={handleChangeInput}
                 isInvalid={!!errors.phone}
-                placeholder={t('forms:phone_placeholder')}
+                placeholder={t('placeholders.phone')}
                 style={styles.formControl}
               />
               <Form.Control.Feedback type="invalid">
@@ -808,13 +806,13 @@ const CategorySection = useMemo(() => (
           </Col>
           <Col xs={12} lg={6}>
             <Form.Group>
-              <Form.Label style={styles.formLabel}>{t('forms:email')}</Form.Label>
+              <Form.Label style={styles.formLabel}>{t('labels.email')}</Form.Label>
               <Form.Control
                 type="email"
                 name="email"
                 value={postData.email}
                 onChange={handleChangeInput}
-                placeholder={t('forms:email_placeholder')}
+                placeholder={t('placeholders.email')}
                 style={styles.formControl}
               />
             </Form.Group>
@@ -824,12 +822,13 @@ const CategorySection = useMemo(() => (
     </Card>
   ), [postData.phone, postData.email, errors, t, handleChangeInput, styles]);
 
+  // 🔥 COMPONENTE IMAGES SECTION
   const ImagesSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
         <h6 style={styles.sectionTitle}>
           <FaImage style={styles.icon} />
-          {t('forms:images')} *
+          {t('sections.images')} *
         </h6>
       </Card.Header>
       <Card.Body style={styles.cardBody}>
@@ -861,11 +860,11 @@ const CategorySection = useMemo(() => (
           }}>
             <Card.Body className="text-center py-3">
               <h4 className="mb-2 fw-bold" style={{fontSize: '18px'}}>
-                {isEdit ? t('forms:edit_clothing') : t('forms:sell_clothing')}
+                {isEdit ? t('headers.edit_clothing') : t('headers.sell_clothing')}
               </h4>
               {isEdit && postToEdit?.title && (
                 <p className="mb-0 text-muted" style={{fontSize: '14px'}}>
-                  {t('forms:editing')}: "{postToEdit.title}"
+                  {t('headers.editing')}: "{postToEdit.title}"
                 </p>
               )}
             </Card.Body>
@@ -914,8 +913,8 @@ const CategorySection = useMemo(() => (
                           disabled={isSubmitting}
                         >
                           <FaSave className={isRTL ? "ms-2" : "me-2"} />
-                          {isSubmitting ? t('common:loading') : 
-                            (isEdit ? t('forms:update') : t('forms:publish'))}
+                          {isSubmitting ? t('common.loading') : 
+                            (isEdit ? t('buttons.update') : t('buttons.publish'))}
                         </Button>
                       </Col>
                       <Col xs={12} sm={4}>
@@ -927,7 +926,7 @@ const CategorySection = useMemo(() => (
                           disabled={isSubmitting}
                         >
                           <FaTimes className={isRTL ? "ms-2" : "me-2"} />
-                          {t('common:cancel')}
+                          {t('buttons.cancel')}
                         </Button>
                       </Col>
                     </Row>
@@ -941,7 +940,7 @@ const CategorySection = useMemo(() => (
                 <Card.Body className="text-center py-4">
                   <div className="fs-1 mb-3">🏁</div>
                   <h5 className="text-muted" style={{fontSize: '16px'}}>
-                    {t('forms:select_subcategory_first')}
+                    {t('messages.select_subcategory_first')}
                   </h5>
                 </Card.Body>
               </Card>

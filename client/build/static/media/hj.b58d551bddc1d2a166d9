@@ -1,0 +1,77 @@
+const wilayas = ['Alger', 'Oran', 'Constantine', 'Annaba', 'Blida', 'Batna', 'Djelfa', 'Sétif', 'Sidi Bel Abbès', 'Biskra', 'Tébessa', 'El Oued', 'Skikda', 'Tiaret', 'Béjaïa', 'Tlemcen', 'Ouargla', 'Mostaganem', 'Bordj Bou Arréridj', 'Chlef', 'Souk Ahras', 'Médéa', 'El Tarf', 'Aïn Defla', 'Naâma', 'Aïn Témouchent', 'Ghardaïa', 'Relizane'];
+const conditions = ['Nouveau', 'Comme neuf', 'Bon état', 'État satisfaisant'];
+const allSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '36', '38', '40', '42', '44', '46', '48', '50'];
+const allColors = ['Noir', 'Blanc', 'Rouge', 'Bleu', 'Vert', 'Jaune', 'Rose', 'Violet', 'Orange', 'Marron', 'Gris', 'Beige', 'Multicolor'];
+const materials = ['Coton', 'Polyester', 'Laine', 'Soie', 'Denim', 'Cuir', 'Synthétique', 'Linen', 'Cachemire', 'Velours'];
+const genders = ['Homme', 'Femme', 'Unisexe', 'Garçon', 'Fille', 'Bébé'];
+const seasons = ['Printemps', 'Été', 'Automne', 'Hiver', 'Toute l\'année'];
+
+ 
+ 
+
+ 
+  const categories = useMemo(() => ({
+    [t('categories.clothing')]: {
+      [t('categories.manClothing')]: [
+        t('subCategories.topsShirts'), t('subCategories.jeansPants'), t('subCategories.shortsCapris'),
+        t('subCategories.jacketsVests'), t('subCategories.suitsBlazers'), t('subCategories.sportswear'), t('subCategories.kamiss'),
+        t('subCategories.underwear'), t('subCategories.pajamas'), t('subCategories.swimwear'), t('subCategories.capsHats'),
+        t('subCategories.socks'), t('subCategories.belts'), t('subCategories.gloves'), t('subCategories.ties')
+      ],
+      [t('categories.womanClothing')]: [
+        t('subCategories.topsShirts'), t('subCategories.jeansPants'), t('subCategories.shortsCapris'),
+        t('subCategories.jacketsVests'), t('subCategories.sets'), t('subCategories.abayasHijabs'), t('subCategories.weddingParty'),
+        t('subCategories.maternity'), t('subCategories.dresses'), t('subCategories.skirts'), t('subCategories.sportswear'), t('subCategories.leggings'),
+        t('subCategories.lingerie'), t('subCategories.pajamas'), t('subCategories.robes'), t('subCategories.swimwear'),
+        t('subCategories.capsHats'), t('subCategories.tights'), t('subCategories.scarves'),
+        t('subCategories.belts'), t('subCategories.gloves')
+      ],
+      [t('categories.manShoes')]: [
+        t('subCategories.sneakers'), t('subCategories.boots'), t('subCategories.classic'), t('subCategories.moccasins'), t('subCategories.sandals'), t('subCategories.slippers')
+      ],
+      [t('categories.womanShoes')]: [
+        t('subCategories.sneakers'), t('subCategories.sandals'), t('subCategories.boots'), t('subCategories.heels'), t('subCategories.ballet'), t('subCategories.slippers')
+      ],
+      [t('categories.boys')]: [
+        t('subCategories.sneakers'), t('subCategories.topsShirts'), t('subCategories.jeansPants'), t('subCategories.shortsCapris'), t('subCategories.jacketsVests'),
+        t('subCategories.suitsBlazers'), t('subCategories.sportswear'), t('subCategories.pajamas'), t('subCategories.underwear'),
+        t('subCategories.swimwear'), t('subCategories.kamiss'), t('subCategories.capsHats')
+      ],
+      [t('categories.girls')]: [
+        t('subCategories.sneakers'), t('subCategories.topsShirts'), t('subCategories.jeansPants'), t('subCategories.shortsCapris'), t('subCategories.jacketsVests'),
+        t('subCategories.dresses'), t('subCategories.skirts'), t('subCategories.sets'), t('subCategories.sportswear'), t('subCategories.pajamas'),
+        t('subCategories.underwear'), t('subCategories.leggings'), t('subCategories.swimwear'), t('subCategories.capsHats')
+      ],
+      [t('categories.baby')]: [t('subCategories.topsShirts'), t('subCategories.sneakers'), t('subCategories.accessories')],
+      [t('categories.professionalWear')]: [t('subCategories.suitsBlazers')],
+      [t('categories.bagsLuggage')]: [
+        t('subCategories.wallets'), t('subCategories.handbags'), t('subCategories.backpacks'),
+        t('subCategories.professionalBags'), t('subCategories.suitcases'), t('subCategories.sportBags')
+      ]
+    }
+  }), [t]);
+
+  // 🔹 Arrays traducidos para selects
+  const translatedConditions = useMemo(() => [
+    t('conditions.new'),
+    t('conditions.likeNew'),
+    t('conditions.good'),
+    t('conditions.satisfactory')
+  ], [t]);
+
+  const translatedSeasons = useMemo(() => [
+    t('seasons.spring'),
+    t('seasons.summer'),
+    t('seasons.autumn'),
+    t('seasons.winter'),
+    t('seasons.allYear')
+  ], [t]);
+
+  const translatedGenders = useMemo(() => [
+    t('genders.man'),
+    t('genders.woman'),
+    t('genders.unisex'),
+    t('genders.boy'),
+    t('genders.girl'),
+    t('genders.baby')
+  ], [t]);

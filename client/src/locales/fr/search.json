@@ -1,157 +1,198 @@
 {
-  
-    "labels": {
-      "subCategory": "Sous-catégorie",
-      "subSubCategory": "Type spécifique",
-      "brand": "Marque",
-      "condition": "État",
-      "gender": "Genre",
-      "size": "Taille",
-      "color": "Couleur",
-      "material": "Matériau",
-      "season": "Saison",
-      "location": "Localisation",
-      "minPrice": "Prix Min",
-      "maxPrice": "Prix Max",
-      "activeFilters": "Filtres actifs"
-    },
-    "placeholders": {
-      "allSubCategories": "Toutes les sous-catégories",
-      "allTypes": "Tous les types",
-      "brand": "Marque...",
-      "allConditions": "Tous les états",
-      "allGenders": "Tous les genres",
-      "allSizes": "Toutes les tailles",
-      "allColors": "Toutes les couleurs",
-      "allMaterials": "Tous les matériaux",
-      "allSeasons": "Toutes les saisons",
-      "location": "Ville ou wilaya...",
-      "minPrice": "Min...",
-      "maxPrice": "Max..."
-    },
-    "buttons": {
-      "search": "Rechercher",
-      "searching": "Recherche...",
-      "showAdvanced": "Recherche avancée",
-      "hideAdvanced": "Masquer la recherche avancée",
-      "latestProducts": "Derniers Produits",
-      "clearAll": "Effacer",
-      "clearFilters": "Effacer les filtres",
-      "seeLatest": "Voir les derniers"
-    },
-    "states": {
-      "searching": "Recherche...",
-      "pleaseWait": "Veuillez patienter...",
-      "noResults": "Aucun produit trouvé",
-      "tryDifferentFilters": "Essayez de modifier vos critères de recherche",
-      "startSearching": "Commencez votre recherche",
-      "useFiltersAbove": "Utilisez les filtres ci-dessus pour trouver des produits",
-      "productFound": "produit trouvé",
-      "productsFound": "produits trouvés"
-    },
-    "errors": {
-      "searchError": "Erreur de "
-    },
- 
- 
-    "search": {
-      "categories": {
-        "organizedTrip": "Voyage Organisé",
-        "vacationRental": "Location Vacances",
-        "hajjUmrah": "Hadj & Omra"
-      },
-      "values": {
-        "voyageOrganise": "Voyage Organisé",
-        "locationVacances": "Location Vacances", 
-        "hadjOmra": "Hadj & Omra"
-      },
-      "labels": {
-        "category": "Catégorie",
-        "destination": "Destination",
-        "destinationOrganized": "Destination (Voyages Organisés)",
-        "destinationRental": "Destination (Location Vacances)",
-        "destinationHajj": "Destination (Hadj & Omra)",
-        "startDate": "Date de Départ Min",
-        "endDate": "Date de Départ Max", 
-        "hotelSearch": "Recherche par Hôtel",
-        "hotel": "Hôtel",
-        "minPrice": "Prix Minimum",
-        "maxPrice": "Prix Maximum",
-        "from": "De",
-        "to": "À",
-        "activeFilters": "Filtres actifs",
-        "smartSearch": "Recherche Intelligente",
-        "latestTrips": "Derniers Voyages",
-        "filter": "filtre",
-        "filters": "filtres"
-      },
-      "placeholders": {
-        "allCategories": "Toutes les catégories",
-        "selectCategoryFirst": "Sélectionnez d'abord une catégorie",
-        "hotelName": "Nom de l'hôtel...",
-        "minPrice": "Min...",
-        "maxPrice": "Max..."
-      },
-      "buttons": {
-      "hideAdvanced": "Masquer la recherche avancée",
-      "showAdvanced": "Recherche avancée", 
-      "search": "Rechercher",
-      "latestTrips": "Derniers Voyages",
-      "clearAll": "Effacer",
-      "searching": "Recherche..."
-    },
-      "states": {
-        "searching": "Recherche...",
-        "applyingFilters": "Application des filtres...",
-        "pleaseWait": "Veuillez patienter..."
-      },
-      "results": {
-        "smartSearchResults": "Recherche intelligente",
-        "filtersApplied": "Filtres appliqués",
-        "resultsFound": "résultats trouvés",
-        "noSmartResults": "Aucun résultat trouvé avec la recherche intelligente"
-      },
-      "errors": {
-        "traditionalSearchError": "Error en búsqueda tradicional",
-        "searchError": "Erreur de recherche"
-      }
-    },
- 
-  
- 
-  
-  
-  
-  "results": {
-    "smartSearchResults": "Recherche intelligente",
-    "filtersApplied": "Filtres appliqués",
-    "resultsFound": "résultats trouvés",
-    "noSmartResults": "Aucun résultat trouvé avec la recherche intelligente"
+  "labels": {
+    "subCategory": "Sous-catégorie",
+    "subSubCategory": "Type spécifique",
+    "brand": "Marque",
+    "condition": "État",
+    "gender": "Genre",
+    "size": "Taille",
+    "color": "Couleur",
+    "material": "Matière",
+    "season": "Saison",
+    "location": "Localisation",
+    "minPrice": "Prix min",
+    "maxPrice": "Prix max"
   },
-  
- 
-  
- 
-    "title": "Rechercher des Voyages",
-    "subtitle": "Trouvez votre prochaine destination parfaite",
-    "searchLabel": "Rechercher des agences ou voyages",
-    "searchPlaceholder": "Rechercher par nom, agence...",
-    "travelAgenciesFound": "Agences de Voyage Trouvées",
-    "searchingAgencies": "Recherche d'agences...",
-    
-    "filters": {
-      "title": "Filtres de Recherche",
-      "subCategory": "Type de Voyage",
-      "selectSubCategory": "Sélectionner le type de voyage",
-      "destination": "Destination",
-      "selectDestination": "Sélectionner une destination",
-      "wilaya": "Wilaya/Région",
-      "wilayaPlaceholder": "Ex: Alger, Oran, Constantine...",
-      "nationalDestinations": "Destinations Nationales",
-      "internationalDestinations": "Destinations Internationales"
+  "placeholders": {
+    "allSubCategories": "Toutes les sous-catégories",
+    "allTypes": "Tous les types",
+    "brand": "Rechercher par marque...",
+    "allConditions": "Tous les états",
+    "allGenders": "Tous les genres",
+    "allSizes": "Toutes les tailles",
+    "allColors": "Toutes les couleurs",
+    "allMaterials": "Toutes les matières",
+    "allSeasons": "Toutes les saisons",
+    "location": "Ville, wilaya...",
+    "minPrice": "Min",
+    "maxPrice": "Max"
+  },
+  "buttons": {
+    "showAdvanced": "Recherche avancée",
+    "hideAdvanced": "Masquer les filtres",
+    "search": "Rechercher",
+    "searching": "Recherche...",
+    "latestProducts": "Derniers produits",
+    "clearAll": "Effacer tout"
+  },
+  "states": {
+    "searching": "Recherche en cours",
+    "pleaseWait": "Veuillez patienter...",
+    "noResults": "Aucun résultat trouvé",
+    "tryAgain": "Essayez avec d'autres critères"
+  },
+  "errors": {
+    "searchError": "Erreur lors de la recherche",
+    "networkError": "Erreur de connexion"
+  },
+  "options": {
+    "categories": {
+      "clothing": "Vêtements",
+      "man_clothing": "Vêtements Homme",
+      "woman_clothing": "Vêtements Femme",
+      "man_shoes": "Chaussures Homme",
+      "woman_shoes": "Chaussures Femme",
+      "boys": "Garçons",
+      "girls": "Filles",
+      "baby": "Bébé",
+      "professional_wear": "Tenues professionnelles",
+      "bags_luggage": "Sacs & Valises",
+      "tops_shirts": "Hauts & Chemises",
+      "jeans_pants": "Jeans & Pantalons",
+      "shorts_capris": "Shorts & Pantacourts",
+      "jackets_vests": "Vestes & Gilets",
+      "suits_blazers": "Costumes & Blazers",
+      "sportswear": "Vêtements de Sport",
+      "kamiss": "Kamiss",
+      "underwear": "Sous-vêtements",
+      "pajamas": "Pyjamas",
+      "swimwear": "Maillots de bain",
+      "caps_hats": "Casquettes & Chapeaux",
+      "socks": "Chaussettes",
+      "belts": "Ceintures",
+      "gloves": "Gants",
+      "ties": "Cravates",
+      "sets": "Ensembles",
+      "abayas_hijabs": "Abayas & Hijabs",
+      "wedding_party": "Mariages & Fêtes",
+      "maternity": "Maternité",
+      "dresses": "Robes",
+      "skirts": "Jupes",
+      "leggings": "Leggings",
+      "lingerie": "Lingerie",
+      "robes": "Peignoirs",
+      "tights": "Collants",
+      "scarves": "Foulards & Écharpes",
+      "sneakers": "Baskets",
+      "boots": "Bottes",
+      "classic": "Classiques",
+      "moccasins": "Mocassins",
+      "sandals": "Sandales",
+      "slippers": "Pantoufles",
+      "heels": "Escarpins",
+      "ballet": "Ballerines",
+      "accessories": "Accessoires",
+      "wallets": "Portefeuilles",
+      "handbags": "Sacs à main",
+      "backpacks": "Sacs à dos",
+      "professional_bags": "Sacs professionnels",
+      "suitcases": "Valises",
+      "sport_bags": "Sacs de sport"
+    },
+    "conditions": {
+      "new": "Neuf",
+      "like_new": "Comme neuf",
+      "good": "Bon état",
+      "satisfactory": "État satisfaisant"
+    },
+    "genders": {
+      "man": "Homme",
+      "woman": "Femme",
+      "unisex": "Unisexe",
+      "boy": "Garçon",
+      "girl": "Fille",
+      "baby": "Bébé"
+    },
+    "sizes": {
+      "XS": "XS",
+      "S": "S",
+      "M": "M",
+      "L": "L",
+      "XL": "XL",
+      "XXL": "XXL",
+      "XXXL": "XXXL",
+      "36": "36",
+      "38": "38",
+      "40": "40",
+      "42": "42",
+      "44": "44",
+      "46": "46",
+      "48": "48",
+      "50": "50"
+    },
+    "colors": {
+      "black": "Noir",
+      "white": "Blanc",
+      "red": "Rouge",
+      "blue": "Bleu",
+      "green": "Vert",
+      "yellow": "Jaune",
+      "pink": "Rose",
+      "purple": "Violet",
+      "orange": "Orange",
+      "brown": "Marron",
+      "gray": "Gris",
+      "beige": "Beige",
+      "multicolor": "Multicolore"
+    },
+    "materials": {
+      "cotton": "Coton",
+      "polyester": "Polyester",
+      "wool": "Laine",
+      "silk": "Soie",
+      "denim": "Jean",
+      "leather": "Cuir",
+      "synthetic": "Synthétique",
+      "linen": "Lin",
+      "cashmere": "Cachemire",
+      "velvet": "Velours"
+    },
+    "seasons": {
+      "spring": "Printemps",
+      "summer": "Été",
+      "autumn": "Automne",
+      "winter": "Hiver",
+      "all_year": "Toute l'année"
+    },
+    "wilayas": {
+      "algiers": "Alger",
+      "oran": "Oran",
+      "constantine": "Constantine",
+      "annaba": "Annaba",
+      "blida": "Blida",
+      "batna": "Batna",
+      "djelfa": "Djelfa",
+      "setif": "Sétif",
+      "sidi_bel_abbes": "Sidi Bel Abbès",
+      "biskra": "Biskra",
+      "tebessa": "Tébessa",
+      "el_oued": "El Oued",
+      "skikda": "Skikda",
+      "tiaret": "Tiaret",
+      "bejaia": "Béjaïa",
+      "tlemcen": "Tlemcen",
+      "ouargla": "Ouargla",
+      "mostaganem": "Mostaganem",
+      "bordj_bou_arreridj": "Bordj Bou Arréridj",
+      "chlef": "Chlef",
+      "souk_ahras": "Souk Ahras",
+      "medea": "Médéa",
+      "el_tarf": "El Tarf",
+      "ain_defla": "Aïn Defla",
+      "naama": "Naâma",
+      "ain_temouchent": "Aïn Témouchent",
+      "ghardaia": "Ghardaïa",
+      "relizane": "Relizane"
     }
-    
-   
-   
   }
- 
+}

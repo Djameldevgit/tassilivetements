@@ -151,16 +151,7 @@ const Posts = ({ filters = {} }) => {
     return (
         <div>
             <div className="post_thumb">
-                {/* 🔹 CONTADOR DE RESULTADOS SOLO EN BÚSQUEDA */}
-                {(filters && Object.keys(filters).length > 0) && (
-                    <div className="mb-3 p-3 bg-light rounded">
-                        <small className="text-muted">
-                            {postsToDisplay.length} {postsToDisplay.length === 1 ? 'produit trouvé' : 'produits trouvés'}
-                            {filters.latest && " (Derniers produits)"}
-                        </small>
-                    </div>
-                )}
-
+             
                 {/* 🔹 MENSAJE SI NO HAY RESULTADOS CON FILTROS */}
                 {(filters && Object.keys(filters).length > 0 && postsToDisplay.length === 0) && (
                     <div className="text-center py-5">
