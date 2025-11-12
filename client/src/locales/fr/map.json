@@ -1,29 +1,35 @@
 {
-  "map": {
-    "locationTitle": "Localisation sur la Carte",
-    "destination": "Destination",
-    "destinationInfo": "Informations de destination",
-    "usedForSearch": "Utilisé pour la recherche",
-    "hotelName": "Hôtel",
-    "city": "Ville",
-    "zoneRegion": "Zone/Région",
-    "address": "Adresse",
-    "hotelMeca": "Mecque",
-    "hotelMedina": "Médine",
-    "availableFields": "Champs disponibles",
-    "streetView": "Vue Rue",
-    "satelliteView": "Vue Satellite",
-    "terrainView": "Vue Terrain",
-    "reload": "Actualiser",
-    "searchingLocation": "Recherche de la localisation...",
-    "noLocationData": "Aucune donnée de localisation disponible",
-    "locationNotFound": "Localisation non trouvée. Affichage de la carte par défaut.",
-    "generalError": "Erreur lors du chargement de la localisation",
-    "noPostData": "Aucune donnée de publication disponible",
-    "loading": "Chargement de la carte...",
-    "unnamedLocation": "Destination"
-  },
   "common": {
-    "back": "Retour"
+    "back": "Retour",
+    "loading": "Chargement"
+  },
+  "shop": {
+    "boutique": "Boutique",
+    "information": "Informations de la boutique"
+  },
+  "user": {
+    "owner": "Propriétaire",
+    "information": "Informations de l'utilisateur"
+  },
+  "location": {
+    "wilaya": "Wilaya",
+    "commune": "Commune",
+    "address": "Adresse", 
+    "location": "Localisation"
+  },
+  "contact": {
+    "phone": "Téléphone",
+    "email": "Email"
+  },
+  "map": {
+    "location": "Localisation sur la carte",
+    "street": "Rue",
+    "satellite": "Satellite",
+    "terrain": "Terrain",
+    "reload": "Actualiser",
+    "searching": "Recherche de la localisation...",
+    "locationNotFound": "Localisation non trouvée",
+    "generalError": "Erreur lors du chargement de la localisation",
+    "noData": "Aucune donnée de boutique disponible"
   }
 }

@@ -84,7 +84,7 @@ const CardBodyTitle = ({ post }) => {
 
     const handleEditPost = () => {
         if (!auth.user) { setShowAuthModal(true); return; }
-        history.push('/createpost', { isEdit: true, postData: post });
+        history.push('/CreatePost', { isEdit: true, postData: post });
         dispatch({ type: 'GLOBALTYPES.STATUS', payload: { ...post, onEdit: true } });
         setShowDropdown(false);
     };

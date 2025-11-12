@@ -13,10 +13,12 @@ import { createPost, updatePost } from '../redux/actions/postAction';
 
 const getInitialState = () => ({
   category: "clothing",
+  bootiquename: "",
   subCategory: "",
   subSubCategory: "",
   title: "",
   description: "",
+  content: "", // 🔥 AGREGAR para compatibilidad
   price: "",
   currency: 'DZD',
   brand: "",
@@ -33,8 +35,7 @@ const getInitialState = () => ({
   email: "",
   tags: []
 });
-
-// Arrays para selects - AHORA SE TRADUCEN DESDE createpost
+// Arrays para selects
 const conditions = ['new', 'like_new', 'good', 'satisfactory'];
 const allSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '36', '38', '40', '42', '44', '46', '48', '50'];
 const allColors = ['black', 'white', 'red', 'blue', 'green', 'yellow', 'pink', 'purple', 'orange', 'brown', 'gray', 'beige', 'multicolor'];
@@ -48,7 +49,7 @@ const CreatePost = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-  const { t, i18n } = useTranslation('createpost'); // Solo createpost
+  const { t, i18n } = useTranslation('createpost');
 
   const isEdit = location.state?.isEdit || false;
   const postToEdit = location.state?.postData || null;
@@ -64,7 +65,15 @@ const CreatePost = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 🔥 ESTRUCTURA DE CATEGORÍAS REACTIVA
+ 
+
+
+
+
+
+
+
+  // 🔥 ESTRUCTURA DE CATEGORÍAS REACTIVA - CORREGIDA
   const categoriesStructure = useMemo(() => ({
     clothing: {
       man_clothing: [
@@ -94,7 +103,7 @@ const CreatePost = () => {
     }
   }), []);
 
-  // 🔥 ESTILOS 100% RESPONSIVE PARA ANDROID
+  // 🔥 ESTILOS RESPONSIVE
   const styles = useMemo(() => ({
     container: {
       padding: '8px',
@@ -185,14 +194,10 @@ const CreatePost = () => {
     }
   }), [isRTL]);
 
-  // 🔥 FUNCIÓN ÚNICA DE TRADUCCIÓN PARA TODO
+  // 🔥 FUNCIÓN DE TRADUCCIÓN
   const translateOption = useCallback((optionKey, fallback = '') => {
     if (!optionKey) return fallback;
-    
-    // Intentar traducir desde createpost
     const translation = t(`options.${optionKey}`, { defaultValue: '' });
-    
-    // Si no existe, usar el fallback o el key
     return translation || fallback || optionKey;
   }, [t]);
 
@@ -207,6 +212,7 @@ const CreatePost = () => {
     return categoriesStructure[postData.category]?.[postData.subCategory] || [];
   }, [postData.category, postData.subCategory, categoriesStructure]);
 
+  // 🔥 EFFECT PARA IDIOMA
   useEffect(() => {
     const lang = languageReducer?.language || 'fr';
     if (i18n.language !== lang) {
@@ -224,28 +230,20 @@ const CreatePost = () => {
         category: sanitizedData.category || "clothing",
         subCategory: sanitizedData.subCategory || "",
         subSubCategory: sanitizedData.subSubCategory || "",
+        // 🔥 MANTENER COMPATIBILIDAD
         description: sanitizedData.description || sanitizedData.content || "",
+        content: sanitizedData.content || sanitizedData.description || "", // Agregar
         title: sanitizedData.title || "",
+        bootiquename: sanitizedData.bootiquename || "",
         sizes: Array.isArray(sanitizedData.sizes) ? sanitizedData.sizes : [],
         colors: Array.isArray(sanitizedData.colors) ? sanitizedData.colors : [],
       };
-
+  
       setPostData(finalPostData);
-      setSelectedSizes(finalPostData.sizes);
-      setSelectedColors(finalPostData.colors);
-
-      if (postToEdit.images?.length > 0) {
-        const existingImages = postToEdit.images
-          .map(img => {
-            if (typeof img === 'string') return { url: img, file: null, isExisting: true };
-            if (img?.url) return { ...img, file: null, isExisting: true };
-            return null;
-          })
-          .filter(Boolean);
-        setImages(existingImages);
-      } else {
-        setImages([]);
-      }
+      setSelectedSizes(Array.isArray(finalPostData.sizes) ? finalPostData.sizes : []);
+      setSelectedColors(Array.isArray(finalPostData.colors) ? finalPostData.colors : []);
+  
+      // ... resto del código
     }
   }, [isEdit, postToEdit]);
 
@@ -254,8 +252,12 @@ const CreatePost = () => {
     return { ...data };
   }, []);
 
+  // 🔥 MANEJO DE CAMBIOS EN INPUTS
   const handleChangeInput = useCallback((e) => {
     const { name, value, type, checked } = e.target;
+    
+    console.log(`🔍 DEBUG - Cambiando campo ${name}:`, value); // DEBUG
+    
     setPostData(prev => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value
@@ -277,6 +279,7 @@ const CreatePost = () => {
     }));
   }, []);
 
+  // 🔥 MANEJO DE IMÁGENES
   const handleChangeImages = useCallback((e) => {
     const files = [...e.target.files];
     let err = "";
@@ -300,17 +303,20 @@ const CreatePost = () => {
     setImages(prev => prev.filter((_, i) => i !== index));
   }, []);
 
+  // 🔥 MANEJO DE TALLAS Y COLORES
   const handleSizeChange = useCallback((size) => {
-    const newSizes = selectedSizes.includes(size)
-      ? selectedSizes.filter(s => s !== size)
-      : [...selectedSizes, size];
+    // 🔥 CORREGIDO: Asegurar que selectedSizes sea un array
+    const currentSizes = selectedSizes || [];
+    const newSizes = currentSizes.includes(size)
+      ? currentSizes.filter(s => s !== size)
+      : [...currentSizes, size];
     
     setSelectedSizes(newSizes);
     setPostData(prev => ({
       ...prev,
       sizes: newSizes
     }));
-
+  
     if (errors.sizes) {
       setErrors(prev => ({
         ...prev,
@@ -318,18 +324,20 @@ const CreatePost = () => {
       }));
     }
   }, [selectedSizes, errors.sizes]);
-
+  
   const handleColorChange = useCallback((color) => {
-    const newColors = selectedColors.includes(color)
-      ? selectedColors.filter(c => c !== color)
-      : [...selectedColors, color];
+    // 🔥 CORREGIDO: Asegurar que selectedColors sea un array
+    const currentColors = selectedColors || [];
+    const newColors = currentColors.includes(color)
+      ? currentColors.filter(c => c !== color)
+      : [...currentColors, color];
     
     setSelectedColors(newColors);
     setPostData(prev => ({
       ...prev,
       colors: newColors
     }));
-
+  
     if (errors.colors) {
       setErrors(prev => ({
         ...prev,
@@ -338,45 +346,71 @@ const CreatePost = () => {
     }
   }, [selectedColors, errors.colors]);
 
+  // 🔥 VALIDACIÓN DEL FORMULARIO
   const validateForm = useCallback(() => {
     const newErrors = {};
     
-    if (!postData.title.trim()) newErrors.title = t('validation.title');
-    if (!postData.description.trim()) newErrors.description = t('validation.description');
+    // Validaciones de campos requeridos
+    if (!postData.description?.trim()) newErrors.description = t('validation.description');
     if (!postData.price || postData.price <= 0) newErrors.price = t('validation.price');
     if (!postData.subCategory) newErrors.subCategory = t('validation.subcategory');
-    if (!postData.brand.trim()) newErrors.brand = t('validation.brand');
+    if (!postData.brand?.trim()) newErrors.brand = t('validation.brand');
     if (!postData.wilaya) newErrors.wilaya = t('validation.wilaya');
-    if (!postData.commune) newErrors.commune = t('validation.commune');
-    if (!postData.phone.trim()) newErrors.phone = t('validation.phone');
-    if (selectedSizes.length === 0) newErrors.sizes = t('validation.sizes');
-    if (selectedColors.length === 0) newErrors.colors = t('validation.colors');
-    if (images.length === 0) newErrors.images = t('validation.images');
+    if (!postData.commune?.trim()) newErrors.commune = t('validation.commune');
+    if (!postData.phone?.trim()) newErrors.phone = t('validation.phone');
+    
+    // 🔥 CORREGIDO: Verificar que los arrays existan y tengan elementos
+    if (!selectedSizes || selectedSizes.length === 0) newErrors.sizes = t('validation.sizes');
+    if (!selectedColors || selectedColors.length === 0) newErrors.colors = t('validation.colors');
+    if (!images || images.length === 0) newErrors.images = t('validation.images');
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [postData, selectedSizes, selectedColors, images, t]);
 
+  // 🔥 ENVÍO DEL FORMULARIO
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+  
+    console.log('🔍 DEBUG - Datos a enviar:', { 
+      postData, 
+      sizes: selectedSizes,
+      colors: selectedColors,
+      images: images.length 
+    });
+  
     if (!validateForm()) {
       showAlertMessage(t('validation.required_fields'), "danger");
       setIsSubmitting(false);
       return;
     }
-
+  
     try {
+      // 🔥 CORREGIDO: Preparar datos limpios para el backend
+      const cleanPostData = {
+        ...postData,
+        // Asegurar que los arrays estén definidos
+        sizes: selectedSizes || [],
+        colors: selectedColors || [],
+        // Limpiar campos opcionales
+        bootiquename: postData.bootiquename?.trim() || undefined,
+        email: postData.email?.trim() || undefined,
+        location: postData.location?.trim() || undefined,
+        material: postData.material || undefined,
+        gender: postData.gender || undefined,
+        season: postData.season || 'all_year'
+      };
+  
       const actionData = {
-        postData,
+        postData: cleanPostData,
         images,
         auth,
         ...(isEdit && postToEdit && {
           status: { _id: postToEdit._id, ...postToEdit }
         })
       };
-
+  
       if (isEdit && postToEdit) {
         await dispatch(updatePost(actionData));
         showAlertMessage(t('success.update'), "success");
@@ -384,15 +418,25 @@ const CreatePost = () => {
         await dispatch(createPost(actionData));
         showAlertMessage(t('success.create'), "success");
       }
-
+  
       setTimeout(() => history.push('/'), 2000);
-
+  
     } catch (error) {
-      showAlertMessage(t('error.publication'), "danger");
+      console.error('Error completo al publicar:', error);
+      
+      // 🔥 MEJOR MANEJO DE ERRORES
+      let errorMessage = t('error.publication');
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      showAlertMessage(errorMessage, "danger");
     } finally {
       setIsSubmitting(false);
     }
-  }, [postData, images, auth, isEdit, postToEdit, dispatch, history, t, validateForm]);
+  }, [postData, selectedSizes, selectedColors, images, auth, isEdit, postToEdit, dispatch, history, t, validateForm]);
 
   const showAlertMessage = useCallback((message, variant) => {
     setAlertMessage(message);
@@ -708,7 +752,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.material, t, handleChangeInput, translateOption, styles]);
 
-  // 🔥 COMPONENTE LOCATION SECTION
+  // 🔥 COMPONENTE LOCATION SECTION - CORREGIDO
   const LocationSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -719,6 +763,25 @@ const CreatePost = () => {
       </Card.Header>
       <Card.Body style={styles.cardBody}>
         <Row className="g-2">
+          {/* 🔥 BOUTIQUE NAME - FUNCIONANDO */}
+          <Col xs={12}>
+            <Form.Group>
+              <Form.Label style={styles.formLabel}>{t('labels.bootiquename')}</Form.Label>
+              <Form.Control
+                type="text"
+                name="bootiquename"
+                value={postData.bootiquename || ""}
+                onChange={handleChangeInput}
+                placeholder={t('placeholders.bootiquename')}
+                style={styles.formControl}
+                isInvalid={!!errors.bootiquename}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.bootiquename}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+
           <Col xs={12} lg={6}>
             <Form.Group>
               <Form.Label style={styles.formLabel}>{t('labels.wilaya')} *</Form.Label>
@@ -741,6 +804,7 @@ const CreatePost = () => {
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
+          
           <Col xs={12} lg={6}>
             <Form.Group>
               <Form.Label style={styles.formLabel}>{t('labels.commune')} *</Form.Label>
@@ -758,6 +822,7 @@ const CreatePost = () => {
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
+          
           <Col xs={12}>
             <Form.Group>
               <Form.Label style={styles.formLabel}>{t('labels.address')}</Form.Label>
@@ -774,7 +839,7 @@ const CreatePost = () => {
         </Row>
       </Card.Body>
     </Card>
-  ), [postData.wilaya, postData.commune, postData.location, errors, t, handleChangeInput, translateOption, styles]);
+  ), [postData.bootiquename, postData.wilaya, postData.commune, postData.location, errors, t, handleChangeInput, translateOption, styles]);
 
   // 🔥 COMPONENTE CONTACT SECTION
   const ContactSection = useMemo(() => (
@@ -946,7 +1011,8 @@ const CreatePost = () => {
               </Card>
             )}
           </Form>
-        </Col>
+          </Col>
+
       </Row>
     </Container>
   );

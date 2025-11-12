@@ -16,6 +16,8 @@
     "images": "Images"
   },
   "labels": {
+    "bootiquename": "Mom du magasin",
+
     "subcategory": "Sous-catégorie",
     "specific_type": "Type Spécifique",
     "title": "Titre",
@@ -44,7 +46,8 @@
     "commune": "Nom de la commune",
     "address": "Adresse exacte",
     "phone": "Numéro de téléphone",
-    "email": "email@exemple.com"
+    "email": "email@exemple.com",
+    "bootiquename": "Magasin...."
   },
   "options": {
     "categories": {

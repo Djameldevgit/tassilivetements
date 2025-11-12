@@ -30,7 +30,9 @@
     "commune": "البلدية",
     "address": "العنوان",
     "phone": "الهاتف",
-    "email": "البريد الإلكتروني"
+    "email": "البريد الإلكتروني",
+    "bootiquename": "اسم المتجر"
+
   },
   "placeholders": {
     "select_subcategory": "اختر الفئة الفرعية",
@@ -44,7 +46,9 @@
     "commune": "اسم البلدية",
     "address": "العنوان الدقيق",
     "phone": "رقم الهاتف",
-    "email": "email@example.com"
+    "email": "email@example.com",
+    "bootiquename": "الاسم..."
+
   },
   "options": {
     "categories": {

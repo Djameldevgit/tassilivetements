@@ -59,7 +59,10 @@ const postSchema = new mongoose.Schema({
         required: true
     },
     email: String,
-    
+    bootiquename:{
+        type: String,
+        default: "Tassili Vetements"
+    },
     // 🔷 CAMPOS ADICIONALES
     tags: [{
         type: String

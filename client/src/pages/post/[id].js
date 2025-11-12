@@ -40,12 +40,11 @@ const DetailPost = () => {
   );
 
   return (
-    <div>
-      {/* SOLO el DetailPostCard - que incluye CardBodyCarousel + DescriptionPost */}
+    <div className='post-thumb'>
+ 
       <DetailPostCard post={post} />
       
-      {/* NO renderizar InputComment y Comments aquí */}
-      {/* Los comentarios se manejan exclusivamente a través del modal en CardBodyCarousel */}
+ 
     </div>
   );
 };

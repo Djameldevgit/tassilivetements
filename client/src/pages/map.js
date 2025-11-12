@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { 
+  Container, 
+  Row, 
+  Col, 
+  Card, 
+  Button, 
+  ButtonGroup, 
+  Alert, 
+  Spinner,
+  Badge
+} from "react-bootstrap";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import { Container, Row, Col, Card, Button, ButtonGroup, Alert, Spinner, Badge } from "react-bootstrap";
-import { useLocation, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import L from "leaflet";
 import { useTranslation } from "react-i18next";
 import "leaflet/dist/leaflet.css";
@@ -11,19 +21,55 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import iconRetina from 'leaflet/dist/images/marker-icon-2x.png';
 
-let DefaultIcon = L.Icon.Default.extend({
-  options: {
-    iconUrl: icon,
-    iconRetinaUrl: iconRetina,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  }
+// Íconos
+import { 
+  FaStore, 
+  FaUser, 
+  FaMapMarkerAlt, 
+  FaPhone, 
+  FaEnvelope, 
+  FaSyncAlt,
+  FaGlobe,
+  FaCity,
+  FaHome,
+  FaIdCard
+} from "react-icons/fa";
+
+// Avatar component mejorado
+const Avatar = ({ user, size = 100 }) => {
+  return (
+    <div
+      className="rounded-circle bg-gradient-primary d-flex align-items-center justify-content-center text-white shadow"
+      style={{
+        width: size,
+        height: size,
+        fontSize: size * 0.4,
+        fontWeight: 'bold',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      }}
+    >
+      {user?.username?.charAt(0)?.toUpperCase() || 'U'}
+    </div>
+  );
+};
+
+// Ícono personalizado para tienda
+const ShopIcon = new L.Icon({
+  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE1IDI3LjVDMTUuODI4NCAyNy41IDE2LjUgMjYuODI4NCAxNi41IDI2VjI0LjVIMTMuNVYyNkMxMy41IDI2LjgyODQgMTQuMTcxNiAyNy41IDE1IDI3LjVaIiBmaWxsPSIjREQyRTM2Ii8+CjxwYXRoIGQ9Ik0yMSAyNkgyMUgyMUgyMVoiIGZpbGw9IiNGRjVCMzYiLz4KPHBhdGggZD0iTTkgNkg5SDIxSDIxVjI2SDlWNloiIGZpbGw9IiNGRjVCMzYiLz4KPHBhdGggZD0iTTcgOUg3SDIzSDIzVjI2SDdWOVoiIGZpbGw9IiNGRjVCMzYiLz4KPHBhdGggZD0iTTUgMTJINVYyNkg1VjEyWiIgZmlsbD0iI0ZGNUIzNiIvPgo8cGF0aCBkPSJNMjUgMTJIMjVWMjZIMjVWMTJaIiBmaWxsPSIjRkY1QjM2Ii8+CjxwYXRoIGQ9Ik0xOC41IDE2LjVMMTguNSAxNi41TDE4LjUgMTYuNUwxOC41IDE2LjVaIiBmaWxsPSIjRkY1QjM2Ii8+CjxwYXRoIGQ9Ik0xNSAxOS41QzE0LjE3MTYgMTkuNSAxMy41IDE4LjgyODQgMTMuNSAxOFYxNi41SDE2LjVWMThDMTYuNSAxOC44Mjg0IDE1LjgyODQgMTkuNSAxNSAxOS41WiIgZmlsbD0iI0ZGNUIzNiIvPgo8cGF0aCBkPSJNMTEuNSAxNi41VjE2LjVIMTguNVYxNi41IiBzdHJva2U9IiNGRjVCMzYiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxwYXRoIGQ9Ik0xMS41IDE5LjVWMTkuNUgxOC41VjE5LjUiIHN0cm9rZT0iI0ZGNUIzNiIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBhdGggZD0iTTExLjUgMTMuNVYxMy41SDE4LjVWMTMuNSIgc3Ryb2tlPSIjRkY1QjM2IiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8L3N2Zz4K',
+  iconSize: [35, 35],
+  iconAnchor: [17, 35],
+  popupAnchor: [0, -35],
 });
 
-L.Marker.prototype.options.icon = new DefaultIcon();
+L.Marker.prototype.options.icon = L.icon({
+  iconUrl: icon,
+  iconRetinaUrl: iconRetina,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
 
 const ChangeView = ({ center, zoom }) => {
   const map = useMap();
@@ -33,13 +79,9 @@ const ChangeView = ({ center, zoom }) => {
   return null;
 };
 
-const Map = ({ post: postProp }) => {
-  const location = useLocation();
+const map = () => {
   const history = useHistory();
   const { t, i18n } = useTranslation('map');
-  
-  // 🆕 DETECCIÓN RTL
-  const isRTL = i18n.language === 'ar';
   
   const [mapCenter, setMapCenter] = useState([36.5, 3.5]);
   const [markerPosition, setMarkerPosition] = useState([36.5, 3.5]);
@@ -47,252 +89,115 @@ const Map = ({ post: postProp }) => {
   const [error, setError] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(10);
   const [mapStyle, setMapStyle] = useState("street");
-  const [usedField, setUsedField] = useState(null);
   
-  // Obtener post de múltiples fuentes
-  const getPostData = () => {
-    if (postProp) return postProp;
-    if (location.state?.postData) return location.state.postData;
-    if (location.state?.post) return location.state.post;
-    return null;
-  };
-
-  const post = getPostData();
+  // Obtener datos del post desde location.state
+  const post = history.location.state?.postData;
+  const isRTL = i18n.language === 'ar';
 
   // Proveedores de mapas
   const mapProviders = {
     street: {
-      name: t('map.streetView', 'Vue Rue'),
+      name: t('map.street', 'Street'),
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      attribution: '© OpenStreetMap'
     },
     satellite: {
-      name: t('map.satelliteView', 'Vue Satellite'),
+      name: t('map.satellite', 'Satellite'),
       url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      attribution: '&copy; <a href="https://www.arcgis.com/">Esri</a>'
+      attribution: '© Esri'
     },
     terrain: {
-      name: t('map.terrainView', 'Vue Terrain'),
+      name: t('map.terrain', 'Terrain'),
       url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-      attribution: '&copy; <a href="https://opentopomap.org">OpenTopoMap</a>'
+      attribution: '© OpenTopoMap'
     }
   };
 
-  // 🔥 CORRECCIÓN: Agregar traducciones faltantes directamente
-  const getTranslatedText = (key, fallback) => {
-    return t(key, fallback);
-  };
-
-  // FUNCIÓN: Obtener todos los campos de ubicación posibles
-  const getLocationFields = () => {
-    if (!post) {
-      console.log("No post data available");
-      return [];
-    }
-    
-    console.log("Available post data for mapping:", post);
-    
-    const locationFields = [];
-    
-    // PRIORIDAD 1: DESTINACION (Campo fundamental para todas las categorías)
-    if (post.destinacion && post.destinacion.trim() !== "") {
-      locationFields.push({
-        field: 'destinacion',
-        value: post.destinacion,
-        label: getTranslatedText('map.destination', 'Destination'),
-        priority: 1,
-        zoom: 12
-      });
-    }
-    
-    // PRIORIDAD 2: CAMPOS DE HAJJ & OMRA (Específicos)
-    if (post.hotelMeca && post.hotelMeca.trim() !== "") {
-      locationFields.push({
-        field: 'hotelMeca',
-        value: `${post.hotelMeca}, Mecca, Saudi Arabia`,
-        label: getTranslatedText('map.hotelMeca', 'Hôtel à La Mecque'),
-        priority: 2,
-        zoom: 16
-      });
-    }
-    
-    if (post.hotelMedina && post.hotelMedina.trim() !== "") {
-      locationFields.push({
-        field: 'hotelMedina',
-        value: `${post.hotelMedina}, Medina, Saudi Arabia`,
-        label: getTranslatedText('map.hotelMedina', 'Hôtel à Médine'),
-        priority: 2,
-        zoom: 16
-      });
-    }
-    
-    // PRIORIDAD 3: CAMPOS GENERALES DE HOTELES
-    if (post.nombreHotel && post.nombreHotel.trim() !== "") {
-      let query = post.nombreHotel;
-      
-      if (post.ciudadHotel && post.ciudadHotel.trim() !== "") {
-        query += `, ${post.ciudadHotel}`;
-      }
-      else if (post.destinacion && post.destinacion.trim() !== "" && 
-               post.destinacion !== post.nombreHotel) {
-        query += `, ${post.destinacion}`;
-      }
-      
-      if (!query.includes('Algeria') && !query.includes('Arabie') && !query.includes('Saudi')) {
-        query += ', Algeria';
-      }
-      
-      locationFields.push({
-        field: 'nombreHotel',
-        value: query,
-        label: getTranslatedText('map.hotelName', 'Nom de l\'hôtel'),
-        priority: 3,
-        zoom: 16
-      });
-    }
-    
-    if (post.ciudadHotel && post.ciudadHotel.trim() !== "") {
-      locationFields.push({
-        field: 'ciudadHotel',
-        value: `${post.ciudadHotel}, Algeria`,
-        label: getTranslatedText('map.city', 'Ville'),
-        priority: 3,
-        zoom: 14
-      });
-    }
-    
-    // PRIORIDAD 4: CAMPOS DE UBICACIÓN DETALLADA
-    if (post.zonaRegion && post.zonaRegion.trim() !== "") {
-      locationFields.push({
-        field: 'zonaRegion',
-        value: `${post.zonaRegion}, Algeria`,
-        label: getTranslatedText('map.zoneRegion', 'Zone/Région'),
-        priority: 4,
-        zoom: 12
-      });
-    }
-    
-    if (post.direccionHotel && post.direccionHotel.trim() !== "") {
-      let query = post.direccionHotel;
-      
-      if (post.ciudadHotel && post.ciudadHotel.trim() !== "") {
-        query += `, ${post.ciudadHotel}`;
-      } else if (post.destinacion && post.destinacion.trim() !== "") {
-        query += `, ${post.destinacion}`;
-      }
-      
-      query += ', Algeria';
-      
-      locationFields.push({
-        field: 'direccionHotel',
-        value: query,
-        label: getTranslatedText('map.address', 'Adresse'),
-        priority: 4,
-        zoom: 17
-      });
-    }
-
-    console.log("Location fields found:", locationFields);
-    return locationFields.sort((a, b) => a.priority - b.priority);
-  };
-
-  // FUNCIÓN MEJORADA: Buscar ubicación
+  // Buscar ubicación
   const searchLocation = async () => {
+    if (!post) return;
+    
     try {
       setLoading(true);
       setError(null);
-      setUsedField(null);
       
-      const locationFields = getLocationFields();
+      const locationFields = [];
       
-      if (locationFields.length === 0) {
-        setError(getTranslatedText('map.noLocationData', 'Aucune donnée de localisation disponible.'));
-        setLoading(false);
-        return;
+      // Combinar wilaya + commune + address
+      if (post.wilaya) {
+        let query = post.wilaya;
+        if (post.commune) query += `, ${post.commune}`;
+        if (post.location) query += `, ${post.location}`;
+        query += ', Algeria';
+        
+        locationFields.push({ value: query, zoom: 14 });
+      }
+      
+      // Solo wilaya
+      if (post.wilaya && !post.commune) {
+        locationFields.push({ value: `${post.wilaya}, Algeria`, zoom: 10 });
+      }
+      
+      // Solo commune
+      if (post.commune && !post.wilaya) {
+        locationFields.push({ value: `${post.commune}, Algeria`, zoom: 12 });
       }
 
-      console.log('Trying location fields in order:', locationFields);
-
-      for (const locationField of locationFields) {
+      for (const field of locationFields) {
         try {
-          console.log(`🔍 Searching with: ${locationField.field} = "${locationField.value}"`);
+          const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(field.value)}&format=json&limit=1`;
+          const response = await fetch(url, { headers: { 'User-Agent': 'ShopApp/1.0' } });
           
-          const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-            locationField.value
-          )}&format=json&addressdetails=1&limit=1`;
-          
-          const response = await fetch(url, {
-            headers: {
-              'User-Agent': 'TravelAgencyApp/1.0'
+          if (response.ok) {
+            const data = await response.json();
+            if (data && data.length > 0) {
+              const lat = parseFloat(data[0].lat);
+              const lon = parseFloat(data[0].lon);
+              
+              setMapCenter([lat, lon]);
+              setMarkerPosition([lat, lon]);
+              setZoomLevel(field.zoom);
+              setLoading(false);
+              return;
             }
-          });
-          
-          if (!response.ok) {
-            console.warn(`❌ Response not OK for ${locationField.field}`);
-            continue;
-          }
-          
-          const data = await response.json();
-          console.log(`📡 API response for ${locationField.field}:`, data);
-
-          if (data && data.length > 0) {
-            const lat = parseFloat(data[0].lat);
-            const lon = parseFloat(data[0].lon);
-            
-            setMapCenter([lat, lon]);
-            setMarkerPosition([lat, lon]);
-            setZoomLevel(locationField.zoom);
-            setUsedField(locationField);
-            
-            console.log(`✅ Location found with: ${locationField.field}`);
-            setLoading(false);
-            return;
-          } else {
-            console.warn(`❌ No results for: ${locationField.field}`);
           }
         } catch (error) {
-          console.warn(`⚠️ Error with ${locationField.field}:`, error);
+          console.warn('Error searching location:', error);
         }
       }
       
-      console.warn('❌ No location found with any field');
-      setError(getTranslatedText('map.locationNotFound', 'Localisation non trouvée. Affichage de la carte par défaut.'));
+      setError(t('map.locationNotFound', 'Location not found'));
       
     } catch (error) {
-      console.error("💥 General location error:", error);
-      setError(getTranslatedText('map.generalError', 'Erreur lors du chargement de la localisation.'));
+      console.error('Location error:', error);
+      setError(t('map.generalError', 'Error loading location'));
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    console.log("🗺️ PropertyMap mounted with post:", post);
-    
     if (post) {
       searchLocation();
     } else {
       setLoading(false);
-      setError(getTranslatedText('map.noPostData', 'Aucune donnée de publication disponible.'));
+      setError(t('map.noData', 'No shop data available'));
     }
   }, [post]);
 
-  // Función para volver atrás
   const handleGoBack = () => {
     history.goBack();
   };
 
-  // Para evitar errores de SSR
-  if (typeof window === 'undefined') {
+  if (!post) {
     return (
-      <Container className="my-4">
-        <Row>
-          <Col>
-            <Alert variant="info">
-              {getTranslatedText('map.loading', 'Chargement de la carte...')}
-            </Alert>
-          </Col>
-        </Row>
+      <Container className="py-4">
+        <Alert variant="warning" className="text-center">
+          <h5>{t('map.noData', 'No shop data available')}</h5>
+          <Button variant="primary" onClick={handleGoBack} className="mt-2">
+            {t('common.back', 'Back')}
+          </Button>
+        </Alert>
       </Container>
     );
   }
@@ -301,128 +206,155 @@ const Map = ({ post: postProp }) => {
     <Container fluid className="py-4" dir={isRTL ? "rtl" : "ltr"}>
       <Row className="justify-content-center">
         <Col lg={10} xl={8}>
-          {/* Header con información - CON RTL */}
-          <Card className="shadow-sm mb-4">
-            <Card.Header className="bg-primary text-white">
+          
+          {/* PRIMERA FILA: AVATAR Y NOMBRE PRINCIPAL */}
+          <Card className="shadow-sm mb-4 border-0 bg-light">
+            <Card.Body className="text-center p-4">
               <Row className={`align-items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <Col>
-                  <h4 className="mb-0">
-                    {/* 🆕 ICONO RTL */}
-                    {isRTL ? (
-                      <span>
-                        {getTranslatedText('map.locationTitle', 'Localisation sur la Carte')}
-                        <i className="fas fa-map-marked-alt ms-2"></i>
-                      </span>
-                    ) : (
-                      <span>
-                        <i className="fas fa-map-marked-alt me-2"></i>
-                        {getTranslatedText('map.locationTitle', 'Localisation sur la Carte')}
-                      </span>
-                    )}
-                  </h4>
-                  {post?.title && (
-                    <small className="opacity-75">{post.title}</small>
+                  {/* Avatar grande centrado */}
+                  <div className="mb-3">
+                    <Avatar user={post.user} size={120} />
+                  </div>
+                  
+                  {/* Nombre de la boutique */}
+                  {post.bootiquename && (
+                    <div className="mb-2">
+                      <h2 className="text-primary fw-bold">
+                        <FaStore className={isRTL ? "ms-3" : "me-3"} />
+                        {post.bootiquename}
+                      </h2>
+                      <Badge bg="outline-primary" className="fs-6">
+                        {t('shop.boutique', 'Boutique')}
+                      </Badge>
+                    </div>
+                  )}
+                  
+                  {/* Username del propietario */}
+                  {post.user?.username && (
+                    <div className="mb-3">
+                      <h5 className="text-muted">
+                        <FaUser className={isRTL ? "ms-2" : "me-2"} />
+                        {post.user.username}
+                      </h5>
+                      <small className="text-muted">{t('user.owner', 'Propriétaire')}</small>
+                    </div>
                   )}
                 </Col>
-                <Col xs="auto">
-                  <Button 
-                    variant="light" 
-                    size="sm" 
-                    onClick={handleGoBack}
-                  >
-                    {/* 🆕 ICONO RTL */}
-                    {isRTL ? (
-                      <span>
-                        {getTranslatedText('common.back', 'Retour')}
-                        <i className="fas fa-arrow-left ms-1"></i>
-                      </span>
-                    ) : (
-                      <span>
-                        <i className="fas fa-arrow-left me-1"></i>
-                        {getTranslatedText('common.back', 'Retour')}
-                      </span>
-                    )}
-                  </Button>
-                </Col>
               </Row>
-            </Card.Header>
-            
-            <Card.Body style={{ textAlign: isRTL ? 'right' : 'left' }}>
-              {/* Información de ubicación - CON RTL */}
-              {post && (
-                <Row className={`mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                  <Col md={6}>
-                    <h6 className="text-muted">
-                      {getTranslatedText('map.destinationInfo', 'Informations de destination')}:
-                    </h6>
-                    
-                    {/* Destinación principal */}
-                    {post.destinacion && (
-                      <p className="mb-1">
-                        <strong>🎯 {getTranslatedText('map.destination', 'Destination')}:</strong> {post.destinacion}
-                      </p>
-                    )}
-                    
-                    {/* Campo usado para la búsqueda */}
-                    {usedField && (
-                      <p className="mb-1">
-                        <strong>📍 {getTranslatedText('map.usedForSearch', 'Utilisé pour la recherche')}:</strong> {usedField.label}
-                      </p>
-                    )}
-                    
-                    {/* Información de hoteles */}
-                    {(post.nombreHotel || post.ciudadHotel) && (
-                      <div className="mt-2 p-2 bg-light rounded">
-                        <small>
-                          {post.nombreHotel && (
-                            <div>
-                              <strong>🏨 {getTranslatedText('map.hotelName', 'Hôtel')}:</strong> {post.nombreHotel}
-                            </div>
-                          )}
-                          {post.ciudadHotel && (
-                            <div>
-                              <strong>🏙️ {getTranslatedText('map.city', 'Ville')}:</strong> {post.ciudadHotel}
-                            </div>
-                          )}
-                        </small>
-                      </div>
-                    )}
-                  </Col>
-                  
-                  <Col md={6}>
-                    <h6 className="text-muted">
-                      {getTranslatedText('map.availableFields', 'Champs disponibles')}:
-                    </h6>
-                    <div className={`d-flex flex-wrap gap-1 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      {getLocationFields().map((field, index) => (
-                        <Badge 
-                          key={index} 
-                          bg={usedField?.field === field.field ? "success" : "outline-secondary"} 
-                          className={`mb-1 ${isRTL ? 'ms-1' : 'me-1'}`}
-                        >
-                          {field.label}
-                        </Badge>
-                      ))}
-                    </div>
-                    
-                    {/* Campos específicos de Hajj & Omra */}
-                    {(post.hotelMeca || post.hotelMedina) && (
-                      <div className="mt-2 p-2 bg-warning bg-opacity-10 rounded">
-                        <small className="text-muted">
-                          <strong>🕋 Hajj & Omra:</strong>
-                          {post.hotelMeca && ` ${getTranslatedText('map.hotelMeca', 'Mecque')}: ${post.hotelMeca}`}
-                          {post.hotelMedina && ` ${getTranslatedText('map.hotelMedina', 'Médine')}: ${post.hotelMedina}`}
-                        </small>
-                      </div>
-                    )}
-                  </Col>
-                </Row>
-              )}
+            </Card.Body>
+          </Card>
 
-              {/* Controles del mapa - CON RTL */}
-              <Row className={`align-items-center mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          {/* SEGUNDA FILA: INFORMACIÓN DETALLADA - CADA CAMPO EN SU FILA */}
+          <Card className="shadow-sm mb-4 border-0">
+            <Card.Header className="bg-white border-bottom">
+              <h5 className="mb-0">
+                <FaIdCard className={isRTL ? "ms-2" : "me-2"} />
+                {t('shop.information', 'Informations de la boutique')}
+              </h5>
+            </Card.Header>
+            <Card.Body className="p-0">
+              
+              {/* Wilaya - Fila individual */}
+              {post.wilaya && (
+                <div className={`border-bottom p-3 ${isRTL ? 'text-right' : ''}`}>
+                  <Row className={`align-items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Col xs={12} md={4}>
+                      <div className="d-flex align-items-center">
+                        <FaMapMarkerAlt className={`text-success ${isRTL ? "ms-2" : "me-2"}`} size={20} />
+                        <strong className="text-dark">{t('location.wilaya', 'Wilaya')}</strong>
+                      </div>
+                    </Col>
+                    <Col xs={12} md={8}>
+                      <span className="fs-5 text-dark">{post.wilaya}</span>
+                    </Col>
+                  </Row>
+                </div>
+              )}
+              
+              {/* Commune - Fila individual */}
+              {post.commune && (
+                <div className={`border-bottom p-3 ${isRTL ? 'text-right' : ''}`}>
+                  <Row className={`align-items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Col xs={12} md={4}>
+                      <div className="d-flex align-items-center">
+                        <FaCity className={`text-info ${isRTL ? "ms-2" : "me-2"}`} size={20} />
+                        <strong className="text-dark">{t('location.commune', 'Commune')}</strong>
+                      </div>
+                    </Col>
+                    <Col xs={12} md={8}>
+                      <span className="fs-5 text-dark">{post.commune}</span>
+                    </Col>
+                  </Row>
+                </div>
+              )}
+              
+              {/* Address - Fila individual */}
+              {post.location && (
+                <div className={`border-bottom p-3 ${isRTL ? 'text-right' : ''}`}>
+                  <Row className={`align-items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Col xs={12} md={4}>
+                      <div className="d-flex align-items-center">
+                        <FaHome className={`text-warning ${isRTL ? "ms-2" : "me-2"}`} size={20} />
+                        <strong className="text-dark">{t('location.address', 'Adresse')}</strong>
+                      </div>
+                    </Col>
+                    <Col xs={12} md={8}>
+                      <span className="fs-5 text-dark">{post.location}</span>
+                    </Col>
+                  </Row>
+                </div>
+              )}
+              
+              {/* Teléfono - Fila individual */}
+              {post.phone && (
+                <div className={`border-bottom p-3 ${isRTL ? 'text-right' : ''}`}>
+                  <Row className={`align-items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Col xs={12} md={4}>
+                      <div className="d-flex align-items-center">
+                        <FaPhone className={`text-primary ${isRTL ? "ms-2" : "me-2"}`} size={20} />
+                        <strong className="text-dark">{t('contact.phone', 'Téléphone')}</strong>
+                      </div>
+                    </Col>
+                    <Col xs={12} md={8}>
+                      <span className="fs-5 text-dark">{post.phone}</span>
+                    </Col>
+                  </Row>
+                </div>
+              )}
+              
+              {/* Email - Fila individual */}
+              {post.email && (
+                <div className={`p-3 ${isRTL ? 'text-right' : ''}`}>
+                  <Row className={`align-items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Col xs={12} md={4}>
+                      <div className="d-flex align-items-center">
+                        <FaEnvelope className={`text-danger ${isRTL ? "ms-2" : "me-2"}`} size={20} />
+                        <strong className="text-dark">{t('contact.email', 'Email')}</strong>
+                      </div>
+                    </Col>
+                    <Col xs={12} md={8}>
+                      <span className="fs-5 text-dark">{post.email}</span>
+                    </Col>
+                  </Row>
+                </div>
+              )}
+              
+            </Card.Body>
+          </Card>
+
+          {/* TERCERA FILA: MAPA */}
+          <Card className="shadow-sm border-0">
+            <Card.Header className="bg-white border-bottom">
+              <Row className={`align-items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <Col>
-                  <ButtonGroup size="sm" className={isRTL ? 'flex-row-reverse' : ''}>
+                  <h5 className="mb-0">
+                    <FaGlobe className={isRTL ? "ms-2" : "me-2"} />
+                    {t('map.location', 'Localisation sur la carte')}
+                  </h5>
+                </Col>
+                <Col xs="auto">
+                  <ButtonGroup size="sm">
                     {Object.keys(mapProviders).map(style => (
                       <Button
                         key={style}
@@ -434,123 +366,86 @@ const Map = ({ post: postProp }) => {
                     ))}
                   </ButtonGroup>
                 </Col>
-                <Col xs="auto">
-                  <Button
-                    variant="outline-secondary"
-                    size="sm"
-                    onClick={searchLocation}
-                    disabled={loading}
-                  >
-                    {/* 🆕 ICONO RTL */}
-                    {isRTL ? (
-                      <span>
-                        {getTranslatedText('map.reload', 'Actualiser')}
-                        <i className="fas fa-sync-alt ms-1"></i>
-                      </span>
-                    ) : (
-                      <span>
-                        <i className="fas fa-sync-alt me-1"></i>
-                        {getTranslatedText('map.reload', 'Actualiser')}
-                      </span>
-                    )}
-                  </Button>
-                </Col>
               </Row>
-
-              {/* Estados de carga y error - CON RTL */}
+            </Card.Header>
+            
+            <Card.Body className="p-0">
+              {/* Estados de carga y error */}
               {loading && (
-                <Alert variant="info" className={`d-flex align-items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
-                  <Spinner animation="border" size="sm" className={isRTL ? "ms-2" : "me-2"} />
-                  {getTranslatedText('map.searchingLocation', 'Recherche de la localisation...')}
-                </Alert>
+                <div className="text-center py-5">
+                  <Spinner animation="border" variant="primary" size="lg" />
+                  <p className="mt-3 fs-5">{t('map.searching', 'Recherche de la localisation...')}</p>
+                </div>
               )}
               
-              {error && (
-                <Alert variant="warning" className={isRTL ? 'text-right' : ''}>
-                  <i className={`fas fa-exclamation-triangle ${isRTL ? 'ms-2' : 'me-2'}`}></i>
+              {error && !loading && (
+                <Alert variant="warning" className="m-4">
+                  <i className={`fas fa-exclamation-triangle ${isRTL ? "ms-2" : "me-2"}`}></i>
                   {error}
                 </Alert>
               )}
-            </Card.Body>
-          </Card>
 
-          {/* Mapa */}
-          <Card className="shadow-sm">
-            <div style={{ height: '60vh', width: '100%', position: 'relative' }}>
-              <MapContainer 
-                center={mapCenter} 
-                zoom={zoomLevel} 
-                style={{ height: '100%', width: '100%' }}
-                scrollWheelZoom={true}
-                doubleClickZoom={true}
-                zoomControl={true}
-                key={mapStyle}
-              >
-                <ChangeView center={mapCenter} zoom={zoomLevel} />
-                <TileLayer
-                  url={mapProviders[mapStyle].url}
-                  attribution={mapProviders[mapStyle].attribution}
-                />
-                
-                {!loading && !error && (
-                  <Marker position={markerPosition}>
-                    <Popup>
-                      <div style={{ 
-                        minWidth: '250px',
-                        direction: isRTL ? 'rtl' : 'ltr',
-                        textAlign: isRTL ? 'right' : 'left'
-                      }}>
-                        <h6 className="fw-bold">
-                          {post?.destinacion || getTranslatedText('map.unnamedLocation', 'Destination')}
-                        </h6>
-                        <hr className="my-2" />
-                        
-                        {usedField && (
-                          <p className="mb-2">
-                            <strong>{usedField.label}:</strong><br />
-                            {usedField.value}
-                          </p>
-                        )}
-                        
-                        <div className="mt-2 p-2 bg-light rounded">
-                          <small className="text-muted">
-                            {post?.nombreHotel && (
-                              <div>
-                                <strong>🏨 {getTranslatedText('map.hotelName', 'Hôtel')}:</strong> {post.nombreHotel}
-                              </div>
-                            )}
-                            
-                            {post?.ciudadHotel && (
-                              <div>
-                                <strong>🏙️ {getTranslatedText('map.city', 'Ville')}:</strong> {post.ciudadHotel}
-                              </div>
-                            )}
-                            
-                            {post?.direccionHotel && (
-                              <div>
-                                <strong>📫 {getTranslatedText('map.address', 'Adresse')}:</strong> {post.direccionHotel}
-                              </div>
-                            )}
-                            
-                            {(post?.hotelMeca || post?.hotelMedina) && (
-                              <div className="mt-1 pt-1 border-top">
-                                <strong>🕋 Hajj & Omra:</strong>
-                                {post.hotelMeca && (
-                                  <div>• {getTranslatedText('map.hotelMeca', 'Mecque')}: {post.hotelMeca}</div>
-                                )}
-                                {post.hotelMedina && (
-                                  <div>• {getTranslatedText('map.hotelMedina', 'Médine')}: {post.hotelMedina}</div>
-                                )}
-                              </div>
-                            )}
-                          </small>
+              {/* Mapa */}
+              {!loading && !error && (
+                <div style={{ height: '400px', width: '100%' }}>
+                  <MapContainer 
+                    center={mapCenter} 
+                    zoom={zoomLevel} 
+                    style={{ height: '100%', width: '100%' }}
+                    scrollWheelZoom={true}
+                  >
+                    <ChangeView center={mapCenter} zoom={zoomLevel} />
+                    <TileLayer
+                      url={mapProviders[mapStyle].url}
+                      attribution={mapProviders[mapStyle].attribution}
+                    />
+                    
+                    <Marker position={markerPosition} icon={ShopIcon}>
+                      <Popup>
+                        <div style={{ minWidth: '250px', textAlign: isRTL ? 'right' : 'left' }}>
+                          <h6 className="fw-bold text-primary mb-2">{post.bootiquename}</h6>
+                          {post.wilaya && <div className="mb-1"><strong>📍 {t('location.wilaya', 'Wilaya')}:</strong> {post.wilaya}</div>}
+                          {post.commune && <div className="mb-1"><strong>🏘️ {t('location.commune', 'Commune')}:</strong> {post.commune}</div>}
+                          {post.location && <div className="mb-1"><strong>🏠 {t('location.address', 'Adresse')}:</strong> {post.location}</div>}
                         </div>
-                      </div>
-                    </Popup>
-                  </Marker>
-                )}
-              </MapContainer>
-            </div>
+                      </Popup>
+                    </Marker>
+                  </MapContainer>
+                </div>
+              )}
+            </Card.Body>
+            
+            <Card.Footer className="bg-white">
+              <Row className={`align-items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <Col>
+                  <small className="text-muted">
+                    {post.wilaya && `${post.wilaya}`}
+                    {post.commune && `, ${post.commune}`}
+                    {post.location && `, ${post.location}`}
+                  </small>
+                </Col>
+                <Col xs="auto">
+                  <div className="d-flex gap-2">
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={searchLocation}
+                      disabled={loading}
+                    >
+                      <FaSyncAlt className={isRTL ? "ms-1" : "me-1"} />
+                      {t('map.reload', 'Actualiser')}
+                    </Button>
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={handleGoBack}
+                    >
+                      {t('common.back', 'Retour')}
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
+            </Card.Footer>
           </Card>
         </Col>
       </Row>
@@ -558,4 +453,4 @@ const Map = ({ post: postProp }) => {
   );
 };
 
-export default Map;
+export default map;

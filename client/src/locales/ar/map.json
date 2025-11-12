@@ -1,29 +1,35 @@
 {
-  "map": {
-    "locationTitle": "الموقع على الخريطة",
-    "destination": "الوجهة",
-    "destinationInfo": "معلومات الوجهة",
-    "usedForSearch": "المستخدم للبحث",
-    "hotelName": "الفندق",
-    "city": "المدينة",
-    "zoneRegion": "المنطقة/الجهة",
-    "address": "العنوان",
-    "hotelMeca": "مكة",
-    "hotelMedina": "المدينة",
-    "availableFields": "الحقول المتاحة",
-    "streetView": "عرض الشارع",
-    "satelliteView": "عرض القمر الصناعي",
-    "terrainView": "عرض التضاريس",
-    "reload": "تحديث",
-    "searchingLocation": "جاري البحث عن الموقع...",
-    "noLocationData": "لا توجد بيانات موقع متاحة",
-    "locationNotFound": "الموقع غير موجود. عرض الخريطة الافتراضية.",
-    "generalError": "خطأ في تحميل الموقع",
-    "noPostData": "لا توجد بيانات منشور متاحة",
-    "loading": "جاري تحميل الخريطة...",
-    "unnamedLocation": "الوجهة"
-  },
   "common": {
-    "back": "رجوع"
+    "back": "رجوع",
+    "loading": "جاري التحميل"
+  },
+  "shop": {
+    "boutique": "المتجر",
+    "information": "معلومات المتجر"
+  },
+  "user": {
+    "owner": "المالك",
+    "information": "معلومات المستخدم"
+  },
+  "location": {
+    "wilaya": "الولاية",
+    "commune": "البلدية", 
+    "address": "العنوان",
+    "location": "الموقع"
+  },
+  "contact": {
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني"
+  },
+  "map": {
+    "location": "الموقع على الخريطة",
+    "street": "الشارع",
+    "satellite": "القمر الصناعي",
+    "terrain": "التضاريس",
+    "reload": "تحديث",
+    "searching": "جاري البحث عن الموقع...",
+    "locationNotFound": "الموقع غير موجود",
+    "generalError": "خطأ في تحميل الموقع",
+    "noData": "لا توجد بيانات للمتجر"
   }
 }

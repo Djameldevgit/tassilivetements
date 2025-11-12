@@ -34,7 +34,7 @@ const postCtrl = {
             if (!postData.subCategory) {
                 return res.status(400).json({msg: "La sous-catégorie est requise."})
             }
-    
+           
             if (!postData.title || postData.title.trim() === "") {
                 return res.status(400).json({msg: "Le titre est requis."})
             }
@@ -79,6 +79,8 @@ const postCtrl = {
                     subCategory: postData.subCategory,
                     subSubCategory: postData.subSubCategory || "",
                     title: postData.title,
+                    bootiquename: postData.bootiquename,
+                     
                     description: postData.description,
                     price: postData.price,
                     currency: postData.currency || "DZD",
@@ -181,6 +183,7 @@ const postCtrl = {
                         subCategory: postData.subCategory,
                         subSubCategory: postData.subSubCategory || "",
                         title: postData.title,
+                        bootiquename: postData.bootiquename,
                         description: postData.description,
                         price: postData.price,
                         currency: postData.currency || "DZD",

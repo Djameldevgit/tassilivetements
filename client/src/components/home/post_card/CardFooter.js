@@ -78,38 +78,35 @@ const CardFooter = ({ post }) => {
     };
 
     const handleOpenMap = () => {
-       
-    
-        // 🔥 NAVEGAR A LA RUTA /map CON LOS DATOS DEL POST
-        history.push('/map')
-          
-         
+        if (!post.location && !post.wilaya && !post.commune) {
+            dispatch({ 
+                type: GLOBALTYPES.ALERT, 
+                payload: { error: 'Aucune information de localisation disponible' } 
+            });
+            return;
+        }
+
+        // 🆕 GUARDAR EN LOCALSTORAGE COMO BACKUP
+        try {
+            localStorage.setItem('currentPost', JSON.stringify(post));
+        } catch (error) {
+            console.log("Error guardando en localStorage:", error);
+        }
+
+        // 🆕 NAVEGAR AL MAPA PASANDO EL POST COMO STATE
+        history.push('/map', { 
+            postData: post 
+            // También puedes usar solo 'post' si prefieres:
+            // post: post
+        });
+        
+        console.log("📍 Navegando al mapa con post:", post);
     };
 
     return (
         <Card.Footer className="border-0 p-0 bg-white">
         <ListGroup variant="flush">
-            {/* Información del producto - COMPACTADA */}
-            <ListGroup.Item className="border-0 px-2 py-1">
-                <div className="d-flex justify-content-between align-items-center">
-                    <div className="flex-grow-1">
-                        <h6 className="fw-bold text-dark mb-0 text-truncate fs-6">
-                            {post.title || 'Sans titre'}
-                        </h6>
-                        <small className="text-muted">
-                            {post.subCategory || 'Général'}
-                        </small>
-                    </div>
-                    <div className="text-end">
-                        <span className="fw-bold text-danger fs-6">
-                            {post.price || '0'}
-                        </span>
-                        <small className="text-muted d-block fs-7">
-                            {post.currency || 'DA'}
-                        </small>
-                    </div>
-                </div>
-            </ListGroup.Item>
+         
 
             {/* Botones de acción - SUPER COMPACTOS */}
             <ListGroup.Item className="border-0 px-1 py-1">
@@ -155,30 +152,33 @@ const CardFooter = ({ post }) => {
         >
             <FaComment size={15} />
         </div>
-
-        {/* 3. Mapa */}
-        <div
-            className={`d-flex align-items-center justify-content-center ${
-                post.location ? 'text-danger' : 'text-muted'
-            }`}
-            style={{
-                width: '30px',
-                height: '30px',
-                cursor: post.location ? 'pointer' : 'not-allowed',
-                borderRadius: '50%',
-                transition: 'all 0.2s'
-            }}
-            onClick={post.location ? handleOpenMap : undefined}
-            onMouseEnter={(e) => {
-                if (post.location) e.currentTarget.style.backgroundColor = '#f8f9fa';
-            }}
-            onMouseLeave={(e) => {
-                if (post.location) e.currentTarget.style.backgroundColor = 'transparent';
-            }}
-            title={post.location ? "Voir sur la carte" : "Localisation non disponible"}
-        >
-            <FaMapMarkerAlt size={15} />
-        </div>
+ 
+<div
+    className={`d-flex align-items-center justify-content-center ${
+        (post.location || post.wilaya || post.commune) ? 'text-danger' : 'text-muted'
+    }`}
+    style={{
+        width: '30px',
+        height: '30px',
+        cursor: (post.location || post.wilaya || post.commune) ? 'pointer' : 'not-allowed',
+        borderRadius: '50%',
+        transition: 'all 0.2s'
+    }}
+    onClick={(post.location || post.wilaya || post.commune) ? () => handleOpenMap(post) : undefined}
+    onMouseEnter={(e) => {
+        if (post.location || post.wilaya || post.commune) e.currentTarget.style.backgroundColor = '#f8f9fa';
+    }}
+    onMouseLeave={(e) => {
+        if (post.location || post.wilaya || post.commune) e.currentTarget.style.backgroundColor = 'transparent';
+    }}
+    title={
+        (post.location || post.wilaya || post.commune) 
+            ? "Voir sur la carte" 
+            : "Localisation non disponible"
+    }
+>
+    <FaMapMarkerAlt size={15} />
+</div>
     </div>
 </ListGroup.Item>
         </ListGroup>
@@ -187,6 +187,5 @@ const CardFooter = ({ post }) => {
 };
 
 export default CardFooter;
- 
 
  
