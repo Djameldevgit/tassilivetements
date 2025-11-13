@@ -13,11 +13,11 @@
     "material": "Matière",
     "location": "Localisation",
     "contact": "Contact",
-    "images": "Images"
+    "images": "Images",
+    "sale_type": "Type de Vente"
   },
   "labels": {
-    "bootiquename": "Mom du magasin",
-
+    "bootiquename": "Nom du magasin",
     "subcategory": "Sous-catégorie",
     "specific_type": "Type Spécifique",
     "title": "Titre",
@@ -32,7 +32,10 @@
     "commune": "Commune",
     "address": "Adresse",
     "phone": "Téléphone",
-    "email": "Email"
+    "email": "Email",
+    "sale_type": "Type de Vente",
+    "min_quantity": "Quantité Minimale",
+    "existing_images": "Images Existantes"
   },
   "placeholders": {
     "select_subcategory": "Sélectionner une sous-catégorie",
@@ -47,7 +50,8 @@
     "address": "Adresse exacte",
     "phone": "Numéro de téléphone",
     "email": "email@exemple.com",
-    "bootiquename": "Magasin...."
+    "bootiquename": "Nom de votre boutique...",
+    "min_quantity": "Ex: 10, 50, 100"
   },
   "options": {
     "categories": {
@@ -196,6 +200,11 @@
       "ain_temouchent": "Aïn Témouchent",
       "ghardaia": "Ghardaïa",
       "relizane": "Relizane"
+    },
+    "saleTypes": {
+      "retail": "Vente au Détail (à l'unité)",
+      "wholesale": "Vente en Gros (lots seulement)",
+      "both": "Les Deux (détail et gros)"
     }
   },
   "validation": {
@@ -212,7 +221,8 @@
     "images": "Téléchargez au moins une image",
     "images_required": "Les images sont requises",
     "images_size": "L'image est trop lourde (max. 5MB)",
-    "required_fields": "Veuillez remplir tous les champs obligatoires"
+    "required_fields": "Veuillez remplir tous les champs obligatoires",
+    "minQuantity": "La quantité minimale est requise pour la vente en gros"
   },
   "success": {
     "create": "Publication créée avec succès",
@@ -231,5 +241,9 @@
   },
   "messages": {
     "select_subcategory_first": "Veuillez sélectionner une sous-catégorie pour continuer"
+  },
+  "help": {
+    "sale_type": "Sélectionnez comment vous souhaitez vendre ce produit",
+    "min_quantity": "Quantité minimale pour les commandes en gros"
   }
 }

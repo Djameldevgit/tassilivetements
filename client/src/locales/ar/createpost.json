@@ -13,7 +13,8 @@
     "material": "المادة",
     "location": "الموقع",
     "contact": "الاتصال",
-    "images": "الصور"
+    "images": "الصور",
+    "sale_type": "نوع البيع"
   },
   "labels": {
     "subcategory": "الفئة الفرعية",
@@ -31,8 +32,10 @@
     "address": "العنوان",
     "phone": "الهاتف",
     "email": "البريد الإلكتروني",
-    "bootiquename": "اسم المتجر"
-
+    "bootiquename": "اسم المتجر",
+    "sale_type": "نوع البيع",
+    "min_quantity": "الحد الأدنى للكمية",
+    "existing_images": "الصور الموجودة"
   },
   "placeholders": {
     "select_subcategory": "اختر الفئة الفرعية",
@@ -47,8 +50,8 @@
     "address": "العنوان الدقيق",
     "phone": "رقم الهاتف",
     "email": "email@example.com",
-    "bootiquename": "الاسم..."
-
+    "bootiquename": "اسم المتجر...",
+    "min_quantity": "مثال: 10, 50, 100"
   },
   "options": {
     "categories": {
@@ -197,6 +200,11 @@
       "ain_temouchent": "عين تموشنت",
       "ghardaia": "غرداية",
       "relizane": "غليزان"
+    },
+    "saleTypes": {
+      "retail": "بيع بالتجزئة (بالقطعة)",
+      "wholesale": "بيع بالجملة (باللوت فقط)",
+      "both": "الاثنان معاً (تجزئة وجملة)"
     }
   },
   "validation": {
@@ -213,7 +221,8 @@
     "images": "ارفع صورة واحدة على الأقل",
     "images_required": "الصور مطلوبة",
     "images_size": "الصورة ثقيلة جداً (5MB كحد أقصى)",
-    "required_fields": "يرجى ملء جميع الحقول الإلزامية"
+    "required_fields": "يرجى ملء جميع الحقول الإلزامية",
+    "minQuantity": "الحد الأدنى للكمية مطلوب للبيع بالجملة"
   },
   "success": {
     "create": "تم إنشاء المنشور بنجاح",
@@ -232,5 +241,9 @@
   },
   "messages": {
     "select_subcategory_first": "يرجى اختيار فئة فرعية للمتابعة"
+  },
+  "help": {
+    "sale_type": "اختر كيف تريد بيع هذا المنتج",
+    "min_quantity": "الحد الأدنى للكمية للطلبات بالجملة"
   }
 }

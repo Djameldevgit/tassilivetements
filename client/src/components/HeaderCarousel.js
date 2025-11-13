@@ -3,105 +3,119 @@ import { useTranslation } from 'react-i18next';
 import Carousel from 'react-bootstrap/Carousel';
 import { useSelector } from 'react-redux';
 
-const HeaderCarousel = () => {
-    const { t, i18n } = useTranslation('carouselhome');
-    const languageReducer = useSelector(state => state.languageReducer);
-    
-    // 🆕 DETECCIÓN RTL MEJORADA
-    const isRTL = i18n.language === 'ar' || languageReducer?.language === 'ar';
+function HeaderCarousel() {
+  const { t } = useTranslation('common');
+  const { languageReducer } = useSelector(state => state);
+  const isRTL = languageReducer?.language === 'ar';
 
-    const slides = [
-        {
-            image: "/images/clothing/04.jpg",
-            titleKey: "slides.spring_collection.title",
-            descriptionKey: "slides.spring_collection.description"
-        },
-        {
-            image: "/images/clothing/00.jpg",
-            titleKey: "slides.summer_sales.title", 
-            descriptionKey: "slides.summer_sales.description"
-        },
-        {
-            image: "/images/clothing/01.jpg",
-            titleKey: "slides.men_collection.title",
-            descriptionKey: "slides.men_collection.description"
-        },
-        {
-            image: "/images/clothing/03.jpg",
-            titleKey: "slides.women_collection.title",
-            descriptionKey: "slides.women_collection.description"
-        }
-    ];
+  // Rutas de las imágenes en la carpeta public/images/
+  const carouselImages = [
+    '/images/banner1.jpg',
+    '/images/banner2.jpg', 
+    '/images/banner3.jpg',
+    '/images/banner4.jpg',
+    '/images/banner5.jpg'
+  ];
 
-    return (
-        <Carousel 
-            data-bs-theme="dark" 
-            fade 
-            interval={3000}
-            dir={isRTL ? "rtl" : "ltr"}
-            // 🆕 ELIMINAR INDICADORES Y FLECHAS
-            indicators={false}
-            nextIcon={null}
-            prevIcon={null}
-            controls={false}
-        >
-            {slides.map((slide, index) => (
-                <Carousel.Item key={index}>
-                    <img
-                        className="d-block w-100"
-                        src={slide.image}
-                        alt={t(slide.titleKey)}
-                        style={{
-                            height: 'clamp(180px, 40vw, 350px)',
-                            objectFit: 'cover'
-                        }}
-                    />
-                    <Carousel.Caption style={{
-                        // 🆕 FONDO MÁS TRANSPARENTE
-                        backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                        backdropFilter: 'blur(8px)',
-                        borderRadius: '12px',
-                        padding: '14px 18px',
-                        // 🆕 CENTRADO Y EN LA PARTE INFERIOR
-                        bottom: '15px',
-                        left: '50%',
-                        right: 'auto',
-                        transform: 'translateX(-50%)',
-                        width: '90%',
-                        maxWidth: '500px',
-                        margin: '0 auto',
-                        // 🆕 TEXTO CENTRADO
-                        textAlign: 'center',
-                        direction: isRTL ? 'rtl' : 'ltr',
-                        border: '1px solid rgba(255, 255, 255, 0.15)',
-                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)'
-                    }}>
-                        <h3 style={{ 
-                            textShadow: '1px 1px 3px rgba(0, 0, 0, 0.8)',
-                            fontSize: 'clamp(16px, 4vw, 20px)',
-                            fontWeight: '700',
-                            marginBottom: '6px',
-                            color: '#ffffff',
-                            lineHeight: '1.3'
-                        }}>
-                            {t(slide.titleKey)}
-                        </h3>
-                        <p style={{ 
-                            textShadow: '1px 1px 3px rgba(0, 0, 0, 0.8)',
-                            fontSize: 'clamp(12px, 3vw, 14px)',
-                            fontWeight: '400',
-                            marginBottom: '0',
-                            color: '#f0f0f0',
-                            lineHeight: '1.4',
-                            opacity: '0.1'
-                        }}>
-                            {t(slide.descriptionKey)}
-                        </p>
-                    </Carousel.Caption>
-                </Carousel.Item>
-            ))}
-        </Carousel>
-    );
-};
+  // Textos traducidos para cada slide
+  const slides = [
+    {
+      title: t('carousel.title1', 'Nouvelle Collection Printemps'),
+      description: t('carousel.desc1', 'Découvrez les dernières tendances de la saison')
+    },
+    {
+      title: t('carousel.title2', 'Soldes Exceptionnelles'),
+      description: t('carousel.desc2', 'Jusqu\'à -50% sur toute la boutique')
+    },
+    {
+      title: t('carousel.title3', 'Livraison Gratuite'),
+      description: t('carousel.desc3', 'Partout en Algérie à partir de 3000 DZD')
+    },
+    {
+      title: t('carousel.title4', 'Mode Homme & Femme'),
+      description: t('carousel.desc4', 'Des styles uniques pour tous les goûts')
+    },
+    {
+      title: t('carousel.title5', 'Qualité Garantie'),
+      description: t('carousel.desc5', 'Des matériaux premium et une confection soignée')
+    }
+  ];
+
+  return (
+    <Carousel 
+      data-bs-theme="light" 
+      fade 
+      interval={4000}
+      indicators={true}
+      controls={true}
+      dir={isRTL ? 'rtl' : 'ltr'}
+      style={{
+        height: 'auto',
+        minHeight: '300px'
+      }}
+    >
+      {carouselImages.map((image, index) => (
+        <Carousel.Item key={index}>
+          <div 
+            className="d-block w-100"
+            style={{
+              height: '60vh',
+              maxHeight: '500px',
+              minHeight: '300px',
+              overflow: 'hidden',
+              backgroundColor: '#f8f9fa'
+            }}
+          >
+            <img
+              src={image}
+              alt={slides[index].title}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center'
+              }}
+              onError={(e) => {
+                e.target.src = `https://via.placeholder.com/800x400/8b5cf6/ffffff?text=Tassili+${index + 1}`;
+              }}
+            />
+          </div>
+          <Carousel.Caption 
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 0.6)',
+              borderRadius: '10px',
+              padding: '20px',
+              bottom: '20px',
+              left: '10%',
+              right: '10%',
+              textAlign: isRTL ? 'right' : 'left'
+            }}
+          >
+            <h3 
+              style={{
+                fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
+                fontWeight: '700',
+                marginBottom: '10px',
+                color: '#ffffff'
+              }}
+            >
+              {slides[index].title}
+            </h3>
+            <p 
+              style={{
+                fontSize: 'clamp(1rem, 2vw, 1.2rem)',
+                fontWeight: '500',
+                color: '#f0f0f0',
+                marginBottom: '0'
+              }}
+            >
+              {slides[index].description}
+            </p>
+          </Carousel.Caption>
+        </Carousel.Item>
+      ))}
+    </Carousel>
+  );
+}
 
 export default HeaderCarousel;

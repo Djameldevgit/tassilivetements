@@ -18,264 +18,102 @@ class APIfeatures {
 }
 
 const postCtrl = {
+ 
     createPost: async (req, res) => {
         try {
-            const { postData, images } = req.body
+            const { postData, images } = req.body;
     
-            if(!images || images.length === 0) {
-                return res.status(400).json({msg: "Veuillez ajouter au moins une photo."})
-            }
-    
+            // 🔥 VALIDACIÓN CON FUNCIÓN REUTILIZABLE
             if (!postData) {
-                return res.status(400).json({msg: "Données du post manquantes."})
+                return res.status(400).json({ msg: "Données du post manquantes." });
             }
     
-            // 🔥 VALIDACIÓN PARA ROPA - CAMPOS REQUERIDOS
-            if (!postData.subCategory) {
-                return res.status(400).json({msg: "La sous-catégorie est requise."})
-            }
-           
-            if (!postData.title || postData.title.trim() === "") {
-                return res.status(400).json({msg: "Le titre est requis."})
+            const validationError = validatePostData(postData);
+            if (validationError) {
+                return res.status(400).json({ msg: validationError });
             }
     
-            if (!postData.description || postData.description.trim() === "") {
-                return res.status(400).json({msg: "La description est requise."})
+            // 🔥 VALIDACIÓN DE IMÁGENES PARA NUEVOS POSTS
+            if (!images || images.length === 0) {
+                return res.status(400).json({ msg: "Veuillez télécharger au moins une image." });
             }
     
-            if (!postData.price || postData.price <= 0) {
-                return res.status(400).json({msg: "Le prix doit être supérieur à 0."})
-            }
+            // 🔥 PREPARAR DATOS CON FUNCIÓN REUTILIZABLE
+            const postFields = preparePostData(postData, images);
+            postFields.user = req.user._id;
     
-            if (!postData.brand || postData.brand.trim() === "") {
-                return res.status(400).json({msg: "La marque est requise."})
-            }
+            // Crear nuevo post
+            const newPost = new Posts(postFields);
+            await newPost.save();
     
-            if (!postData.wilaya || postData.wilaya.trim() === "") {
-                return res.status(400).json({msg: "La wilaya est requise."})
-            }
-    
-            if (!postData.commune || postData.commune.trim() === "") {
-                return res.status(400).json({msg: "La commune est requise."})
-            }
-    
-            if (!postData.phone || postData.phone.trim() === "") {
-                return res.status(400).json({msg: "Le téléphone est requis."})
-            }
-    
-            // 🔥 VALIDACIÓN DE ARRAYS PARA ROPA
-            if (!postData.sizes || postData.sizes.length === 0) {
-                return res.status(400).json({msg: "Veuillez sélectionner au moins une taille."})
-            }
-    
-            if (!postData.colors || postData.colors.length === 0) {
-                return res.status(400).json({msg: "Veuillez sélectionner au moins une couleur."})
-            }
-    
-            // 🔥 CREAR NUEVO POST PARA ROPA
-            const newPost = new Posts({
-                    // ✅ CAMPOS BÁSICOS
-                    category: postData.category || "Vêtements",
-                    subCategory: postData.subCategory,
-                    subSubCategory: postData.subSubCategory || "",
-                    title: postData.title,
-                    bootiquename: postData.bootiquename,
-                     
-                    description: postData.description,
-                    price: postData.price,
-                    currency: postData.currency || "DZD",
-                    brand: postData.brand,
-                    condition: postData.condition || "Nouveau",
-                    
-                    // ✅ CAMPOS DE CARACTERÍSTICAS
-                    sizes: postData.sizes || [],
-                    colors: postData.colors || [],
-                    material: postData.material || "",
-                    gender: postData.gender || "",
-                    season: postData.season || "Toute l'année",
-                    
-                    // ✅ CAMPOS DE UBICACIÓN Y CONTACTO
-                    wilaya: postData.wilaya,
-                    commune: postData.commune,
-                    location: postData.location || "",
-                    phone: postData.phone,
-                    email: postData.email || "",
-                    
-                    // ✅ CAMPOS ADICIONALES
-                    tags: postData.tags || [],
-                    images: images,
-                    user: req.user._id
-                })
-    
-            await newPost.save()
-    
-            // 🔥 POPULATE OPTIMIZADO
-            await newPost.populate('user', 'avatar username fullname followers')
+            // Populate para obtener datos del usuario
+            await newPost.populate('user', 'avatar username fullname followers');
     
             res.json({
                 msg: 'Vêtement publié avec succès!',
-                newPost
-            })
+                newPost: newPost
+            });
     
         } catch (err) {
-            console.error('Error en createPost:', err)
-            return res.status(500).json({msg: err.message})
+            console.error('Error en createPost:', err);
+            return res.status(500).json({ msg: err.message });
         }
     },
-    
     updatePost: async (req, res) => {
         try {
-            const { postData, images } = req.body
+            const { postData, images, existingImages } = req.body;
     
+            // 🔥 VALIDACIÓN CON FUNCIÓN REUTILIZABLE
             if (!postData) {
-                return res.status(400).json({msg: "Données du post manquantes."})
+                return res.status(400).json({ msg: "Données du post manquantes." });
             }
     
-            // 🔥 VALIDACIÓN PARA ROPA - CAMPOS REQUERIDOS
-            if (!postData.subCategory) {
-                return res.status(400).json({msg: "La sous-catégorie est requise."})
+            const validationError = validatePostData(postData);
+            if (validationError) {
+                return res.status(400).json({ msg: validationError });
             }
     
-            if (!postData.title || postData.title.trim() === "") {
-                return res.status(400).json({msg: "Le titre est requis."})
+            // 🔥 VALIDACIÓN DE IMÁGENES (nuevas + existentes)
+            const hasImages = (images && images.length > 0) || 
+                             (existingImages && existingImages.length > 0) ||
+                             (postData.images && postData.images.length > 0);
+            
+            if (!hasImages) {
+                return res.status(400).json({ msg: "Veuillez télécharger au moins une image." });
             }
     
-            if (!postData.description || postData.description.trim() === "") {
-                return res.status(400).json({msg: "La description est requise."})
-            }
-    
-            if (!postData.price || postData.price <= 0) {
-                return res.status(400).json({msg: "Le prix doit être supérieur à 0."})
-            }
-    
-            if (!postData.brand || postData.brand.trim() === "") {
-                return res.status(400).json({msg: "La marque est requise."})
-            }
-    
-            if (!postData.wilaya || postData.wilaya.trim() === "") {
-                return res.status(400).json({msg: "La wilaya est requise."})
-            }
-    
-            if (!postData.commune || postData.commune.trim() === "") {
-                return res.status(400).json({msg: "La commune est requise."})
-            }
-    
-            if (!postData.phone || postData.phone.trim() === "") {
-                return res.status(400).json({msg: "Le téléphone est requis."})
-            }
-    
-            // 🔥 VALIDACIÓN DE ARRAYS PARA ROPA
-            if (!postData.sizes || postData.sizes.length === 0) {
-                return res.status(400).json({msg: "Veuillez sélectionner au moins une taille."})
-            }
-    
-            if (!postData.colors || postData.colors.length === 0) {
-                return res.status(400).json({msg: "Veuillez sélectionner au moins une couleur."})
+            // 🔥 PREPARAR DATOS CON FUNCIÓN REUTILIZABLE
+            const updateFields = preparePostData(postData, images);
+            
+            // Si hay imágenes existentes, combinarlas con las nuevas
+            if (existingImages && existingImages.length > 0) {
+                updateFields.images = [...existingImages, ...(images || [])];
             }
     
             // Buscar y actualizar el post
             const post = await Posts.findOneAndUpdate(
                 { _id: req.params.id },
-                {
-                    $set: {
-                        // ✅ CAMPOS BÁSICOS
-                        category: postData.category || "Vêtements",
-                        subCategory: postData.subCategory,
-                        subSubCategory: postData.subSubCategory || "",
-                        title: postData.title,
-                        bootiquename: postData.bootiquename,
-                        description: postData.description,
-                        price: postData.price,
-                        currency: postData.currency || "DZD",
-                        brand: postData.brand,
-                        condition: postData.condition || "Nouveau",
-                        
-                        // ✅ CAMPOS DE CARACTERÍSTICAS
-                        sizes: postData.sizes || [],
-                        colors: postData.colors || [],
-                        material: postData.material || "",
-                        gender: postData.gender || "",
-                        season: postData.season || "Toute l'année",
-                        
-                        // ✅ CAMPOS DE UBICACIÓN Y CONTACTO
-                        wilaya: postData.wilaya,
-                        commune: postData.commune,
-                        location: postData.location || "",
-                        phone: postData.phone,
-                        email: postData.email || "",
-                        
-                        // ✅ CAMPOS ADICIONALES
-                        tags: postData.tags || [],
-                        images: images || postData.images
-                    }
-                },
+                { $set: updateFields },
                 { new: true, runValidators: true }
-            )
+            );
     
             if (!post) {
-                return res.status(400).json({msg: "Ce vêtement n'existe pas."})
+                return res.status(400).json({ msg: "Ce vêtement n'existe pas." });
             }
     
             // Populate para obtener datos del usuario
-            await post.populate('user', 'avatar username fullname followers')
+            await post.populate('user', 'avatar username fullname followers');
     
             res.json({
                 msg: 'Vêtement modifié avec succès!',
                 newPost: post
-            })
+            });
     
         } catch (err) {
-            console.error('Error en updatePost:', err)
-            return res.status(500).json({msg: err.message})
+            console.error('Error en updatePost:', err);
+            return res.status(500).json({ msg: err.message });
         }
     },
-  /*  updatePost: async (req, res) => {
-        try {
-            const { postData, images } = req.body
-
-            if (!postData) {
-                return res.status(400).json({msg: "Données de mise à jour manquantes."})
-            }
-
-            // Preparar datos de actualización
-            const updateData = {
-                ...postData, // ✅ TODOS los campos en una línea
-                images
-            }
-
-            // Filtrar campos undefined (opcional, mongoose los ignora)
-            Object.keys(updateData).forEach(key => {
-                if (updateData[key] === undefined) {
-                    delete updateData[key]
-                }
-            })
-
-            const post = await Posts.findOneAndUpdate(
-                { _id: req.params.id }, 
-                updateData,
-                { new: true } // Retornar el documento actualizado
-            ).populate("user likes", "avatar username fullname")
-            .populate({
-                path: "comments",
-                populate: {
-                    path: "user likes",
-                    select: "-password"
-                }
-            })
-
-            if (!post) {
-                return res.status(404).json({msg: "Post non trouvé."})
-            }
-
-            res.json({
-                msg: "Post mis à jour avec succès!",
-                newPost: post
-            })
-        } catch (err) {
-            return res.status(500).json({msg: err.message})
-        }
-    },
-    */
     likePost: async (req, res) => {
         try {
             const post = await Posts.find({_id: req.params.id, likes: req.user._id})

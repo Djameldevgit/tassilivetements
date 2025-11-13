@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
-import { FaSave, FaTimes, FaTag, FaMapMarkerAlt, FaPhone, FaImage } from 'react-icons/fa';
+import { FaSave, FaTimes, FaTag, FaMapMarkerAlt, FaPhone, FaImage, FaStore, FaBoxes, FaShoppingCart } from 'react-icons/fa';
 
 // 🔷 COMPONENTE DE SUBIDA DE IMÁGENES
 import ImageUpload from '../components/forms/ImageUpload';
@@ -18,7 +18,7 @@ const getInitialState = () => ({
   subSubCategory: "",
   title: "",
   description: "",
-  content: "", // 🔥 AGREGAR para compatibilidad
+  content: "",
   price: "",
   currency: 'DZD',
   brand: "",
@@ -28,6 +28,9 @@ const getInitialState = () => ({
   material: "",
   gender: "",
   season: 'all_year',
+  // 🔥 NUEVO CAMPO: Tipo de venta con 3 opciones
+  saleType: 'retail', // 'retail', 'wholesale', 'both'
+  minQuantity: "",
   wilaya: "",
   commune: "",
   location: "",
@@ -35,6 +38,7 @@ const getInitialState = () => ({
   email: "",
   tags: []
 });
+
 // Arrays para selects
 const conditions = ['new', 'like_new', 'good', 'satisfactory'];
 const allSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '36', '38', '40', '42', '44', '46', '48', '50'];
@@ -43,6 +47,8 @@ const materials = ['cotton', 'polyester', 'wool', 'silk', 'denim', 'leather', 's
 const genders = ['man', 'woman', 'unisex', 'boy', 'girl', 'baby'];
 const seasons = ['spring', 'summer', 'autumn', 'winter', 'all_year'];
 const wilayas = ['algiers', 'oran', 'constantine', 'annaba', 'blida', 'batna', 'djelfa', 'setif', 'sidi_bel_abbes', 'biskra', 'tebessa', 'el_oued', 'skikda', 'tiaret', 'bejaia', 'tlemcen', 'ouargla', 'mostaganem', 'bordj_bou_arreridj', 'chlef', 'souk_ahras', 'medea', 'el_tarf', 'ain_defla', 'naama', 'ain_temouchent', 'ghardaia', 'relizane'];
+// 🔥 NUEVO: 3 opciones para tipo de venta
+const saleTypes = ['retail', 'wholesale', 'both'];
 
 const CreatePost = () => {
   const { auth, theme, languageReducer } = useSelector((state) => state);
@@ -57,6 +63,7 @@ const CreatePost = () => {
 
   const [postData, setPostData] = useState(getInitialState);
   const [images, setImages] = useState([]);
+  const [existingImages, setExistingImages] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertVariant, setAlertVariant] = useState("info");
@@ -65,45 +72,7 @@ const CreatePost = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
- 
-
-
-
-
-
-
-
-  // 🔥 ESTRUCTURA DE CATEGORÍAS REACTIVA - CORREGIDA
-  const categoriesStructure = useMemo(() => ({
-    clothing: {
-      man_clothing: [
-        'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests', 
-        'suits_blazers', 'sportswear', 'kamiss', 'underwear', 'pajamas', 
-        'swimwear', 'caps_hats', 'socks', 'belts', 'gloves', 'ties'
-      ],
-      woman_clothing: [
-        'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests', 
-        'sets', 'abayas_hijabs', 'wedding_party', 'maternity', 'dresses', 
-        'skirts', 'sportswear', 'leggings', 'lingerie', 'pajamas', 'robes', 
-        'swimwear', 'caps_hats', 'tights', 'scarves', 'belts', 'gloves'
-      ],
-      man_shoes: ['sneakers', 'boots', 'classic', 'moccasins', 'sandals', 'slippers'],
-      woman_shoes: ['sneakers', 'sandals', 'boots', 'heels', 'ballet', 'slippers'],
-      boys: [
-        'sneakers', 'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests',
-        'suits_blazers', 'sportswear', 'pajamas', 'underwear', 'swimwear', 'kamiss', 'caps_hats'
-      ],
-      girls: [
-        'sneakers', 'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests',
-        'dresses', 'skirts', 'sets', 'sportswear', 'pajamas', 'underwear', 'leggings', 'swimwear', 'caps_hats'
-      ],
-      baby: ['tops_shirts', 'sneakers', 'accessories'],
-      professional_wear: ['suits_blazers'],
-      bags_luggage: ['wallets', 'handbags', 'backpacks', 'professional_bags', 'suitcases', 'sport_bags']
-    }
-  }), []);
-
-  // 🔥 ESTILOS RESPONSIVE
+  // 🔥 ESTILOS DEFINIDOS CORRECTAMENTE
   const styles = useMemo(() => ({
     container: {
       padding: '8px',
@@ -194,6 +163,36 @@ const CreatePost = () => {
     }
   }), [isRTL]);
 
+  // 🔥 ESTRUCTURA DE CATEGORÍAS
+  const categoriesStructure = useMemo(() => ({
+    clothing: {
+      man_clothing: [
+        'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests', 
+        'suits_blazers', 'sportswear', 'kamiss', 'underwear', 'pajamas', 
+        'swimwear', 'caps_hats', 'socks', 'belts', 'gloves', 'ties'
+      ],
+      woman_clothing: [
+        'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests', 
+        'sets', 'abayas_hijabs', 'wedding_party', 'maternity', 'dresses', 
+        'skirts', 'sportswear', 'leggings', 'lingerie', 'pajamas', 'robes', 
+        'swimwear', 'caps_hats', 'tights', 'scarves', 'belts', 'gloves'
+      ],
+      man_shoes: ['sneakers', 'boots', 'classic', 'moccasins', 'sandals', 'slippers'],
+      woman_shoes: ['sneakers', 'sandals', 'boots', 'heels', 'ballet', 'slippers'],
+      boys: [
+        'sneakers', 'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests',
+        'suits_blazers', 'sportswear', 'pajamas', 'underwear', 'swimwear', 'kamiss', 'caps_hats'
+      ],
+      girls: [
+        'sneakers', 'tops_shirts', 'jeans_pants', 'shorts_capris', 'jackets_vests',
+        'dresses', 'skirts', 'sets', 'sportswear', 'pajamas', 'underwear', 'leggings', 'swimwear', 'caps_hats'
+      ],
+      baby: ['tops_shirts', 'sneakers', 'accessories'],
+      professional_wear: ['suits_blazers'],
+      bags_luggage: ['wallets', 'handbags', 'backpacks', 'professional_bags', 'suitcases', 'sport_bags']
+    }
+  }), []);
+
   // 🔥 FUNCIÓN DE TRADUCCIÓN
   const translateOption = useCallback((optionKey, fallback = '') => {
     if (!optionKey) return fallback;
@@ -220,33 +219,43 @@ const CreatePost = () => {
     }
   }, [languageReducer?.language, i18n]);
 
+  // 🔥 EFFECT PARA EDITAR - COMPLETAMENTE CORREGIDO
   useEffect(() => {
     if (isEdit && postToEdit) {
-      const sanitizedData = sanitizePostData(postToEdit);
+      console.log('🔄 Cargando datos para edición:', postToEdit);
       
+      const sanitizedData = {
+        ...postToEdit,
+        sizes: Array.isArray(postToEdit.sizes) ? postToEdit.sizes : [],
+        colors: Array.isArray(postToEdit.colors) ? postToEdit.colors : [],
+        // 🔥 NUEVO: Campos de tipo de venta con valores por defecto si no existen
+        saleType: postToEdit.saleType || 'retail',
+        minQuantity: postToEdit.minQuantity || "",
+        description: postToEdit.description || postToEdit.content || "",
+        content: postToEdit.content || postToEdit.description || "",
+      };
+
       const finalPostData = {
         ...getInitialState(),
         ...sanitizedData,
         category: sanitizedData.category || "clothing",
-        subCategory: sanitizedData.subCategory || "",
-        subSubCategory: sanitizedData.subSubCategory || "",
-        // 🔥 MANTENER COMPATIBILIDAD
-        description: sanitizedData.description || sanitizedData.content || "",
-        content: sanitizedData.content || sanitizedData.description || "", // Agregar
-        title: sanitizedData.title || "",
-        bootiquename: sanitizedData.bootiquename || "",
-        sizes: Array.isArray(sanitizedData.sizes) ? sanitizedData.sizes : [],
-        colors: Array.isArray(sanitizedData.colors) ? sanitizedData.colors : [],
       };
-  
+
+      console.log('📝 Datos finales para edición:', finalPostData);
+
       setPostData(finalPostData);
-      setSelectedSizes(Array.isArray(finalPostData.sizes) ? finalPostData.sizes : []);
-      setSelectedColors(Array.isArray(finalPostData.colors) ? finalPostData.colors : []);
-  
-      // ... resto del código
+      setSelectedSizes(finalPostData.sizes);
+      setSelectedColors(finalPostData.colors);
+      
+      // 🔥 CORREGIDO: Cargar imágenes existentes si estamos editando
+      if (postToEdit.images && Array.isArray(postToEdit.images)) {
+        setExistingImages(postToEdit.images);
+        console.log('🖼️ Imágenes existentes cargadas:', postToEdit.images);
+      }
     }
   }, [isEdit, postToEdit]);
 
+  // 🔥 SANITIZAR DATOS DEL POST
   const sanitizePostData = useCallback((data) => {
     if (!data) return {};
     return { ...data };
@@ -255,8 +264,6 @@ const CreatePost = () => {
   // 🔥 MANEJO DE CAMBIOS EN INPUTS
   const handleChangeInput = useCallback((e) => {
     const { name, value, type, checked } = e.target;
-    
-    console.log(`🔍 DEBUG - Cambiando campo ${name}:`, value); // DEBUG
     
     setPostData(prev => ({
       ...prev,
@@ -271,6 +278,7 @@ const CreatePost = () => {
     }
   }, [errors]);
 
+  // 🔥 MANEJO DE CAMBIOS DE CATEGORÍA
   const handleCategoryChange = useCallback((field, value) => {
     setPostData(prev => ({
       ...prev,
@@ -278,6 +286,162 @@ const CreatePost = () => {
       ...(field === 'subCategory' && { subSubCategory: '' })
     }));
   }, []);
+
+  // 🔥 VALIDACIÓN DEL FORMULARIO
+  const validateForm = useCallback(() => {
+    const newErrors = {};
+    
+    // Validaciones de campos requeridos
+    if (!postData.description?.trim()) newErrors.description = t('validation.description');
+    if (!postData.price || postData.price <= 0) newErrors.price = t('validation.price');
+    if (!postData.subCategory) newErrors.subCategory = t('validation.subcategory');
+    if (!postData.brand?.trim()) newErrors.brand = t('validation.brand');
+    if (!postData.wilaya) newErrors.wilaya = t('validation.wilaya');
+    if (!postData.commune?.trim()) newErrors.commune = t('validation.commune');
+    if (!postData.phone?.trim()) newErrors.phone = t('validation.phone');
+    
+    // 🔥 NUEVA VALIDACIÓN: Para venta al por mayor o both, validar cantidad mínima
+    if ((postData.saleType === 'wholesale' || postData.saleType === 'both') && 
+        (!postData.minQuantity || postData.minQuantity <= 0)) {
+      newErrors.minQuantity = t('validation.minQuantity');
+    }
+    
+    // Validaciones de arrays
+    if (!selectedSizes || selectedSizes.length === 0) newErrors.sizes = t('validation.sizes');
+    if (!selectedColors || selectedColors.length === 0) newErrors.colors = t('validation.colors');
+    
+    // Validar que haya al menos una imagen (nueva o existente)
+    if (images.length === 0 && existingImages.length === 0) {
+      newErrors.images = t('validation.images');
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [postData, selectedSizes, selectedColors, images, existingImages, t]);
+
+  // 🔥 ENVÍO DEL FORMULARIO
+  const handleSubmit = useCallback(async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    console.log('🔍 Datos a enviar:', { 
+      postData, 
+      sizes: selectedSizes,
+      colors: selectedColors,
+      newImages: images.length,
+      existingImages: existingImages.length
+    });
+
+    if (!validateForm()) {
+      showAlertMessage(t('validation.required_fields'), "danger");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      // Preparar datos limpios para el backend
+      const cleanPostData = {
+        ...postData,
+        sizes: selectedSizes || [],
+        colors: selectedColors || [],
+        // Limpiar campos opcionales
+        bootiquename: postData.bootiquename?.trim() || undefined,
+        email: postData.email?.trim() || undefined,
+        location: postData.location?.trim() || undefined,
+        material: postData.material || undefined,
+        gender: postData.gender || undefined,
+        season: postData.season || 'all_year',
+        // 🔥 CORREGIDO: Solo incluir minQuantity para wholesale y both
+        minQuantity: (postData.saleType === 'wholesale' || postData.saleType === 'both') ? postData.minQuantity : undefined,
+        existingImages: isEdit ? existingImages : undefined
+      };
+
+      const actionData = {
+        postData: cleanPostData,
+        images,
+        auth,
+        ...(isEdit && postToEdit && {
+          status: { _id: postToEdit._id, ...postToEdit }
+        })
+      };
+
+      console.log('🚀 Enviando datos:', actionData);
+
+      if (isEdit && postToEdit) {
+        await dispatch(updatePost(actionData));
+        showAlertMessage(t('success.update'), "success");
+      } else {
+        await dispatch(createPost(actionData));
+        showAlertMessage(t('success.create'), "success");
+      }
+
+      setTimeout(() => history.push('/'), 2000);
+
+    } catch (error) {
+      console.error('❌ Error al publicar:', error);
+      
+      let errorMessage = t('error.publication');
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      showAlertMessage(errorMessage, "danger");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [postData, selectedSizes, selectedColors, images, existingImages, auth, isEdit, postToEdit, dispatch, history, t, validateForm]);
+
+  // 🔥 MOSTRAR ALERTAS
+  const showAlertMessage = useCallback((message, variant) => {
+    setAlertMessage(message);
+    setAlertVariant(variant);
+    setShowAlert(true);
+    setTimeout(() => setShowAlert(false), 5000);
+  }, []);
+
+  // 🔥 MANEJO DE TALLAS (RESTAURADO COMO ANTES)
+  const handleSizeChange = useCallback((size) => {
+    const currentSizes = selectedSizes || [];
+    const newSizes = currentSizes.includes(size)
+      ? currentSizes.filter(s => s !== size)
+      : [...currentSizes, size];
+    
+    setSelectedSizes(newSizes);
+    setPostData(prev => ({
+      ...prev,
+      sizes: newSizes
+    }));
+  
+    if (errors.sizes) {
+      setErrors(prev => ({
+        ...prev,
+        sizes: ''
+      }));
+    }
+  }, [selectedSizes, errors.sizes]);
+
+  // 🔥 MANEJO DE COLORES (RESTAURADO COMO ANTES)
+  const handleColorChange = useCallback((color) => {
+    const currentColors = selectedColors || [];
+    const newColors = currentColors.includes(color)
+      ? currentColors.filter(c => c !== color)
+      : [...currentColors, color];
+    
+    setSelectedColors(newColors);
+    setPostData(prev => ({
+      ...prev,
+      colors: newColors
+    }));
+  
+    if (errors.colors) {
+      setErrors(prev => ({
+        ...prev,
+        colors: ''
+      }));
+    }
+  }, [selectedColors, errors.colors]);
 
   // 🔥 MANEJO DE IMÁGENES
   const handleChangeImages = useCallback((e) => {
@@ -299,153 +463,16 @@ const CreatePost = () => {
     setImages(prev => [...prev, ...newImages]);
   }, [t]);
 
-  const deleteImages = useCallback((index) => {
-    setImages(prev => prev.filter((_, i) => i !== index));
+  // 🔥 ELIMINAR IMÁGENES
+  const deleteImages = useCallback((index, isExisting = false) => {
+    if (isExisting) {
+      setExistingImages(prev => prev.filter((_, i) => i !== index));
+    } else {
+      setImages(prev => prev.filter((_, i) => i !== index));
+    }
   }, []);
 
-  // 🔥 MANEJO DE TALLAS Y COLORES
-  const handleSizeChange = useCallback((size) => {
-    // 🔥 CORREGIDO: Asegurar que selectedSizes sea un array
-    const currentSizes = selectedSizes || [];
-    const newSizes = currentSizes.includes(size)
-      ? currentSizes.filter(s => s !== size)
-      : [...currentSizes, size];
-    
-    setSelectedSizes(newSizes);
-    setPostData(prev => ({
-      ...prev,
-      sizes: newSizes
-    }));
-  
-    if (errors.sizes) {
-      setErrors(prev => ({
-        ...prev,
-        sizes: ''
-      }));
-    }
-  }, [selectedSizes, errors.sizes]);
-  
-  const handleColorChange = useCallback((color) => {
-    // 🔥 CORREGIDO: Asegurar que selectedColors sea un array
-    const currentColors = selectedColors || [];
-    const newColors = currentColors.includes(color)
-      ? currentColors.filter(c => c !== color)
-      : [...currentColors, color];
-    
-    setSelectedColors(newColors);
-    setPostData(prev => ({
-      ...prev,
-      colors: newColors
-    }));
-  
-    if (errors.colors) {
-      setErrors(prev => ({
-        ...prev,
-        colors: ''
-      }));
-    }
-  }, [selectedColors, errors.colors]);
-
-  // 🔥 VALIDACIÓN DEL FORMULARIO
-  const validateForm = useCallback(() => {
-    const newErrors = {};
-    
-    // Validaciones de campos requeridos
-    if (!postData.description?.trim()) newErrors.description = t('validation.description');
-    if (!postData.price || postData.price <= 0) newErrors.price = t('validation.price');
-    if (!postData.subCategory) newErrors.subCategory = t('validation.subcategory');
-    if (!postData.brand?.trim()) newErrors.brand = t('validation.brand');
-    if (!postData.wilaya) newErrors.wilaya = t('validation.wilaya');
-    if (!postData.commune?.trim()) newErrors.commune = t('validation.commune');
-    if (!postData.phone?.trim()) newErrors.phone = t('validation.phone');
-    
-    // 🔥 CORREGIDO: Verificar que los arrays existan y tengan elementos
-    if (!selectedSizes || selectedSizes.length === 0) newErrors.sizes = t('validation.sizes');
-    if (!selectedColors || selectedColors.length === 0) newErrors.colors = t('validation.colors');
-    if (!images || images.length === 0) newErrors.images = t('validation.images');
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  }, [postData, selectedSizes, selectedColors, images, t]);
-
-  // 🔥 ENVÍO DEL FORMULARIO
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-  
-    console.log('🔍 DEBUG - Datos a enviar:', { 
-      postData, 
-      sizes: selectedSizes,
-      colors: selectedColors,
-      images: images.length 
-    });
-  
-    if (!validateForm()) {
-      showAlertMessage(t('validation.required_fields'), "danger");
-      setIsSubmitting(false);
-      return;
-    }
-  
-    try {
-      // 🔥 CORREGIDO: Preparar datos limpios para el backend
-      const cleanPostData = {
-        ...postData,
-        // Asegurar que los arrays estén definidos
-        sizes: selectedSizes || [],
-        colors: selectedColors || [],
-        // Limpiar campos opcionales
-        bootiquename: postData.bootiquename?.trim() || undefined,
-        email: postData.email?.trim() || undefined,
-        location: postData.location?.trim() || undefined,
-        material: postData.material || undefined,
-        gender: postData.gender || undefined,
-        season: postData.season || 'all_year'
-      };
-  
-      const actionData = {
-        postData: cleanPostData,
-        images,
-        auth,
-        ...(isEdit && postToEdit && {
-          status: { _id: postToEdit._id, ...postToEdit }
-        })
-      };
-  
-      if (isEdit && postToEdit) {
-        await dispatch(updatePost(actionData));
-        showAlertMessage(t('success.update'), "success");
-      } else {
-        await dispatch(createPost(actionData));
-        showAlertMessage(t('success.create'), "success");
-      }
-  
-      setTimeout(() => history.push('/'), 2000);
-  
-    } catch (error) {
-      console.error('Error completo al publicar:', error);
-      
-      // 🔥 MEJOR MANEJO DE ERRORES
-      let errorMessage = t('error.publication');
-      if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      
-      showAlertMessage(errorMessage, "danger");
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [postData, selectedSizes, selectedColors, images, auth, isEdit, postToEdit, dispatch, history, t, validateForm]);
-
-  const showAlertMessage = useCallback((message, variant) => {
-    setAlertMessage(message);
-    setAlertVariant(variant);
-    setShowAlert(true);
-    setTimeout(() => setShowAlert(false), 5000);
-  }, []);
-
-  // 🔥 COMPONENTE CATEGORY SECTION
+  // 🔥 COMPONENTE CATEGORY SECTION (ORIGINAL)
   const CategorySection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -503,7 +530,72 @@ const CreatePost = () => {
     </Card>
   ), [postData.subCategory, postData.subSubCategory, errors.subCategory, t, getSubCategoryOptions, getSubSubCategoryOptions, styles, handleCategoryChange, translateOption]);
 
-  // 🔥 COMPONENTE BASIC INFO SECTION
+  // 🔥 COMPONENTE SALE TYPE SECTION - ACTUALIZADO CON SELECT NORMAL
+  const SaleTypeSection = useMemo(() => (
+    <Card style={styles.card}>
+      <Card.Header style={styles.cardHeader}>
+        <h6 style={styles.sectionTitle}>
+          <FaShoppingCart style={styles.icon} />
+          {t('sections.sale_type')}
+        </h6>
+      </Card.Header>
+      <Card.Body style={styles.cardBody}>
+        <Row className="g-3">
+          <Col xs={12} lg={6}>
+            <Form.Group>
+              <Form.Label style={styles.formLabel}>
+                {t('labels.sale_type')} *
+              </Form.Label>
+              <Form.Select
+                name="saleType"
+                value={postData.saleType}
+                onChange={handleChangeInput}
+                style={styles.formControl}
+              >
+                {saleTypes.map(type => (
+                  <option key={type} value={type}>
+                    {translateOption(`saleTypes.${type}`)}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Text className="text-muted">
+                {t('help.sale_type')}
+              </Form.Text>
+            </Form.Group>
+          </Col>
+
+          {/* Campo de cantidad mínima solo para wholesale y both */}
+          {(postData.saleType === 'wholesale' || postData.saleType === 'both') && (
+            <Col xs={12} lg={6}>
+              <Form.Group>
+                <Form.Label style={styles.formLabel}>
+                  {t('labels.min_quantity')} *
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  name="minQuantity"
+                  value={postData.minQuantity}
+                  onChange={handleChangeInput}
+                  isInvalid={!!errors.minQuantity}
+                  placeholder={t('placeholders.min_quantity')}
+                  style={styles.formControl}
+                  min="1"
+                />
+                <Form.Text className="text-muted">
+                  {t('help.min_quantity')}
+                </Form.Text>
+                <Form.Control.Feedback type="invalid">
+                  {errors.minQuantity}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+          )}
+        </Row>
+      </Card.Body>
+    </Card>
+  ), [postData.saleType, postData.minQuantity, errors.minQuantity, t, handleChangeInput, styles, translateOption]);
+
+  // 🔥 COMPONENTE BASIC INFO SECTION (ORIGINAL)
   const BasicInfoSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -570,7 +662,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.title, postData.brand, postData.description, errors, t, handleChangeInput, styles]);
 
-  // 🔥 COMPONENTE PRICE CONDITION SECTION
+  // 🔥 COMPONENTE PRICE CONDITION SECTION (ORIGINAL)
   const PriceConditionSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -657,7 +749,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.price, postData.condition, postData.gender, postData.season, errors.price, t, handleChangeInput, translateOption, styles]);
 
-  // 🔥 COMPONENTE SIZES SECTION
+  // 🔥 COMPONENTE SIZES SECTION (ORIGINAL - CHECKBOXES NORMALES)
   const SizesSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -689,7 +781,7 @@ const CreatePost = () => {
     </Card>
   ), [selectedSizes, errors.sizes, t, handleSizeChange, translateOption, styles]);
 
-  // 🔥 COMPONENTE COLORS SECTION
+  // 🔥 COMPONENTE COLORS SECTION (ORIGINAL - CHECKBOXES NORMALES)
   const ColorsSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -721,7 +813,7 @@ const CreatePost = () => {
     </Card>
   ), [selectedColors, errors.colors, t, handleColorChange, translateOption, styles]);
 
-  // 🔥 COMPONENTE MATERIAL SECTION
+  // 🔥 COMPONENTE MATERIAL SECTION (ORIGINAL)
   const MaterialSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -752,7 +844,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.material, t, handleChangeInput, translateOption, styles]);
 
-  // 🔥 COMPONENTE LOCATION SECTION - CORREGIDO
+  // 🔥 COMPONENTE LOCATION SECTION (ORIGINAL)
   const LocationSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -763,7 +855,6 @@ const CreatePost = () => {
       </Card.Header>
       <Card.Body style={styles.cardBody}>
         <Row className="g-2">
-          {/* 🔥 BOUTIQUE NAME - FUNCIONANDO */}
           <Col xs={12}>
             <Form.Group>
               <Form.Label style={styles.formLabel}>{t('labels.bootiquename')}</Form.Label>
@@ -841,7 +932,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.bootiquename, postData.wilaya, postData.commune, postData.location, errors, t, handleChangeInput, translateOption, styles]);
 
-  // 🔥 COMPONENTE CONTACT SECTION
+  // 🔥 COMPONENTE CONTACT SECTION (ORIGINAL)
   const ContactSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -887,7 +978,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.phone, postData.email, errors, t, handleChangeInput, styles]);
 
-  // 🔥 COMPONENTE IMAGES SECTION
+  // 🔥 COMPONENTE IMAGES SECTION - ACTUALIZADO PARA MANEJAR IMÁGENES EXISTENTES
   const ImagesSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -902,15 +993,56 @@ const CreatePost = () => {
             {errors.images}
           </Alert>
         )}
+        
+        {/* MOSTRAR IMÁGENES EXISTENTES SI ESTAMOS EDITANDO */}
+        {isEdit && existingImages.length > 0 && (
+          <div className="mb-4">
+            <h6 className="mb-3" style={{fontSize: '14px', fontWeight: '600'}}>
+              {t('labels.existing_images')} ({existingImages.length})
+            </h6>
+            <Row>
+              {existingImages.map((image, index) => (
+                <Col key={`existing-${index}`} xs={6} sm={4} md={3} className="mb-3">
+                  <div className="position-relative">
+                    <img
+                      src={image.url || image}
+                      alt={`Existente ${index + 1}`}
+                      className="img-fluid rounded"
+                      style={{
+                        width: '100%',
+                        height: '120px',
+                        objectFit: 'cover',
+                        border: '2px solid #e9ecef'
+                      }}
+                    />
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      className="position-absolute top-0 end-0"
+                      style={{transform: 'translate(30%, -30%)'}}
+                      onClick={() => deleteImages(index, true)}
+                    >
+                      ×
+                    </Button>
+                  </div>
+                </Col>
+              ))}
+            </Row>
+          </div>
+        )}
+        
+        {/* COMPONENTE DE SUBIDA DE NUEVAS IMÁGENES */}
         <ImageUpload
           images={images}
           handleChangeImages={handleChangeImages}
           deleteImages={deleteImages}
           theme={theme}
+          isEdit={isEdit}
+          existingImagesCount={existingImages.length}
         />
       </Card.Body>
     </Card>
-  ), [images, errors.images, t, theme, handleChangeImages, deleteImages, styles]);
+  ), [images, existingImages, errors.images, t, theme, handleChangeImages, deleteImages, isEdit, styles]);
 
   return (
     <Container fluid style={styles.container} dir={isRTL ? "rtl" : "ltr"}>
@@ -953,6 +1085,8 @@ const CreatePost = () => {
             {postData.subCategory && (
               <>
                 {BasicInfoSection}
+                {/* 🔥 NUEVA SECCIÓN: Tipo de venta */}
+                {SaleTypeSection}
                 {PriceConditionSection}
                 {SizesSection}
                 {ColorsSection}
@@ -1011,8 +1145,7 @@ const CreatePost = () => {
               </Card>
             )}
           </Form>
-          </Col>
-
+        </Col>
       </Row>
     </Container>
   );

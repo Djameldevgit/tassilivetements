@@ -3,7 +3,10 @@ const mongoose = require('mongoose')
 const postSchema = new mongoose.Schema({
     // 🔷 CAMPOS BÁSICOS DEL SISTEMA
     content: String,
-    title: String,
+    title: {
+        type: String,
+        required: true
+    },
     images: {
         type: Array,
         required: true
@@ -15,9 +18,12 @@ const postSchema = new mongoose.Schema({
     // 🔷 CAMPOS PRINCIPALES PARA ROPA
     category: {
         type: String,
-        default: "Vêtements"
+        default: "clothing"
     },
-    subCategory: String,
+    subCategory: {
+        type: String,
+        required: true
+    },
     subSubCategory: String, // Tipo específico: Hauts & Chemises, Jeans & Pantalons, etc.
     description: String,
     
@@ -25,8 +31,8 @@ const postSchema = new mongoose.Schema({
     brand: String, // Marca: Zara, Nike, etc.
     condition: {
         type: String,
-        default: "Nouveau"
-    }, // Nouveau, Comme neuf, Bon état, État satisfaisant
+        default: "new"
+    }, // new, like_new, good, satisfactory
     price: {
         type: Number,
         required: true
@@ -43,26 +49,31 @@ const postSchema = new mongoose.Schema({
     colors: [{
         type: String
     }], // Array de colores: Noir, Blanc, Rouge, etc.
-    material: String, // Coton, Polyester, Laine, Soie, etc.
-    gender: String, // Homme, Femme, Unisexe, Garçon, Fille, Bébé
+    material: String, // cotton, polyester, wool, silk, etc.
+    gender: String, // man, woman, unisex, boy, girl, baby
     season: {
         type: String,
-        default: "Toute l'année"
-    }, // Printemps, Été, Automne, Hiver, Toute l'année
+        default: "all_year"
+    }, // spring, summer, autumn, winter, all_year
+    
+    // 🔥 NUEVOS CAMPOS: TIPO DE VENTA
+    saleType: {
+        type: String,
+        default: "retail"
+    }, // retail, wholesale, both
+    minQuantity: Number, // Cantidad mínima para venta al por mayor
     
     // 🔷 UBICACIÓN Y CONTACTO
     wilaya: String,
     commune: String,
     location: String, // Dirección detallada
-    phone: {
-        type: String,
-        required: true
-    },
+    phone: String,
     email: String,
-    bootiquename:{
+    bootiquename: {
         type: String,
-        default: "Tassili Vetements"
+        default: ""
     },
+    
     // 🔷 CAMPOS ADICIONALES
     tags: [{
         type: String
@@ -75,7 +86,7 @@ const postSchema = new mongoose.Schema({
     timestamps: true
 })
 
-// 🔥 ÍNDICES PARA PERFORMANCE - SOLO PARA ROPA
+// 🔥 ÍNDICES PARA PERFORMANCE - ACTUALIZADOS
 
 // Índices básicos
 postSchema.index({ category: 1, subCategory: 1 })
@@ -90,11 +101,15 @@ postSchema.index({ gender: 1 })
 postSchema.index({ material: 1 })
 postSchema.index({ season: 1 })
 postSchema.index({ price: 1 })
-postSchema.index({ sizes: 1 }) // Índice para array de tallas
-postSchema.index({ colors: 1 }) // Índice para array de colores
-postSchema.index({ tags: 1 }) // Índice para array de etiquetas
+postSchema.index({ sizes: 1 })
+postSchema.index({ colors: 1 })
+postSchema.index({ tags: 1 })
 
-// Índices compuestos para búsquedas avanzadas de ropa
+// 🔥 NUEVOS ÍNDICES PARA TIPO DE VENTA
+postSchema.index({ saleType: 1 })
+postSchema.index({ saleType: 1, minQuantity: 1 })
+
+// Índices compuestos para búsquedas avanzadas
 postSchema.index({ 
     category: 1, 
     subCategory: 1, 
@@ -113,6 +128,11 @@ postSchema.index({
 postSchema.index({ 
     brand: 1, 
     condition: 1,
+    price: 1 
+})
+postSchema.index({ 
+    saleType: 1,
+    category: 1,
     price: 1 
 })
 
