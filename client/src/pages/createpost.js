@@ -28,8 +28,7 @@ const getInitialState = () => ({
   material: "",
   gender: "",
   season: 'all_year',
-  // 🔥 NUEVO CAMPO: Tipo de venta con 3 opciones
-  saleType: 'retail', // 'retail', 'wholesale', 'both'
+  saleType: 'retail',
   minQuantity: "",
   wilaya: "",
   commune: "",
@@ -47,7 +46,6 @@ const materials = ['cotton', 'polyester', 'wool', 'silk', 'denim', 'leather', 's
 const genders = ['man', 'woman', 'unisex', 'boy', 'girl', 'baby'];
 const seasons = ['spring', 'summer', 'autumn', 'winter', 'all_year'];
 const wilayas = ['algiers', 'oran', 'constantine', 'annaba', 'blida', 'batna', 'djelfa', 'setif', 'sidi_bel_abbes', 'biskra', 'tebessa', 'el_oued', 'skikda', 'tiaret', 'bejaia', 'tlemcen', 'ouargla', 'mostaganem', 'bordj_bou_arreridj', 'chlef', 'souk_ahras', 'medea', 'el_tarf', 'ain_defla', 'naama', 'ain_temouchent', 'ghardaia', 'relizane'];
-// 🔥 NUEVO: 3 opciones para tipo de venta
 const saleTypes = ['retail', 'wholesale', 'both'];
 
 const CreatePost = () => {
@@ -72,7 +70,7 @@ const CreatePost = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 🔥 ESTILOS DEFINIDOS CORRECTAMENTE
+  // 🔥 ESTILOS
   const styles = useMemo(() => ({
     container: {
       padding: '8px',
@@ -211,6 +209,76 @@ const CreatePost = () => {
     return categoriesStructure[postData.category]?.[postData.subCategory] || [];
   }, [postData.category, postData.subCategory, categoriesStructure]);
 
+  // 🔥 ELIMINAR IMÁGENES - DEFINIDA AL PRINCIPIO Y EXPORTADA
+  const deleteImage = useCallback((index, isExisting = false) => {
+    console.log('🗑️ Eliminando imagen:', { index, isExisting });
+    if (isExisting) {
+      setExistingImages(prev => {
+        const newImages = prev.filter((_, i) => i !== index);
+        console.log('📸 Imágenes existentes después de eliminar:', newImages);
+        return newImages;
+      });
+    } else {
+      setImages(prev => {
+        const newImages = prev.filter((_, i) => i !== index);
+        console.log('📸 Nuevas imágenes después de eliminar:', newImages);
+        return newImages;
+      });
+    }
+  }, []);
+
+  // 🔥 MANEJO DE TALLAS - CORREGIDO
+  const handleSizeChange = useCallback((size) => {
+    setSelectedSizes(prev => {
+      const newSizes = prev.includes(size)
+        ? prev.filter(s => s !== size)
+        : [...prev, size];
+      
+      console.log('📏 Tallas seleccionadas:', newSizes);
+      
+      // Actualizar postData
+      setPostData(prevData => ({
+        ...prevData,
+        sizes: newSizes
+      }));
+      
+      return newSizes;
+    });
+
+    if (errors.sizes) {
+      setErrors(prev => ({
+        ...prev,
+        sizes: ''
+      }));
+    }
+  }, [errors.sizes]);
+
+  // 🔥 MANEJO DE COLORES - CORREGIDO
+  const handleColorChange = useCallback((color) => {
+    setSelectedColors(prev => {
+      const newColors = prev.includes(color)
+        ? prev.filter(c => c !== color)
+        : [...prev, color];
+      
+      console.log('🎨 Colores seleccionados:', newColors);
+      
+      // Actualizar postData
+      setPostData(prevData => ({
+        ...prevData,
+        colors: newColors
+      }));
+      
+      return newColors;
+    });
+
+    if (errors.colors) {
+      setErrors(prev => ({
+        ...prev,
+        colors: ''
+      }));
+    }
+  }, [errors.colors]);
+
   // 🔥 EFFECT PARA IDIOMA
   useEffect(() => {
     const lang = languageReducer?.language || 'fr';
@@ -220,54 +288,89 @@ const CreatePost = () => {
   }, [languageReducer?.language, i18n]);
 
   // 🔥 EFFECT PARA EDITAR - COMPLETAMENTE CORREGIDO
-  useEffect(() => {
-    if (isEdit && postToEdit) {
-      console.log('🔄 Cargando datos para edición:', postToEdit);
+// 🔥 EFFECT PARA EDITAR - COMPLETAMENTE CORREGIDO
+useEffect(() => {
+  if (isEdit && postToEdit) {
+    console.log('🔄 Cargando datos para edición:', postToEdit);
+    
+    // 🔥 CORREGIDO: Verificar y manejar imágenes de forma segura
+    const imagesArray = postToEdit.images && Array.isArray(postToEdit.images) 
+      ? postToEdit.images 
+      : [];
+
+    // 🔥 CORREGIDO: Cargar todos los campos con valores por defecto
+    const sanitizedData = {
+      // Campos básicos
+      title: postToEdit.title || "",
+      description: postToEdit.description || postToEdit.content || "",
+      brand: postToEdit.brand || "",
+      price: postToEdit.price || "",
       
-      const sanitizedData = {
-        ...postToEdit,
-        sizes: Array.isArray(postToEdit.sizes) ? postToEdit.sizes : [],
-        colors: Array.isArray(postToEdit.colors) ? postToEdit.colors : [],
-        // 🔥 NUEVO: Campos de tipo de venta con valores por defecto si no existen
-        saleType: postToEdit.saleType || 'retail',
-        minQuantity: postToEdit.minQuantity || "",
-        description: postToEdit.description || postToEdit.content || "",
-        content: postToEdit.content || postToEdit.description || "",
-      };
-
-      const finalPostData = {
-        ...getInitialState(),
-        ...sanitizedData,
-        category: sanitizedData.category || "clothing",
-      };
-
-      console.log('📝 Datos finales para edición:', finalPostData);
-
-      setPostData(finalPostData);
-      setSelectedSizes(finalPostData.sizes);
-      setSelectedColors(finalPostData.colors);
+      // Categorías
+      category: postToEdit.category || "clothing",
+      subCategory: postToEdit.subCategory || "",
+      subSubCategory: postToEdit.subSubCategory || "",
       
-      // 🔥 CORREGIDO: Cargar imágenes existentes si estamos editando
-      if (postToEdit.images && Array.isArray(postToEdit.images)) {
-        setExistingImages(postToEdit.images);
-        console.log('🖼️ Imágenes existentes cargadas:', postToEdit.images);
-      }
-    }
-  }, [isEdit, postToEdit]);
+      // Arrays - asegurar que sean arrays
+      sizes: Array.isArray(postToEdit.sizes) ? postToEdit.sizes : [],
+      colors: Array.isArray(postToEdit.colors) ? postToEdit.colors : [],
+      
+      // Selects
+      condition: postToEdit.condition || 'new',
+      gender: postToEdit.gender || "",
+      season: postToEdit.season || 'all_year',
+      material: postToEdit.material || "",
+      
+      // Ubicación
+      bootiquename: postToEdit.bootiquename || "",
+      wilaya: postToEdit.wilaya || "",
+      commune: postToEdit.commune || "",
+      location: postToEdit.location || "",
+      
+      // Contacto
+      phone: postToEdit.phone || "",
+      email: postToEdit.email || "",
+      
+      // 🔥 NUEVOS CAMPOS: Tipo de venta
+      saleType: postToEdit.saleType || 'retail',
+      minQuantity: postToEdit.minQuantity || "",
+      
+      // Otros
+      currency: postToEdit.currency || 'DZD',
+      tags: Array.isArray(postToEdit.tags) ? postToEdit.tags : []
+    };
 
-  // 🔥 SANITIZAR DATOS DEL POST
-  const sanitizePostData = useCallback((data) => {
-    if (!data) return {};
-    return { ...data };
-  }, []);
+    console.log('📝 Datos sanitizados para edición:', sanitizedData);
+    console.log('🖼️ Imágenes cargadas:', imagesArray);
 
+    // Establecer los datos
+    setPostData(prev => ({
+      ...getInitialState(),
+      ...sanitizedData
+    }));
+
+    // 🔥 CORREGIDO: Establecer arrays de selección
+    setSelectedSizes(sanitizedData.sizes);
+    setSelectedColors(sanitizedData.colors);
+    
+    // 🔥 CORREGIDO: Cargar imágenes existentes de forma segura
+    setExistingImages(imagesArray);
+    
+    // Resetear imágenes nuevas
+    setImages([]);
+  }
+}, [isEdit, postToEdit]);
   // 🔥 MANEJO DE CAMBIOS EN INPUTS
   const handleChangeInput = useCallback((e) => {
     const { name, value, type, checked } = e.target;
     
+    const finalValue = type === "checkbox" ? checked : value;
+    
+    console.log(`✏️ Cambio en ${name}:`, finalValue);
+    
     setPostData(prev => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value
+      [name]: finalValue
     }));
     
     if (errors[name]) {
@@ -280,6 +383,8 @@ const CreatePost = () => {
 
   // 🔥 MANEJO DE CAMBIOS DE CATEGORÍA
   const handleCategoryChange = useCallback((field, value) => {
+    console.log(`📂 Cambio de categoría ${field}:`, value);
+    
     setPostData(prev => ({
       ...prev,
       [field]: value,
@@ -291,6 +396,14 @@ const CreatePost = () => {
   const validateForm = useCallback(() => {
     const newErrors = {};
     
+    console.log('🔍 Validando formulario...', {
+      postData,
+      selectedSizes,
+      selectedColors,
+      imagesCount: images.length,
+      existingImagesCount: existingImages.length
+    });
+    
     // Validaciones de campos requeridos
     if (!postData.description?.trim()) newErrors.description = t('validation.description');
     if (!postData.price || postData.price <= 0) newErrors.price = t('validation.price');
@@ -300,13 +413,13 @@ const CreatePost = () => {
     if (!postData.commune?.trim()) newErrors.commune = t('validation.commune');
     if (!postData.phone?.trim()) newErrors.phone = t('validation.phone');
     
-    // 🔥 NUEVA VALIDACIÓN: Para venta al por mayor o both, validar cantidad mínima
+    // 🔥 VALIDACIÓN: Para venta al por mayor o both, validar cantidad mínima
     if ((postData.saleType === 'wholesale' || postData.saleType === 'both') && 
         (!postData.minQuantity || postData.minQuantity <= 0)) {
       newErrors.minQuantity = t('validation.minQuantity');
     }
     
-    // Validaciones de arrays
+    // Validaciones de arrays - usar los estados separados
     if (!selectedSizes || selectedSizes.length === 0) newErrors.sizes = t('validation.sizes');
     if (!selectedColors || selectedColors.length === 0) newErrors.colors = t('validation.colors');
     
@@ -315,133 +428,95 @@ const CreatePost = () => {
       newErrors.images = t('validation.images');
     }
     
+    console.log('❌ Errores encontrados:', newErrors);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [postData, selectedSizes, selectedColors, images, existingImages, t]);
 
   // 🔥 ENVÍO DEL FORMULARIO
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+// 🔥 ENVÍO DEL FORMULARIO - CORREGIDO
+const handleSubmit = useCallback(async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    console.log('🔍 Datos a enviar:', { 
-      postData, 
+  console.log('🚀 Iniciando envío del formulario...', { 
+    postData, 
+    sizes: selectedSizes,
+    colors: selectedColors,
+    newImages: images.length,
+    existingImages: existingImages.length
+  });
+
+  if (!validateForm()) {
+    showAlertMessage(t('validation.required_fields'), "danger");
+    setIsSubmitting(false);
+    return;
+  }
+
+  try {
+    // 🔥 CORREGIDO: Preparar datos limpios para el backend
+    const cleanPostData = {
+      ...postData,
       sizes: selectedSizes,
       colors: selectedColors,
-      newImages: images.length,
-      existingImages: existingImages.length
-    });
+      // Limpiar campos opcionales
+      bootiquename: postData.bootiquename?.trim() || undefined,
+      email: postData.email?.trim() || undefined,
+      location: postData.location?.trim() || undefined,
+      material: postData.material || undefined,
+      gender: postData.gender || undefined,
+      season: postData.season || 'all_year',
+      // 🔥 CORREGIDO: Solo incluir minQuantity para wholesale y both
+      minQuantity: (postData.saleType === 'wholesale' || postData.saleType === 'both') ? 
+        parseInt(postData.minQuantity) : undefined
+    };
 
-    if (!validateForm()) {
-      showAlertMessage(t('validation.required_fields'), "danger");
-      setIsSubmitting(false);
-      return;
+    // 🔥 CORREGIDO: Preparar datos para la acción
+    const actionData = {
+      postData: cleanPostData,
+      images,
+      auth
+    };
+
+    // 🔥 CORREGIDO: Agregar datos específicos para edición
+    if (isEdit && postToEdit) {
+      actionData.postId = postToEdit._id;
+      actionData.existingImages = existingImages;
     }
 
-    try {
-      // Preparar datos limpios para el backend
-      const cleanPostData = {
-        ...postData,
-        sizes: selectedSizes || [],
-        colors: selectedColors || [],
-        // Limpiar campos opcionales
-        bootiquename: postData.bootiquename?.trim() || undefined,
-        email: postData.email?.trim() || undefined,
-        location: postData.location?.trim() || undefined,
-        material: postData.material || undefined,
-        gender: postData.gender || undefined,
-        season: postData.season || 'all_year',
-        // 🔥 CORREGIDO: Solo incluir minQuantity para wholesale y both
-        minQuantity: (postData.saleType === 'wholesale' || postData.saleType === 'both') ? postData.minQuantity : undefined,
-        existingImages: isEdit ? existingImages : undefined
-      };
+    console.log('📤 Enviando datos al backend:', actionData);
 
-      const actionData = {
-        postData: cleanPostData,
-        images,
-        auth,
-        ...(isEdit && postToEdit && {
-          status: { _id: postToEdit._id, ...postToEdit }
-        })
-      };
-
-      console.log('🚀 Enviando datos:', actionData);
-
-      if (isEdit && postToEdit) {
-        await dispatch(updatePost(actionData));
-        showAlertMessage(t('success.update'), "success");
-      } else {
-        await dispatch(createPost(actionData));
-        showAlertMessage(t('success.create'), "success");
-      }
-
-      setTimeout(() => history.push('/'), 2000);
-
-    } catch (error) {
-      console.error('❌ Error al publicar:', error);
-      
-      let errorMessage = t('error.publication');
-      if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      
-      showAlertMessage(errorMessage, "danger");
-    } finally {
-      setIsSubmitting(false);
+    if (isEdit && postToEdit) {
+      await dispatch(updatePost(actionData));
+      showAlertMessage(t('success.update'), "success");
+    } else {
+      await dispatch(createPost(actionData));
+      showAlertMessage(t('success.create'), "success");
     }
-  }, [postData, selectedSizes, selectedColors, images, existingImages, auth, isEdit, postToEdit, dispatch, history, t, validateForm]);
 
-  // 🔥 MOSTRAR ALERTAS
+    setTimeout(() => history.push('/'), 2000);
+
+  } catch (error) {
+    console.error('❌ Error al publicar:', error);
+    
+    let errorMessage = t('error.publication');
+    if (error.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    
+    showAlertMessage(errorMessage, "danger");
+  } finally {
+    setIsSubmitting(false);
+  }
+}, [postData, selectedSizes, selectedColors, images, existingImages, auth, isEdit, postToEdit, dispatch, history, t, validateForm]);
   const showAlertMessage = useCallback((message, variant) => {
     setAlertMessage(message);
     setAlertVariant(variant);
     setShowAlert(true);
     setTimeout(() => setShowAlert(false), 5000);
   }, []);
-
-  // 🔥 MANEJO DE TALLAS (RESTAURADO COMO ANTES)
-  const handleSizeChange = useCallback((size) => {
-    const currentSizes = selectedSizes || [];
-    const newSizes = currentSizes.includes(size)
-      ? currentSizes.filter(s => s !== size)
-      : [...currentSizes, size];
-    
-    setSelectedSizes(newSizes);
-    setPostData(prev => ({
-      ...prev,
-      sizes: newSizes
-    }));
-  
-    if (errors.sizes) {
-      setErrors(prev => ({
-        ...prev,
-        sizes: ''
-      }));
-    }
-  }, [selectedSizes, errors.sizes]);
-
-  // 🔥 MANEJO DE COLORES (RESTAURADO COMO ANTES)
-  const handleColorChange = useCallback((color) => {
-    const currentColors = selectedColors || [];
-    const newColors = currentColors.includes(color)
-      ? currentColors.filter(c => c !== color)
-      : [...currentColors, color];
-    
-    setSelectedColors(newColors);
-    setPostData(prev => ({
-      ...prev,
-      colors: newColors
-    }));
-  
-    if (errors.colors) {
-      setErrors(prev => ({
-        ...prev,
-        colors: ''
-      }));
-    }
-  }, [selectedColors, errors.colors]);
 
   // 🔥 MANEJO DE IMÁGENES
   const handleChangeImages = useCallback((e) => {
@@ -461,18 +536,10 @@ const CreatePost = () => {
     }
 
     setImages(prev => [...prev, ...newImages]);
-  }, [t]);
+    console.log('📸 Nuevas imágenes agregadas:', newImages);
+  }, [t, showAlertMessage]);
 
-  // 🔥 ELIMINAR IMÁGENES
-  const deleteImages = useCallback((index, isExisting = false) => {
-    if (isExisting) {
-      setExistingImages(prev => prev.filter((_, i) => i !== index));
-    } else {
-      setImages(prev => prev.filter((_, i) => i !== index));
-    }
-  }, []);
-
-  // 🔥 COMPONENTE CATEGORY SECTION (ORIGINAL)
+  // 🔥 COMPONENTE CATEGORY SECTION
   const CategorySection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -530,7 +597,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.subCategory, postData.subSubCategory, errors.subCategory, t, getSubCategoryOptions, getSubSubCategoryOptions, styles, handleCategoryChange, translateOption]);
 
-  // 🔥 COMPONENTE SALE TYPE SECTION - ACTUALIZADO CON SELECT NORMAL
+  // 🔥 COMPONENTE SALE TYPE SECTION
   const SaleTypeSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -564,7 +631,6 @@ const CreatePost = () => {
             </Form.Group>
           </Col>
 
-          {/* Campo de cantidad mínima solo para wholesale y both */}
           {(postData.saleType === 'wholesale' || postData.saleType === 'both') && (
             <Col xs={12} lg={6}>
               <Form.Group>
@@ -595,7 +661,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.saleType, postData.minQuantity, errors.minQuantity, t, handleChangeInput, styles, translateOption]);
 
-  // 🔥 COMPONENTE BASIC INFO SECTION (ORIGINAL)
+  // 🔥 COMPONENTE BASIC INFO SECTION
   const BasicInfoSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -662,7 +728,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.title, postData.brand, postData.description, errors, t, handleChangeInput, styles]);
 
-  // 🔥 COMPONENTE PRICE CONDITION SECTION (ORIGINAL)
+  // 🔥 COMPONENTE PRICE CONDITION SECTION
   const PriceConditionSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -749,7 +815,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.price, postData.condition, postData.gender, postData.season, errors.price, t, handleChangeInput, translateOption, styles]);
 
-  // 🔥 COMPONENTE SIZES SECTION (ORIGINAL - CHECKBOXES NORMALES)
+  // 🔥 COMPONENTE SIZES SECTION - CHECKBOXES FUNCIONALES
   const SizesSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -777,11 +843,16 @@ const CreatePost = () => {
             </Col>
           ))}
         </Row>
+        <div className="mt-2">
+          <small className="text-muted">
+            {t('help.sizes_selected')}: {selectedSizes.length}
+          </small>
+        </div>
       </Card.Body>
     </Card>
   ), [selectedSizes, errors.sizes, t, handleSizeChange, translateOption, styles]);
 
-  // 🔥 COMPONENTE COLORS SECTION (ORIGINAL - CHECKBOXES NORMALES)
+  // 🔥 COMPONENTE COLORS SECTION - CHECKBOXES FUNCIONALES
   const ColorsSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -809,11 +880,16 @@ const CreatePost = () => {
             </Col>
           ))}
         </Row>
+        <div className="mt-2">
+          <small className="text-muted">
+            {t('help.colors_selected')}: {selectedColors.length}
+          </small>
+        </div>
       </Card.Body>
     </Card>
   ), [selectedColors, errors.colors, t, handleColorChange, translateOption, styles]);
 
-  // 🔥 COMPONENTE MATERIAL SECTION (ORIGINAL)
+  // 🔥 COMPONENTE MATERIAL SECTION
   const MaterialSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -844,7 +920,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.material, t, handleChangeInput, translateOption, styles]);
 
-  // 🔥 COMPONENTE LOCATION SECTION (ORIGINAL)
+  // 🔥 COMPONENTE LOCATION SECTION
   const LocationSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -932,7 +1008,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.bootiquename, postData.wilaya, postData.commune, postData.location, errors, t, handleChangeInput, translateOption, styles]);
 
-  // 🔥 COMPONENTE CONTACT SECTION (ORIGINAL)
+  // 🔥 COMPONENTE CONTACT SECTION
   const ContactSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -978,7 +1054,7 @@ const CreatePost = () => {
     </Card>
   ), [postData.phone, postData.email, errors, t, handleChangeInput, styles]);
 
-  // 🔥 COMPONENTE IMAGES SECTION - ACTUALIZADO PARA MANEJAR IMÁGENES EXISTENTES
+  // 🔥 COMPONENTE IMAGES SECTION - CORREGIDO
   const ImagesSection = useMemo(() => (
     <Card style={styles.card}>
       <Card.Header style={styles.cardHeader}>
@@ -1020,7 +1096,7 @@ const CreatePost = () => {
                       size="sm"
                       className="position-absolute top-0 end-0"
                       style={{transform: 'translate(30%, -30%)'}}
-                      onClick={() => deleteImages(index, true)}
+                      onClick={() => deleteImage(index, true)}
                     >
                       ×
                     </Button>
@@ -1035,14 +1111,14 @@ const CreatePost = () => {
         <ImageUpload
           images={images}
           handleChangeImages={handleChangeImages}
-          deleteImages={deleteImages}
+          deleteImage={deleteImage}  
           theme={theme}
           isEdit={isEdit}
           existingImagesCount={existingImages.length}
         />
       </Card.Body>
     </Card>
-  ), [images, existingImages, errors.images, t, theme, handleChangeImages, deleteImages, isEdit, styles]);
+  ), [images, existingImages, errors.images, t, theme, handleChangeImages, deleteImage, isEdit, styles]);
 
   return (
     <Container fluid style={styles.container} dir={isRTL ? "rtl" : "ltr"}>
@@ -1085,7 +1161,6 @@ const CreatePost = () => {
             {postData.subCategory && (
               <>
                 {BasicInfoSection}
-                {/* 🔥 NUEVA SECCIÓN: Tipo de venta */}
                 {SaleTypeSection}
                 {PriceConditionSection}
                 {SizesSection}

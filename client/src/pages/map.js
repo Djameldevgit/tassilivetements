@@ -33,8 +33,183 @@ import {
   FaGlobe,
   FaCity,
   FaHome,
-  FaIdCard
+  FaIdCard,
+  FaRuler,
+  FaLocationArrow
 } from "react-icons/fa";
+
+// 🆕 FUNCIÓN PARA CALCULAR DISTANCIA (Fórmula Haversine)
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371; // Radio de la Tierra en km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const distance = R * c; // Distancia en km
+  return distance;
+};
+
+// 🆕 HOOK PARA OBTENER UBICACIÓN ACTUAL DEL USUARIO
+const useUserLocation = () => {
+  const [userLocation, setUserLocation] = useState(null);
+  const [locationError, setLocationError] = useState(null);
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
+
+  const getUserLocation = () => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error('Geolocalización no soportada'));
+        return;
+      }
+
+      setIsGettingLocation(true);
+      setLocationError(null);
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const location = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            accuracy: position.coords.accuracy
+          };
+          setUserLocation(location);
+          setIsGettingLocation(false);
+          resolve(location);
+        },
+        (error) => {
+          let errorMessage = 'Error obteniendo ubicación';
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = 'Permiso de ubicación denegado';
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = 'Información de ubicación no disponible';
+              break;
+            case error.TIMEOUT:
+              errorMessage = 'Tiempo de espera agotado';
+              break;
+          }
+          setLocationError(errorMessage);
+          setIsGettingLocation(false);
+          reject(new Error(errorMessage));
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 60000
+        }
+      );
+    });
+  };
+
+  return { userLocation, locationError, isGettingLocation, getUserLocation };
+};
+
+// 🆕 COMPONENTE DE CÁLCULO DE DISTANCIA
+const DistanceCalculator = ({ shopPosition }) => {
+  const { t } = useTranslation('map');
+  const { userLocation, locationError, isGettingLocation, getUserLocation } = useUserLocation();
+  const [distance, setDistance] = useState(null);
+  const [calculating, setCalculating] = useState(false);
+
+  const calculateDistanceToShop = async () => {
+    if (!shopPosition) return;
+    
+    try {
+      setCalculating(true);
+      
+      // Obtener ubicación actual del usuario
+      const currentLocation = await getUserLocation();
+      
+      if (currentLocation && shopPosition.lat && shopPosition.lng) {
+        const calculatedDistance = calculateDistance(
+          currentLocation.lat,
+          currentLocation.lng,
+          shopPosition.lat,
+          shopPosition.lng
+        );
+        
+        setDistance(calculatedDistance);
+      }
+    } catch (error) {
+      console.error('Error calculando distancia:', error);
+    } finally {
+      setCalculating(false);
+    }
+  };
+
+  // Formatear distancia de manera legible
+  const formatDistance = (km) => {
+    if (km < 1) {
+      return `${Math.round(km * 1000)} m`; // Mostrar en metros si es menos de 1km
+    } else if (km < 1000) {
+      return `${km.toFixed(1)} km`;
+    } else {
+      return `${Math.round(km)} km`; // Redondear para distancias largas
+    }
+  };
+
+  if (!shopPosition || !shopPosition.lat) {
+    return null;
+  }
+
+  return (
+    <div className="mt-3 p-3 bg-light rounded border">
+      <div className="d-flex align-items-center justify-content-between mb-2">
+        <div className="d-flex align-items-center">
+          <FaRuler className="text-primary me-2" size={20} />
+          <h6 className="mb-0 fw-bold">{t('map.distanceToShop', 'Distancia a la tienda')}</h6>
+        </div>
+        
+        <Button
+          variant={distance ? "outline-success" : "primary"}
+          size="sm"
+          onClick={calculateDistanceToShop}
+          disabled={calculating || isGettingLocation}
+        >
+          {calculating || isGettingLocation ? (
+            <Spinner animation="border" size="sm" />
+          ) : distance ? (
+            <FaSyncAlt />
+          ) : (
+            <FaLocationArrow />
+          )}
+          <span className="ms-2">
+            {distance ? t('map.recalculate', 'Recalcular') : t('map.calculate', 'Calcular')}
+          </span>
+        </Button>
+      </div>
+      
+      {distance !== null ? (
+        <div className="text-center">
+          <Badge   className="fs-6 p-2">
+           <h4>{formatDistance(distance)} </h4> 
+          </Badge>
+          <p className="text-muted small mb-0 mt-1">
+            {t('map.distanceDescription', 'Distancia en línea recta desde tu ubicación actual')}
+          </p>
+        </div>
+      ) : locationError ? (
+        <Alert variant="warning" className="py-2 mb-0">
+          <small>{locationError}</small>
+        </Alert>
+      ) : (
+        <p className="text-muted small mb-0">
+          {t('map.getDistance', 'Haz clic en "Calcular" para conocer la distancia desde tu ubicación actual')}
+        </p>
+      )}
+      
+      {userLocation && (
+        <small className="text-muted d-block mt-2">
+          {t('map.yourLocation', 'Tu ubicación actual')}: {userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}
+        </small>
+      )}
+    </div>
+  );
+};
 
 // Avatar component mejorado
 const Avatar = ({ user, size = 60 }) => {
@@ -118,6 +293,7 @@ const Map = () => {
   
   const [mapCenter, setMapCenter] = useState([36.5, 3.5]);
   const [markerPosition, setMarkerPosition] = useState([36.5, 3.5]);
+  const [shopPosition, setShopPosition] = useState(null); // 🆕 Guardar posición de la tienda
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(10);
@@ -162,6 +338,7 @@ const Map = () => {
     try {
       setLoading(true);
       setError(null);
+      setShopPosition(null); // 🆕 Resetear posición
       
       const locationFields = [];
       
@@ -232,6 +409,7 @@ const Map = () => {
               
               setMapCenter([lat, lon]);
               setMarkerPosition([lat, lon]);
+              setShopPosition({ lat, lng: lon }); // 🆕 GUARDAR POSICIÓN DE LA TIENDA
               setZoomLevel(field.zoom);
               setLoading(false);
               return;
@@ -303,7 +481,6 @@ const Map = () => {
 
           {/* SEGUNDA FILA: INFORMACIÓN DEL USUARIO EN LÍNEA - CAMPO Y VALOR EN MISMA LÍNEA */}
           <Card className="shadow-sm mb-1 border-0">
-           
             <Card.Body>
               <Row className={`g-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                 
@@ -388,7 +565,7 @@ const Map = () => {
             </Card.Body>
           </Card>
 
-          {/* TERCERA FILA: MAPA CON BOTONES FUNCIONALES */}
+          {/* TERCERA FILA: MAPA CON CALCULADOR DE DISTANCIA */}
           <Card className="shadow-sm border-0">
             <Card.Header className="bg-white border-bottom">
               <Row className={`align-items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -442,32 +619,37 @@ const Map = () => {
 
               {/* Mapa - Solo mostrar si hay al menos un campo de ubicación */}
               {!loading && !error && (post.wilaya || post.commune || post.location) && (
-                <div style={{ height: '400px', width: '100%' }}>
-                  <MapContainer 
-                    center={mapCenter} 
-                    zoom={zoomLevel} 
-                    style={{ height: '100%', width: '100%' }}
-                    scrollWheelZoom={true}
-                    key={`${mapStyle}-${mapCenter[0]}-${mapCenter[1]}`} // Force re-render on style change
-                  >
-                    <ChangeView center={mapCenter} zoom={zoomLevel} />
-                    <TileLayer
-                      url={mapProviders[mapStyle].url}
-                      attribution={mapProviders[mapStyle].attribution}
-                    />
-                    
-                    <Marker position={markerPosition} icon={ShopIcon}>
-                      <Popup>
-                        <div style={{ minWidth: '250px', textAlign: isRTL ? 'right' : 'left' }}>
-                          <h6 className="fw-bold text-primary mb-2">{post.bootiquename}</h6>
-                          {post.wilaya && <div className="mb-1"><strong>📍 {t('location.wilaya', 'Wilaya')}:</strong> {post.wilaya}</div>}
-                          {post.commune && <div className="mb-1"><strong>🏘️ {t('location.commune', 'Comuna')}:</strong> {post.commune}</div>}
-                          {post.location && <div className="mb-1"><strong>🏠 {t('location.address', 'Dirección')}:</strong> {post.location}</div>}
-                        </div>
-                      </Popup>
-                    </Marker>
-                  </MapContainer>
-                </div>
+                <>
+                  <div style={{ height: '400px', width: '100%' }}>
+                    <MapContainer 
+                      center={mapCenter} 
+                      zoom={zoomLevel} 
+                      style={{ height: '100%', width: '100%' }}
+                      scrollWheelZoom={true}
+                      key={`${mapStyle}-${mapCenter[0]}-${mapCenter[1]}`} // Force re-render on style change
+                    >
+                      <ChangeView center={mapCenter} zoom={zoomLevel} />
+                      <TileLayer
+                        url={mapProviders[mapStyle].url}
+                        attribution={mapProviders[mapStyle].attribution}
+                      />
+                      
+                      <Marker position={markerPosition} icon={ShopIcon}>
+                        <Popup>
+                          <div style={{ minWidth: '250px', textAlign: isRTL ? 'right' : 'left' }}>
+                            <h6 className="fw-bold text-primary mb-2">{post.bootiquename}</h6>
+                            {post.wilaya && <div className="mb-1"><strong>📍 {t('location.wilaya', 'Wilaya')}:</strong> {post.wilaya}</div>}
+                            {post.commune && <div className="mb-1"><strong>🏘️ {t('location.commune', 'Comuna')}:</strong> {post.commune}</div>}
+                            {post.location && <div className="mb-1"><strong>🏠 {t('location.address', 'Dirección')}:</strong> {post.location}</div>}
+                          </div>
+                        </Popup>
+                      </Marker>
+                    </MapContainer>
+                  </div>
+                  
+                  {/* 🆕 COMPONENTE DE CÁLCULO DE DISTANCIA */}
+                  <DistanceCalculator shopPosition={shopPosition} />
+                </>
               )}
             </Card.Body>
             

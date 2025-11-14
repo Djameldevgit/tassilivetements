@@ -1,11 +1,16 @@
 const mongoose = require('mongoose')
 
 const postSchema = new mongoose.Schema({
-    // 🔷 CAMPOS BÁSICOS DEL SISTEMA
+    // 🔷 CAMPOS EXISTENTES DEL SISTEMA
     content: String,
-    title: {
-        type: String,
-        required: true
+    title: String,
+    link: String,
+    price: String,
+    priceType: String,
+    offerType: String,
+    features: {
+        type: Array,
+        default: []
     },
     images: {
         type: Array,
@@ -15,125 +20,248 @@ const postSchema = new mongoose.Schema({
     comments: [{ type: mongoose.Types.ObjectId, ref: 'comment' }],
     user: { type: mongoose.Types.ObjectId, ref: 'user' },
 
-    // 🔷 CAMPOS PRINCIPALES PARA ROPA
+    // 🔷 CAMPOS COMUNES A TODAS LAS CATEGORÍAS
     category: {
         type: String,
-        default: "clothing"
+        default: "Agence de Voyage"
     },
-    subCategory: {
-        type: String,
-        required: true
-    },
-    subSubCategory: String, // Tipo específico: Hauts & Chemises, Jeans & Pantalons, etc.
+    subCategory: String,
     description: String,
-    
-    // 🔷 INFORMACIÓN DEL PRODUCTO
-    brand: String, // Marca: Zara, Nike, etc.
-    condition: {
-        type: String,
-        default: "new"
-    }, // new, like_new, good, satisfactory
-    price: {
-        type: Number,
-        required: true
-    },
-    currency: {
-        type: String,
-        default: "DZD"
-    }, // DZD, EUR, USD
-    
-    // 🔷 CARACTERÍSTICAS DE ROPA
-    sizes: [{
-        type: String
-    }], // Array de tallas: XS, S, M, L, XL, etc.
-    colors: [{
-        type: String
-    }], // Array de colores: Noir, Blanc, Rouge, etc.
-    material: String, // cotton, polyester, wool, silk, etc.
-    gender: String, // man, woman, unisex, boy, girl, baby
-    season: {
-        type: String,
-        default: "all_year"
-    }, // spring, summer, autumn, winter, all_year
-    
-    // 🔥 NUEVOS CAMPOS: TIPO DE VENTA
-    saleType: {
-        type: String,
-        default: "retail"
-    }, // retail, wholesale, both
-    minQuantity: Number, // Cantidad mínima para venta al por mayor
-    
-    // 🔷 UBICACIÓN Y CONTACTO
     wilaya: String,
     commune: String,
-    location: String, // Dirección detallada
-    phone: String,
-    email: String,
-    bootiquename: {
-        type: String,
-        default: ""
+    contacto: String,
+
+    // 🔷 CAMPOS DE VIAJE (COMPARTIDOS)
+    datedepar: String,
+    horadudepar: String,
+    horariollegada: String,
+    duracionviaje: String,
+    fecharegreso: String,
+    dateretour: String,           // 🔷 NUEVO
+    dureeSejour: String,          // 🔷 NUEVO
+
+    // 🔷 CAMPOS DE TRANSPORTE
+    transporte: String,
+    tipoTransporte: String,
+    claseTransporte: String,
+    companiaTransporte: String,
+    numeroTransporte: String,
+    itinerarioTransporte: String,
+    tiempoTransporte: String,
+    serviciosTransporte: {
+        type: Array,
+        default: []
     },
+    comentariosTransporte: String,
+
+    // 🔷 CAMPOS ESPECÍFICOS DE HAJJ & OMRA
+    categoriaHotelMeca: String,    // 🔷 NUEVO
+    compagnieAerienne: String,     // 🔷 NUEVO (también usado en voyage organisé)
+    typeTransport: String,         // 🔷 NUEVO
+    precioBase: String,            // 🔷 NUEVO
+    tipoPrecio: String,            // 🔷 NUEVO
+   
+    // 🔷 CAMPOS ESPECÍFICOS DE LOCATION VACANCES
+    tipoPropiedad: String,         // 🔷 NUEVO
+    capacidad: String,             // 🔷 NUEVO
+    habitaciones: String,          // 🔷 NUEVO
+    superficie: String,
+    nombrePropiedad: String,       // 🔷 NUEVO
+    direccionCompleta: String,     // 🔷 NUEVO
+    ciudad: String,                // 🔷 NUEVO
+    zonaBarrio: String,            // 🔷 NUEVO
+    descripcionUbicacion: String,  // 🔷 NUEVO
+    transportInclus: String,       // 🔷 NUEVO
+ 
+    // 🔷 CAMPOS ESPECÍFICOS DE VOYAGE ORGANISÉ
+    categoriaAlojamiento: String,  // 🔷 NUEVO
+    tipoHabitacion: String,        // 🔷 NUEVO
+    regimenComidas: String,        // 🔷 NUEVO
+    ubicacionHotel: String,        // 🔷 NUEVO
+    nombreHotel: String,           // 🔷 NUEVO
+    ciudadHotel: String,           // 🔷 NUEVO
+    direccionHotel: String,        // 🔷 NUEVO
+    zonaRegion: String,            // 🔷 NUEVO
+    modeTransport: String,         // 🔷 NUEVO
+    classeTransport: String,       // 🔷 NUEVO
+    typeVol: String,               // 🔷 NUEVO
+    baggage: String,               // 🔷 NUEVO
+    repasVol: String,              // 🔷 NUEVO
     
-    // 🔷 CAMPOS ADICIONALES
-    tags: [{
-        type: String
-    }], // Etiquetas para búsqueda
+    // 🔷 CAMPOS DE PERIODO VIAJE
+    mesInicio: String,
+    mesFin: String,
+    temporada: String,
+    anio: String,
 
-    // 🔷 META DATOS
-    views: { type: Number, default: 0 }
+    // 🔷 PRECIOS
+    prixAdulte: String,
+    prixEnfant: String,
+    prixBebe: String,
 
+    // 🔷 SERVICIOS GENERALES
+    servicesInclus: {
+        type: Array,
+        default: []
+    },
+    activites: {
+        type: Array,
+        default: []
+    },
+    language: {
+        type: Array,
+        default: []
+    },
+    specifications: {
+        type: Array,
+        default: []
+    },
+    optionsPaiement: {
+        type: Array,
+        default: []
+    },
+    documentsRequises: {
+        type: Array,
+        default: []
+    },
+    excursions: {
+        type: Array,
+        default: []
+    },
+    servicios: {
+        type: Array,
+        default: []
+    },
+    serviciosTr: {
+        type: Array,
+        default: []
+    },
+     
+    // 🔷 TIPO Y CATEGORÍA
+    typeVoyage: String,
+    niveauConfort: String,
+    publicCible: String,
+
+    // 🔷 CAMPOS ESPECÍFICOS PARA VOYAGE ORGANISÉ (EXISTENTES)
+    destinacionlocacionvoyage: String,
+    destinacionomra: String,
+    destinacionvoyageorganise: String,
+    paysDestination: String,
+    voyage1hotel1: String,
+    voyage1nombrehotel1: String,
+    voyage2hotel2: String,
+    voyage1nombrehotel2: String,
+
+    // 🔷 CAMPOS PARA CLASIFICACION HOTEL
+    nombredelhotel: String,
+    adresshotel: String,
+    estrellas: String,
+    serviciosdelhotel: String,
+    incluidoenelprecio: String,
+    totalhabitaciones: String,
+    tipodehabutaciones: {
+        type: Array,
+        default: []
+    },
+    wifi: {
+        type: Array,
+        default: []
+    },
+    hotelWebsite: String,
+
+    // 🔷 CAMPOS ESPECÍFICOS PARA LOCATION VACANCES (EXISTENTES)
+    Location_Vacances: String,
+    alquilergeneral: String,
+    etage: String,
+    promoteurimmobilier: {
+        type: Boolean,
+        default: false
+    },
+    adress: String,
+    capacitePersonnes: String,
+    nombreChambres: String,
+    nombreSallesBain: String,
+
+    // 🔷 EQUIPAMIENTOS (MANTENER EL ORIGINAL COMO BOOLEAN)
+    wifiGratuit: {
+        type: Boolean,
+        default: false
+    },
+    climatisation: {
+        type: Boolean,
+        default: false
+    },
+    cuisineEquipee: {
+        type: Boolean,
+        default: false
+    },
+    television: {
+        type: Boolean,
+        default: false
+    },
+    piscine: {
+        type: Boolean,
+        default: false
+    },
+ 
+    animauxAcceptes: {
+        type: Boolean,
+        default: false
+    },
+    menageInclus: {
+        type: Boolean,
+        default: false
+    },
+
+    // 🔷 CHECK-IN/OUT
+    checkInTime: String,
+    checkOutTime: String,
+
+    // 🔷 TARIFAS
+    tarifnuit: String,
+    reservacionenlinea: String,
+    views: { type: Number, default: 0 },
+
+    // 🔷 PAGO
+    acompteRequise: {
+        type: Boolean,
+        default: false
+    },
+    pourcentageAcompte: String,
+
+    // 🔷 CAMPOS ESPECÍFICOS PARA HAJJ & OMRA (EXISTENTES)
+    guideLocal: {
+        type: Boolean,
+        default: false
+    },
+    repasInclus: {
+        type: Boolean,
+        default: false
+    },
+    transfertAeroport: {
+        type: Boolean,
+        default: false
+    },
+    delaiTraitement: String,
+    formalites: String,
+    assurancesIncluses: {
+        type: Boolean,
+        default: false
+    },
+  
+    // 🔷 POLÍTICAS Y CONTACTO (COMPARTIDOS)
+    cancelarreserva: String,
+    conditionsAnnulation: String,
+    politiqueAnnulation: String,
+    itemsReservations_Visa: String
+   
 }, {
     timestamps: true
 })
 
-// 🔥 ÍNDICES PARA PERFORMANCE - ACTUALIZADOS
-
-// Índices básicos
+// 🔷 ÍNDICES PARA MEJOR PERFORMANCE
 postSchema.index({ category: 1, subCategory: 1 })
 postSchema.index({ wilaya: 1, commune: 1 })
 postSchema.index({ user: 1, createdAt: -1 })
-
-// Índices para búsqueda de ropa
-postSchema.index({ subSubCategory: 1 })
-postSchema.index({ brand: 1 })
-postSchema.index({ condition: 1 })
-postSchema.index({ gender: 1 })
-postSchema.index({ material: 1 })
-postSchema.index({ season: 1 })
-postSchema.index({ price: 1 })
-postSchema.index({ sizes: 1 })
-postSchema.index({ colors: 1 })
-postSchema.index({ tags: 1 })
-
-// 🔥 NUEVOS ÍNDICES PARA TIPO DE VENTA
-postSchema.index({ saleType: 1 })
-postSchema.index({ saleType: 1, minQuantity: 1 })
-
-// Índices compuestos para búsquedas avanzadas
-postSchema.index({ 
-    category: 1, 
-    subCategory: 1, 
-    subSubCategory: 1 
-})
-postSchema.index({ 
-    category: 1, 
-    gender: 1, 
-    price: 1 
-})
-postSchema.index({ 
-    wilaya: 1, 
-    commune: 1, 
-    category: 1 
-})
-postSchema.index({ 
-    brand: 1, 
-    condition: 1,
-    price: 1 
-})
-postSchema.index({ 
-    saleType: 1,
-    category: 1,
-    price: 1 
-})
 
 module.exports = mongoose.model('post', postSchema)
